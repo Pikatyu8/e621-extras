@@ -1,0 +1,270 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  width: 280px;
+  background-color: #000000;
+  color: #ffffff;
+  padding: 14px;
+  user-select: none;
+}
+
+/* 1. Remove arrows from numeric input */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  padding-bottom: 2px;
+}
+
+.title {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  gap: 4px;
+  border-bottom: 1px solid #222222;
+  padding-bottom: 8px;
+}
+
+.tab-btn {
+  flex: 1;
+  background: #000000;
+  color: #666666;
+  border: 1px solid #222222;
+  padding: 6px 0;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.tab-btn:hover {
+  color: #cccccc;
+  background-color: #0a0a0a;
+}
+
+.tab-btn.active {
+  background-color: #ffffff;
+  color: #000000;
+  border-color: #ffffff;
+}
+
+.tab-content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.btn {
+  width: 100%;
+  background: #000000;
+  color: #ffffff;
+  border: 1px solid #272727;
+  padding: 8px 12px;
+  font-size: 12px;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.btn:hover:not(:disabled) {
+  background-color: #141414;
+  border-color: #444444;
+}
+
+.btn:active:not(:disabled) {
+  background-color: #222222;
+}
+
+.btn:disabled {
+  color: #444444;
+  border-color: #181818;
+  cursor: not-allowed;
+}
+
+.btn-sub {
+  padding-left: 20px;
+  color: #aaaaaa;
+}
+
+.setting-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #0a0a0a;
+  border: 1px solid #222222;
+  padding: 10px 12px;
+}
+
+.setting-block {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: #0a0a0a;
+  border: 1px solid #222222;
+  padding: 10px 12px;
+}
+
+.setting-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.setting-label {
+  font-size: 12px;
+  color: #ffffff;
+}
+
+.setting-desc {
+  font-size: 10px;
+  color: #666666;
+}
+
+.btn-toggle-switch {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.input-inline-group {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.input-minimal {
+  flex: 1;
+  background: #000000;
+  border: 1px solid #272727;
+  color: #ffffff;
+  padding: 6px 10px;
+  font-size: 12px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.input-minimal:focus {
+  border-color: #666666;
+}
+
+.btn-inline {
+  width: auto;
+  padding: 6px 14px;
+}
+
+.badge {
+  display: inline-block;
+  width: 36px;
+  text-align: center;
+  font-size: 10px;
+  border: 1px solid #444444;
+  padding: 2px 0;
+  text-transform: uppercase;
+  color: #ffffff;
+  background-color: transparent;
+  font-weight: 500;
+}
+
+.badge.on {
+  background-color: #ffffff;
+  color: #000000;
+  border-color: #ffffff;
+}
+
+.footer {
+  border-top: 1px solid #222222;
+  padding-top: 8px;
+}
+
+.status-msg {
+  font-size: 11px;
+  color: #888888;
+  line-height: 1.4;
+  min-height: 16px;
+  word-break: break-word;
+}
+
+/* 2. Screen styles for third-party pages */
+.offline-view {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 160px;
+  text-align: center;
+  gap: 14px;
+  padding: 8px 0;
+}
+
+.offline-text {
+  font-size: 12px;
+  color: #888888;
+  line-height: 1.4;
+}
+
+.offline-links {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.offline-link {
+  display: block;
+  text-decoration: none;
+  color: #ffffff;
+  background-color: #0a0a0a;
+  border: 1px solid #222222;
+  padding: 8px 0;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  transition: background-color 0.15s, border-color 0.15s;
+}
+
+.offline-link:hover {
+  background-color: #141414;
+  border-color: #444444;
+}

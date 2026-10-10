@@ -1,0 +1,8 @@
+bundles
+re621.Legacy-master
+__pycache__
+.vscode
+build
+dist
+.git
+tests

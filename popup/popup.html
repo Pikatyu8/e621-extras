@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>e621 extras</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <!-- Shown on non-e621 pages -->
+  <div id="offlineView" class="offline-view hidden">
+    <p class="offline-text">extension works on these webpages:</p>
+    <div class="offline-links">
+      <a href="https://e621.net" target="_blank" class="offline-link">e621.net</a>
+      <a href="https://e926.net" target="_blank" class="offline-link">e926.net</a>
+    </div>
+  </div>
+
+  <!-- Main UI -->
+  <div id="mainView" class="container">
+    <header class="header">
+      <h1 class="title">e621 extras</h1>
+    </header>
+
+    <nav class="tabs">
+      <button class="tab-btn active" data-tab="blck">BLCK</button>
+      <button class="tab-btn" data-tab="extra">EXTRA</button>
+    </nav>
+
+    <!-- Tab 1: BLCK -->
+    <main id="tab-blck" class="tab-content">
+      <div class="section">
+        <button id="btnAutoUpdate" class="btn" title="Keep the blacklist in sync with your downvotes automatically">
+          <span>Auto Update</span>
+          <span id="autoUpdateState" class="badge">OFF</span>
+        </button>
+        <button id="btnSyncApi" class="btn btn-sub hidden" title="Re-fetch downvotes and update the blacklist">↳ Sync via API</button>
+      </div>
+
+      <div id="manualActions" class="section">
+        <button id="btnBackup" class="btn" title="Save the current blacklist in the extension">Backup Current Blacklist</button>
+        <button id="btnLoadDownvotes" class="btn" title="Fetch your downvoted posts from the site into the extension">Load Downvotes</button>
+        <button id="btnUpload" class="btn" title="Add the loaded downvotes to your blacklist as id:N rules">Upload to Blacklist</button>
+        <button id="btnUnload" class="btn" title="Remove those id:N rules from your blacklist">Unload from Blacklist</button>
+      </div>
+    </main>
+
+    <!-- Tab 2: EXTRA -->
+    <main id="tab-extra" class="tab-content hidden">
+      <!-- Hover Zoom Settings -->
+      <div class="setting-row">
+        <div class="setting-info">
+          <span class="setting-label">Hover Zoom (Shift)</span>
+          <span class="setting-desc">Hold Shift while hovering</span>
+        </div>
+        <button id="btnHzToggle" class="btn-toggle-switch">
+          <span id="hzBadge" class="badge on">ON</span>
+        </button>
+      </div>
+
+      <div class="setting-row">
+        <div class="setting-info">
+          <span class="setting-label">Load Sample on Hover</span>
+          <span class="setting-desc">Load sample image instead of full</span>
+        </div>
+        <button id="btnHzSampleToggle" class="btn-toggle-switch">
+          <span id="hzSampleBadge" class="badge on">ON</span>
+        </button>
+      </div>
+
+      <!-- Tag Script Preview (Ctrl) Setting -->
+      <div class="setting-row">
+        <div class="setting-info">
+          <span class="setting-label">Tag Script Preview (Ctrl)</span>
+          <span class="setting-desc">View active tag scripts</span>
+        </div>
+        <button id="btnCtrlPreviewToggle" class="btn-toggle-switch">
+          <span id="ctrlPreviewBadge" class="badge on">ON</span>
+        </button>
+      </div>
+
+      <div class="setting-row">
+        <div class="setting-info">
+          <span class="setting-label">Sticky Preview (Ctrl)</span>
+          <span class="setting-desc">Toggle with Ctrl instead of holding</span>
+        </div>
+        <button id="btnCtrlStickyToggle" class="btn-toggle-switch">
+          <span id="ctrlStickyBadge" class="badge">OFF</span>
+        </button>
+      </div>
+
+      <!-- Tracking FPS Setting -->
+      <div class="setting-row">
+        <div class="setting-info">
+          <span class="setting-label">Tracking FPS</span>
+          <span class="setting-desc">0 = Monitor Hz (or limit for weak PCs)</span>
+        </div>
+        <input type="number" id="inputTrackingFps" class="input-minimal" placeholder="0" min="0" max="360" style="width: 58px; flex: none; text-align: center;" />
+      </div>
+
+      <!-- Hide Thumbnail Tooltips Setting -->
+      <div class="setting-row">
+        <div class="setting-info">
+          <span class="setting-label">Hide Thumbnail Tooltips</span>
+          <span class="setting-desc">Suppress browser tooltip on thumbnails</span>
+        </div>
+        <button id="btnHideTooltipsToggle" class="btn-toggle-switch">
+          <span id="hideTooltipsBadge" class="badge">OFF</span>
+        </button>
+      </div>
+
+      <!-- Queued Tag Scripts Setting -->
+      <div class="setting-row">
+        <div class="setting-info">
+          <span class="setting-label">Queued Tag Scripts</span>
+          <span class="setting-desc">Queue edits during hourly limits</span>
+        </div>
+        <button id="btnQueueToggle" class="btn-toggle-switch">
+          <span id="queueBadge" class="badge">OFF</span>
+        </button>
+      </div>
+
+      <div id="queueBlock" class="setting-block hidden">
+        <div class="setting-info">
+          <span class="setting-label">Tag Script Queue</span>
+          <span id="queueStatusText" class="setting-desc">0 posts queued</span>
+        </div>
+        <div class="input-inline-group">
+          <a id="btnOpenTimeouted" href="https://e621.net/posts/timeouted" target="_blank" class="btn btn-inline">View Queue</a>
+          <button id="btnProcessQueue" class="btn btn-inline">Process Now</button>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="setting-row">
+          <div class="setting-info">
+            <span class="setting-label">Show Uploader</span>
+            <span class="setting-desc">Under status in post details</span>
+          </div>
+          <button id="btnShowUploader" class="btn-toggle-switch">
+            <span id="showUploaderBadge" class="badge on">ON</span>
+          </button>
+        </div>
+
+        <div class="setting-block">
+          <span class="setting-label">Show Post Tree</span>
+          <div class="input-inline-group">
+            <input type="number" id="inputTreePostId" class="input-minimal" placeholder="post id" />
+            <button id="btnShowTreePopup" class="btn btn-inline">Show</button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div id="statusMessage" class="status-msg">Ready</div>
+    </footer>
+  </div>
+
+  <script src="../scripts/constants.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

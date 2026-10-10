@@ -1,0 +1,13 @@
+{
+  "name": "e621-extras",
+  "private": true,
+  "version": "1.3.0",
+  "scripts": {
+    "test": "node --test tests/",
+    "lint": "eslint ."
+  },
+  "devDependencies": {
+    "eslint": "^9.0.0",
+    "globals": "^15.0.0"
+  }
+}
