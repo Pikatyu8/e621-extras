@@ -22,12 +22,53 @@
     </header>
 
     <nav class="tabs">
-      <button class="tab-btn active" data-tab="blck">BLCK</button>
-      <button class="tab-btn" data-tab="extra">EXTRA</button>
+      <button class="tab-btn active" data-tab="main">MAIN</button>
+      <button class="tab-btn" data-tab="blck">BLCK</button>
+      <button class="tab-btn" data-tab="tagscr">TAGSCR</button>
+      <button class="tab-btn" data-tab="hz">HZ</button>
     </nav>
 
-    <!-- Tab 1: BLCK -->
-    <main id="tab-blck" class="tab-content">
+    <!-- Tab 1: MAIN -->
+    <main id="tab-main" class="tab-content">
+      <div class="setting-row">
+        <div class="setting-info">
+          <span class="setting-label">Hide Thumbnail Tooltips</span>
+          <span class="setting-desc">Suppress browser tooltip on thumbnails</span>
+        </div>
+        <button id="btnHideTooltipsToggle" class="btn-toggle-switch">
+          <span id="hideTooltipsBadge" class="badge">OFF</span>
+        </button>
+      </div>
+
+      <div class="setting-row">
+        <div class="setting-info">
+          <span class="setting-label">Tracking FPS</span>
+          <span class="setting-desc">0 = Monitor Hz (or limit for weak PCs)</span>
+        </div>
+        <input type="number" id="inputTrackingFps" class="input-minimal" placeholder="0" min="0" max="360" style="width: 58px; flex: none; text-align: center;" />
+      </div>
+
+      <div class="setting-row">
+        <div class="setting-info">
+          <span class="setting-label">Show Uploader</span>
+          <span class="setting-desc">Under status in post details</span>
+        </div>
+        <button id="btnShowUploader" class="btn-toggle-switch">
+          <span id="showUploaderBadge" class="badge on">ON</span>
+        </button>
+      </div>
+
+      <div class="setting-block">
+        <span class="setting-label">Show Post Tree</span>
+        <div class="input-inline-group">
+          <input type="number" id="inputTreePostId" class="input-minimal" placeholder="post id" />
+          <button id="btnShowTreePopup" class="btn btn-inline">Show</button>
+        </div>
+      </div>
+    </main>
+
+    <!-- Tab 2: BLCK -->
+    <main id="tab-blck" class="tab-content hidden">
       <div class="section">
         <button id="btnAutoUpdate" class="btn" title="Keep the blacklist in sync with your downvotes automatically">
           <span>Auto Update</span>
@@ -44,30 +85,8 @@
       </div>
     </main>
 
-    <!-- Tab 2: EXTRA -->
-    <main id="tab-extra" class="tab-content hidden">
-      <!-- Hover Zoom Settings -->
-      <div class="setting-row">
-        <div class="setting-info">
-          <span class="setting-label">Hover Zoom (Shift)</span>
-          <span class="setting-desc">Hold Shift while hovering</span>
-        </div>
-        <button id="btnHzToggle" class="btn-toggle-switch">
-          <span id="hzBadge" class="badge on">ON</span>
-        </button>
-      </div>
-
-      <div class="setting-row">
-        <div class="setting-info">
-          <span class="setting-label">Load Sample on Hover</span>
-          <span class="setting-desc">Load sample image instead of full</span>
-        </div>
-        <button id="btnHzSampleToggle" class="btn-toggle-switch">
-          <span id="hzSampleBadge" class="badge on">ON</span>
-        </button>
-      </div>
-
-      <!-- Tag Script Preview (Ctrl) Setting -->
+    <!-- Tab 3: TAGSCR -->
+    <main id="tab-tagscr" class="tab-content hidden">
       <div class="setting-row">
         <div class="setting-info">
           <span class="setting-label">Tag Script Preview (Ctrl)</span>
@@ -88,27 +107,6 @@
         </button>
       </div>
 
-      <!-- Tracking FPS Setting -->
-      <div class="setting-row">
-        <div class="setting-info">
-          <span class="setting-label">Tracking FPS</span>
-          <span class="setting-desc">0 = Monitor Hz (or limit for weak PCs)</span>
-        </div>
-        <input type="number" id="inputTrackingFps" class="input-minimal" placeholder="0" min="0" max="360" style="width: 58px; flex: none; text-align: center;" />
-      </div>
-
-      <!-- Hide Thumbnail Tooltips Setting -->
-      <div class="setting-row">
-        <div class="setting-info">
-          <span class="setting-label">Hide Thumbnail Tooltips</span>
-          <span class="setting-desc">Suppress browser tooltip on thumbnails</span>
-        </div>
-        <button id="btnHideTooltipsToggle" class="btn-toggle-switch">
-          <span id="hideTooltipsBadge" class="badge">OFF</span>
-        </button>
-      </div>
-
-      <!-- Queued Tag Scripts Setting -->
       <div class="setting-row">
         <div class="setting-info">
           <span class="setting-label">Queued Tag Scripts</span>
@@ -129,25 +127,28 @@
           <button id="btnProcessQueue" class="btn btn-inline">Process Now</button>
         </div>
       </div>
+    </main>
 
-      <div class="section">
-        <div class="setting-row">
-          <div class="setting-info">
-            <span class="setting-label">Show Uploader</span>
-            <span class="setting-desc">Under status in post details</span>
-          </div>
-          <button id="btnShowUploader" class="btn-toggle-switch">
-            <span id="showUploaderBadge" class="badge on">ON</span>
-          </button>
+    <!-- Tab 4: HZ -->
+    <main id="tab-hz" class="tab-content hidden">
+      <div class="setting-row">
+        <div class="setting-info">
+          <span class="setting-label">Hover Zoom (Shift)</span>
+          <span class="setting-desc">Hold Shift while hovering</span>
         </div>
+        <button id="btnHzToggle" class="btn-toggle-switch">
+          <span id="hzBadge" class="badge on">ON</span>
+        </button>
+      </div>
 
-        <div class="setting-block">
-          <span class="setting-label">Show Post Tree</span>
-          <div class="input-inline-group">
-            <input type="number" id="inputTreePostId" class="input-minimal" placeholder="post id" />
-            <button id="btnShowTreePopup" class="btn btn-inline">Show</button>
-          </div>
+      <div class="setting-row">
+        <div class="setting-info">
+          <span class="setting-label">Load Sample on Hover</span>
+          <span class="setting-desc">Load sample image instead of full</span>
         </div>
+        <button id="btnHzSampleToggle" class="btn-toggle-switch">
+          <span id="hzSampleBadge" class="badge on">ON</span>
+        </button>
       </div>
     </main>
 

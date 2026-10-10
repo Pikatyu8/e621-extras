@@ -6,7 +6,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   const offlineView = $('offlineView');
   const statusMsg = $('statusMessage');
   const tabBtns = document.querySelectorAll('.tab-btn');
-  const tabs = { blck: $('tab-blck'), extra: $('tab-extra') };
+  const tabs = {
+    main: $('tab-main'),
+    blck: $('tab-blck'),
+    tagscr: $('tab-tagscr'),
+    hz: $('tab-hz')
+  };
 
   const autoUpdateState = $('autoUpdateState');
   const btnSyncApi = $('btnSyncApi');
@@ -258,7 +263,15 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
 
   const stored = await chrome.storage.local.get([KEYS.ACTIVE_POPUP_TAB]);
-  showTab(stored[KEYS.ACTIVE_POPUP_TAB] === 'extra' ? 'extra' : 'blck');
+  const validTabs = ['main', 'blck', 'tagscr', 'hz'];
+  let initialTab = 'main';
+  if (stored[KEYS.ACTIVE_POPUP_TAB] === 'extra') {
+    initialTab = 'tagscr';
+  } else if (validTabs.includes(stored[KEYS.ACTIVE_POPUP_TAB])) {
+    initialTab = stored[KEYS.ACTIVE_POPUP_TAB];
+  }
+  showTab(initialTab);
+
   await refreshUI();
 
   const liveTimer = setInterval(refreshUI, 1000);
