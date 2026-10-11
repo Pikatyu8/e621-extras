@@ -45,7 +45,7 @@
 
   (async function start() {
     await U.ensureStorageSchema();
-    for (const name of ['uploader', 'tree', 'blacklist', 'hoverZoom', 'tagScriptQueue', 'timeoutedPage', 'tagScript', 'tooltipsManager']) {
+    for (const name of ['uploader', 'userEdits', 'tree', 'blacklist', 'hoverZoom', 'tagScriptQueue', 'timeoutedPage', 'tagScript', 'tooltipsManager']) {
       try {
         await E621X.get(name).init();
       } catch (err) {

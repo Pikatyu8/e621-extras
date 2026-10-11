@@ -339,3 +339,158 @@
 .e621x-tag-type-8, .e621x-tag-type-lore { color: #2e8b57; }
 .e621x-tag-type-command { color: #fef08a; }
 .e621x-tag-type-prefix { color: #94a3b8; }
+
+/* ===== Specific Post Edits Filter ===== */
+.e621x-specific-edits-wrapper {
+  margin-top: 10px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.e621x-specific-edits-trigger {
+  font-size: 11px;
+  color: #ffff00 !important;
+  font-weight: bold;
+  text-decoration: underline;
+  cursor: pointer;
+  display: inline-block;
+  text-align: center;
+  margin: 6px auto;
+  user-select: none;
+  transition: color 0.15s ease;
+}
+
+.e621x-specific-edits-trigger:hover {
+  color: #ffffff !important;
+}
+
+.e621x-specific-edits-panel {
+  background: var(--color-section, #152f56);
+  border: 1px solid var(--color-section-border, #2a4c7e);
+  border-radius: 4px;
+  padding: 12px 14px;
+  margin: 8px auto 0 auto;
+  width: 100%;
+  max-width: 480px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 12px;
+  text-align: left;
+}
+
+.e621x-specific-edits-panel.is-hidden {
+  display: none !important;
+}
+
+.e621x-specific-edits-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  padding-bottom: 6px;
+}
+
+.e621x-specific-edits-title {
+  font-weight: bold;
+  color: #ffffff;
+  font-size: 12px;
+  letter-spacing: 0.3px;
+}
+
+.e621x-specific-edits-close {
+  background: transparent;
+  border: none;
+  color: #8a9ba8;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 4px;
+}
+
+.e621x-specific-edits-close:hover {
+  color: #ffffff;
+}
+
+.e621x-specific-edits-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.e621x-specific-edits-field {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.e621x-specific-edits-field label {
+  font-size: 11px;
+  color: #b4c7d9;
+  font-weight: 600;
+}
+
+.e621x-specific-edits-input {
+  width: 100%;
+  box-sizing: border-box;
+  font-size: 12px;
+  padding: 6px 8px;
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  border: 1px solid #cccccc;
+  border-radius: 2px;
+  outline: none;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.e621x-specific-edits-input::placeholder {
+  color: #777777 !important;
+}
+
+.e621x-specific-edits-input:focus {
+  background-color: #ffffcc !important;
+  border-color: #bbbb33 !important;
+  color: #000000 !important;
+}
+
+.e621x-specific-edits-actions {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+.e621x-specific-edits-btn {
+  padding: 4px 12px;
+  font-size: 11px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.e621x-specific-edits-status {
+  font-size: 11px;
+  color: #fef08a;
+  background: #0a1b32;
+  border: 1px solid #24416b;
+  border-radius: 3px;
+  padding: 6px 10px;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.e621x-specific-edits-status.is-error {
+  color: #ff6b6b;
+  border-color: #7f1d1d;
+}
+
+.e621x-specific-edits-status a {
+  color: #ffff00;
+  text-decoration: underline;
+  margin-left: 4px;
+  font-weight: 600;
+}

@@ -32,6 +32,7 @@
         "scripts/ui/tooltips.js",
         "scripts/blacklist.js",
         "scripts/uploader.js",
+        "scripts/user_edits.js",
         "scripts/tree/data.js",
         "scripts/tree/export.js",
         "scripts/tree/modal.js",
