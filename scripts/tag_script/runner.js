@@ -149,8 +149,7 @@ E621X.define('tagScriptRunner',
       return U.showToast(`Post #${postId} cannot be edited: ${reason}`, true);
     }
 
-    const isExt = Storage.isExtendedMode();
-    const changes = Engine.runTagScript(postData, script, isExt);
+    const changes = Engine.runTagScript(postData, script);
     if (!changes.trim()) return U.showToast(`Post #${postId}: No changes needed`);
 
     const queueEnabled = await Queue.isEnabled();
@@ -222,7 +221,7 @@ E621X.define('tagScriptRunner',
     }
   }
 
-  function buildPlan(thumbs, script, isExt) {
+  function buildPlan(thumbs, script) {
     const items = [];
     let skipped = 0;
 
@@ -234,13 +233,9 @@ E621X.define('tagScriptRunner',
           skipped++;
           continue;
         }
-        const changes = Engine.runTagScript(postData, script, isExt).trim();
+        const changes = Engine.runTagScript(postData, script).trim();
         if (changes) items.push({ thumb, id: thumb.dataset.id, changes });
       } catch (err) {
-        if (err instanceof Engine.UnsupportedTermError) {
-          U.showToast(`Unsupported syntax: ${err.message}`, true);
-          return null;
-        }
         skipped++;
         U.logWarn(`checking post #${thumb.dataset.id}`, err);
       }
@@ -331,7 +326,7 @@ E621X.define('tagScriptRunner',
 
     bulkRunning = true;
     try {
-      const plan = await buildPlan(thumbs, script, Storage.isExtendedMode());
+      const plan = await buildPlan(thumbs, script);
       if (!plan) return;
       if (!plan.items.length) return U.showToast('No changes needed');
 

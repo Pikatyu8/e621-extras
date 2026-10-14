@@ -1,7 +1,7 @@
 /* UI panel, presets management, sticky keys, hotkeys and lifecycle orchestration. */
 E621X.define('tagScript',
-  ['utils', 'selectors', 'tagScriptStorage', 'tagScriptRunner', 'tagScriptHelp', 'tagScriptPreview', 'tagScriptQueue', 'tagScriptLogger'],
-  (U, SEL, Storage, Runner, Help, Preview, Queue, Log) => {
+  ['utils', 'selectors', 'tagScriptStorage', 'tagScriptRunner', 'tagScriptPreview', 'tagScriptQueue', 'tagScriptLogger'],
+  (U, SEL, Storage, Runner, Preview, Queue, Log) => {
   'use strict';
 
   const IDS = {
@@ -10,7 +10,6 @@ E621X.define('tagScript',
     reason: 'e621x-tag-script-reason',
     all: 'e621x-tag-script-all',
     sticky: 'e621x-tag-script-sticky',
-    extended: 'e621x-tag-script-extended',
     presetSelect: 'e621x-tag-script-preset-select',
     presetName: 'e621x-tag-script-preset-name',
     presetSave: 'e621x-tag-script-preset-save',
@@ -172,12 +171,6 @@ E621X.define('tagScript',
       setFieldDisplayValue(scriptVal, `handleLoadPreset("${preset.name}") for slot #${currentId}`);
     }
 
-    if (typeof preset.extended === 'boolean') {
-      Storage.setExtendedMode(preset.extended, `handleLoadPreset("${preset.name}")`);
-      const extCheckbox = document.getElementById(IDS.extended);
-      if (extCheckbox) extCheckbox.checked = preset.extended;
-    }
-
     updatePresetDropdown(preset.name);
     Preview.syncPreview();
     U.showToast(`Preset "${preset.name}" loaded`);
@@ -213,8 +206,7 @@ E621X.define('tagScript',
     const existingIdx = presets.findIndex(p => p.name.toLowerCase() === name.toLowerCase());
     const presetData = {
       name,
-      scripts,
-      extended: Storage.isExtendedMode()
+      scripts
     };
 
     if (existingIdx >= 0) {
@@ -275,7 +267,6 @@ E621X.define('tagScript',
     Log.add('ACTION', 'handleDeletePreset', `Successfully deleted preset "${deletedName}"`);
   }
 
-  /* Extended Mode moved to its own dedicated row below Sticky Keys */
   function buildUi(withOwnField) {
     const ui = document.createElement('div');
     ui.id = IDS.ui;
@@ -301,13 +292,6 @@ E621X.define('tagScript',
           <span>Sticky Keys</span>
         </label>
         <a id="${IDS.queueLink}" href="/posts/timeouted" target="_blank" class="e621x-ts-queue-link hidden">Queue (0)</a>
-      </div>
-      <div class="e621x-ts-row e621x-ts-row--spread">
-        <label class="e621x-ts-label">
-          <input type="checkbox" id="${IDS.extended}" />
-          <span>Extended Mode</span>
-        </label>
-        <a href="/help/tag_scripts#extended" target="_blank" rel="noopener" class="e621x-ts-help">help</a>
       </div>`;
     return ui;
   }
@@ -329,7 +313,6 @@ E621X.define('tagScript',
 
     const ownField = document.getElementById(IDS.ownField);
     const stickyCheckbox = document.getElementById(IDS.sticky);
-    const extCheckbox = document.getElementById(IDS.extended);
     const presetSelect = document.getElementById(IDS.presetSelect);
     const presetNameInput = document.getElementById(IDS.presetName);
     const presetSaveBtn = document.getElementById(IDS.presetSave);
@@ -356,14 +339,6 @@ E621X.define('tagScript',
       Preview.syncPreview();
       Log.click(e, `Sticky Keys toggled to ${isSticky ? 'ON' : 'OFF'}`);
       U.showToast(`Tag Scripts: Sticky Keys ${isSticky ? 'ON' : 'OFF'}`);
-    });
-
-    extCheckbox.checked = Storage.isExtendedMode();
-    extCheckbox.addEventListener('change', (e) => {
-      Storage.setExtendedMode(extCheckbox.checked, 'checkbox change');
-      Storage.syncActivePresetExtended(extCheckbox.checked, 'checkbox change');
-      Log.click(e, `Extended Mode toggled to ${extCheckbox.checked ? 'ON' : 'OFF'}`);
-      U.showToast(`Tag Scripts: Extended Mode ${extCheckbox.checked ? 'ON' : 'OFF'}`);
     });
 
     const activePreset = Storage.getActivePresetName();
@@ -469,7 +444,6 @@ E621X.define('tagScript',
   function setupThumbnailClickListener() {
     document.addEventListener('click', (e) => {
       if (!isTagScriptMode()) return;
-      if (usesNative && !Storage.isExtendedMode()) return;
 
       const thumb = e.target.closest(SEL.thumbnail);
       if (!thumb) return;
@@ -541,7 +515,7 @@ E621X.define('tagScript',
   }
 
   function init() {
-    [injectUI, setupThumbnailClickListener, setupHotkeys, Help.setupHelpPageDocs, Preview.init, Runner.syncQueuedOutlines].forEach(feature => {
+    [injectUI, setupThumbnailClickListener, setupHotkeys, Preview.init, Runner.syncQueuedOutlines].forEach(feature => {
       try {
         Promise.resolve(feature()).catch(err => U.logWarn(`tagScript.${feature.name}`, err));
       } catch (err) {

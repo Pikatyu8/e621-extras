@@ -1,5 +1,5 @@
-/* Storage & cookie persistence for tag script slots (1-9), presets, sticky keys and extended mode.
- * Tab-specific state (active slots 1-9, active preset, sticky/extended state) is isolated per-tab
+/* Storage & cookie persistence for tag script slots (1-9), presets, and sticky keys.
+ * Tab-specific state (active slots 1-9, active preset, sticky state) is isolated per-tab
  * via sessionStorage with automatic seeding, preventing cross-tab preset overwrites. */
 E621X.define('tagScriptStorage', ['utils', 'tagScriptLogger'], (U, Log) => {
   'use strict';
@@ -7,7 +7,6 @@ E621X.define('tagScriptStorage', ['utils', 'tagScriptLogger'], (U, Log) => {
   const LS = {
     CURRENT_ID: 'current_tag_script_id',
     scriptKey: (id) => `tag-script-${id}`,
-    EXTENDED: 'e621_tag_script_extended',
     STICKY: 'e621_tag_script_sticky',
     ACTIVE_STICKY_SLOTS: 'e621_tag_script_active_sticky_slots',
     SLOT_BEFORE_STICKY: 'e621_tag_script_slot_before_sticky',
@@ -74,11 +73,6 @@ E621X.define('tagScriptStorage', ['utils', 'tagScriptLogger'], (U, Log) => {
         ? String(matchedPreset.sticky)
         : (localStorage.getItem(LS.STICKY) || 'false');
       sessionStorage.setItem(LS.STICKY, sticky);
-
-      const extended = (matchedPreset && typeof matchedPreset.extended === 'boolean')
-        ? String(matchedPreset.extended)
-        : (localStorage.getItem(LS.EXTENDED) || 'false');
-      sessionStorage.setItem(LS.EXTENDED, extended);
 
       const activeStickySlots = localStorage.getItem(LS.ACTIVE_STICKY_SLOTS) || '[]';
       sessionStorage.setItem(LS.ACTIVE_STICKY_SLOTS, activeStickySlots);
@@ -224,29 +218,6 @@ E621X.define('tagScriptStorage', ['utils', 'tagScriptLogger'], (U, Log) => {
     saveStoredPresets(presets, `syncActivePresetScript("${activeName}" -> slot #${id} via ${source})`);
   }
 
-  function syncActivePresetExtended(isExtended, source) {
-    const activeName = getActivePresetName();
-    if (!activeName) return;
-
-    const presets = getStoredPresets();
-    const preset = presets.find(p => p.name.toLowerCase() === activeName.toLowerCase());
-    if (!preset) return;
-
-    preset.extended = Boolean(isExtended);
-    saveStoredPresets(presets, `syncActivePresetExtended("${activeName}" -> ${isExtended} via ${source})`);
-  }
-
-  const isExtendedMode = () => tabGet(LS.EXTENDED, 'false') === 'true';
-
-  const setExtendedMode = (value, source = 'unknown') => {
-    const oldVal = isExtendedMode();
-    const nextVal = Boolean(value);
-    if (oldVal !== nextVal) {
-      tabSet(LS.EXTENDED, String(nextVal), true);
-      Log.valueChange('extended_mode', oldVal, nextVal, source);
-    }
-  };
-
   /* Sticky keys mode helpers */
   const isStickyMode = () => tabGet(LS.STICKY, 'false') === 'true';
 
@@ -305,9 +276,6 @@ E621X.define('tagScriptStorage', ['utils', 'tagScriptLogger'], (U, Log) => {
     getActivePresetName,
     setActivePresetName,
     syncActivePresetScript,
-    syncActivePresetExtended,
-    isExtendedMode,
-    setExtendedMode,
     isStickyMode,
     setStickyMode,
     getActiveStickySlots,

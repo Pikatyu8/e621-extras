@@ -16,13 +16,6 @@ E621X.define('selectors', [], () => ({
   nativeTagScriptField: '#tag-script-field',
   parentChildren: '.parent-children',
   relationNotices: '.notice.notice-child, .notice.notice-parent',
-  helpContentTargets: [
-    '#c-help #content',
-    '#content .dtext-container',
-    '#content',
-    '#c-help #a-show',
-    '#help-page'
-  ],
   voteButton: 'button[data-action="1"], button[data-action="-1"], .ptbr-vote-button',
   commentVoteClasses: ['comment-vote-down-link', 'comment-vote-up-link'],
 

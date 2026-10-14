@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "e621 extras",
-  "version": "1.4.1",
-  "description": "Downvotes-to-blacklist manager, post tree viewer, uploader display, hover zoom and extended tag scripts for e621 and e926.",
+  "version": "1.4.2",
+  "description": "Downvotes-to-blacklist manager, post tree viewer, hover zoom and tag scripts for regular members of e621 and e926.",
   "permissions": ["storage", "alarms", "unlimitedStorage"],
   "host_permissions": [
     "https://*.e621.net/*",
@@ -44,7 +44,6 @@
         "scripts/tag_script/logger.js",
         "scripts/tag_script/storage.js",
         "scripts/tag_script/runner.js",
-        "scripts/tag_script/help.js",
         "scripts/tag_script/preview.js",
         "scripts/tag_script/index.js",
         "scripts/content.js"

@@ -1,7 +1,7 @@
 {
   "name": "e621-extras",
   "private": true,
-  "version": "1.4.1",
+  "version": "1.4.2",
   "scripts": {
     "build:userscript": "node userscript-build.js && node userscript-fix.js dist/e621-extras.user.js",
     "test": "node --test tests/",
