@@ -178,6 +178,7 @@ E621X.define('userEdits', ['utils', 'selectors', 'net', 'dom'], (U, SEL, Net, D)
     let sortKey = 'added_desc';
     let filterCategory = 'all';
     let filterAction = 'all';
+    let filterUploadType = 'all';
     let filterQuery = '';
     let currentPage = 1;
     const PAGE_SIZE = 50;
@@ -274,19 +275,27 @@ E621X.define('userEdits', ['utils', 'selectors', 'net', 'dom'], (U, SEL, Net, D)
 
     const selectSort = D.el('select', { class: 'st-select e621x-stats-select' }, [
       D.el('option', { value: 'added_desc', text: 'Sort by: Most Added (↓)' }),
+      D.el('option', { value: 'added_asc', text: 'Sort by: Least Added (↑)' }),
       D.el('option', { value: 'removed_desc', text: 'Sort by: Most Removed (↓)' }),
+      D.el('option', { value: 'removed_asc', text: 'Sort by: Least Removed (↑)' }),
       D.el('option', { value: 'posts_desc', text: 'Sort by: Most in Posts (↓)' }),
       D.el('option', { value: 'date_desc', text: 'Sort by: Date (Most Recent)' }),
       D.el('option', { value: 'date_asc', text: 'Sort by: Date (Oldest First)' }),
-      D.el('option', { value: 'net_desc', text: 'Sort by: Net Change (+Add -Rem)' }),
       D.el('option', { value: 'name_asc', text: 'Sort by: Name (A-Z)' })
     ]);
 
     const selectAction = D.el('select', { class: 'st-select e621x-stats-select' }, [
       D.el('option', { value: 'all', text: 'All Tag Changes' }),
       D.el('option', { value: 'added_only', text: 'Added Only (>0)' }),
+      D.el('option', { value: 'added_or_removed', text: 'Added or Removed (>0)' }),
       D.el('option', { value: 'removed_only', text: 'Removed Only (>0)' }),
       D.el('option', { value: 'both', text: 'Both Added & Removed' })
+    ]);
+
+    const selectUploadType = D.el('select', { class: 'st-select e621x-stats-select' }, [
+      D.el('option', { value: 'all', text: 'All (Uploads & Edits)' }),
+      D.el('option', { value: 'uploads_only', text: 'Uploads Only' }),
+      D.el('option', { value: 'non_uploads', text: 'Non-Uploads Only' })
     ]);
 
     const selectCat = D.el('select', { class: 'st-select e621x-stats-select' }, [
@@ -312,6 +321,7 @@ E621X.define('userEdits', ['utils', 'selectors', 'net', 'dom'], (U, SEL, Net, D)
         inputSearch,
         selectSort,
         selectAction,
+        selectUploadType,
         selectCat
       ]),
       D.el('div', { class: 'e621x-stats-toolbar-group' }, [
@@ -363,12 +373,91 @@ E621X.define('userEdits', ['utils', 'selectors', 'net', 'dom'], (U, SEL, Net, D)
     document.addEventListener('keydown', handleKeydown);
 
     let activeDataset = null;
+    let renderId = 0;
+    let isFetchingMissing = false;
 
-    function renderActiveTable() {
+    async function renderActiveTable() {
       if (!activeDataset) return;
+      const currentRenderId = ++renderId;
 
-      const { statsMap } = activeDataset;
-      let tags = Array.from(statsMap.values());
+      const {
+        statsMap,
+        totalVersions = 0,
+        uploadVersions = 0,
+        editVersions = 0,
+        uniquePosts = 0,
+        uniquePostsAll = uniquePosts,
+        uniquePostsUpload = 0,
+        uniquePostsEdit = 0
+      } = activeDataset;
+
+      // Map metrics according to the selected upload scope
+      let tags = Array.from(statsMap.values()).map(s => {
+        if (filterUploadType === 'uploads_only') {
+          return {
+            name: s.name,
+            added: s.uploadAdded || 0,
+            removed: s.uploadRemoved || 0,
+            inPosts: s.uploadInPosts || 0,
+            firstDate: s.uploadFirstDate || 0,
+            lastDate: s.uploadLastDate || 0
+          };
+        }
+        if (filterUploadType === 'non_uploads') {
+          return {
+            name: s.name,
+            added: s.editAdded || 0,
+            removed: s.editRemoved || 0,
+            inPosts: s.editInPosts || 0,
+            firstDate: s.editFirstDate || 0,
+            lastDate: s.editLastDate || 0
+          };
+        }
+        return {
+          name: s.name,
+          added: s.added || 0,
+          removed: s.removed || 0,
+          inPosts: s.inPosts || 0,
+          firstDate: s.firstDate || 0,
+          lastDate: s.lastDate || 0
+        };
+      });
+
+      // Synchronize Summary Cards with the active upload scope
+      let totalAddedCount = 0;
+      let totalRemovedCount = 0;
+      let totalInPostsCount = 0;
+
+      for (const s of tags) {
+        if (s.added > 0) totalAddedCount++;
+        if (s.removed > 0) totalRemovedCount++;
+        if (s.inPosts > 0) totalInPostsCount++;
+      }
+
+      let displayedVersions = totalVersions;
+      let displayedPosts = uniquePostsAll;
+      if (filterUploadType === 'uploads_only') {
+        displayedVersions = uploadVersions;
+        displayedPosts = uniquePostsUpload;
+      } else if (filterUploadType === 'non_uploads') {
+        displayedVersions = editVersions;
+        displayedPosts = uniquePostsEdit;
+      }
+
+      const numVersionsEl = summaryCardVersions.querySelector('.e621x-stats-summary-num');
+      if (numVersionsEl) numVersionsEl.textContent = (displayedVersions || 0).toLocaleString();
+
+      const numPostsEl = summaryCardPosts.querySelector('.e621x-stats-summary-num');
+      if (numPostsEl) numPostsEl.textContent = (displayedPosts || 0).toLocaleString();
+
+      const numAddedEl = summaryCardAdded.querySelector('.e621x-stats-summary-num');
+      if (numAddedEl) numAddedEl.textContent = totalAddedCount.toLocaleString();
+
+      const numRemovedEl = summaryCardRemoved.querySelector('.e621x-stats-summary-num');
+      if (numRemovedEl) numRemovedEl.textContent = totalRemovedCount.toLocaleString();
+
+      const numPoolEl = summaryCardPool.querySelector('.e621x-stats-summary-num');
+      if (numPoolEl) numPoolEl.textContent = totalInPostsCount.toLocaleString();
 
       // Text Search
       if (filterQuery) {
@@ -378,6 +467,8 @@ E621X.define('userEdits', ['utils', 'selectors', 'net', 'dom'], (U, SEL, Net, D)
       // Action Filter
       if (filterAction === 'added_only') {
         tags = tags.filter(t => t.added > 0);
+      } else if (filterAction === 'added_or_removed') {
+        tags = tags.filter(t => t.added > 0 || t.removed > 0);
       } else if (filterAction === 'removed_only') {
         tags = tags.filter(t => t.removed > 0);
       } else if (filterAction === 'both') {
@@ -395,19 +486,18 @@ E621X.define('userEdits', ['utils', 'selectors', 'net', 'dom'], (U, SEL, Net, D)
         switch (sortKey) {
           case 'added_desc':
             return (b.added - a.added) || (b.inPosts - a.inPosts) || a.name.localeCompare(b.name);
+          case 'added_asc':
+            return (a.added - b.added) || (a.inPosts - b.inPosts) || a.name.localeCompare(b.name);
           case 'removed_desc':
             return (b.removed - a.removed) || (b.inPosts - a.inPosts) || a.name.localeCompare(b.name);
+          case 'removed_asc':
+            return (a.removed - b.removed) || (a.inPosts - b.inPosts) || a.name.localeCompare(b.name);
           case 'posts_desc':
             return (b.inPosts - a.inPosts) || (b.added - a.added) || a.name.localeCompare(b.name);
           case 'date_desc':
             return (b.lastDate - a.lastDate) || (b.added - a.added);
           case 'date_asc':
             return (a.firstDate - b.firstDate) || (a.lastDate - b.lastDate);
-          case 'net_desc': {
-            const netA = a.added - a.removed;
-            const netB = b.added - b.removed;
-            return (netB - netA) || (b.added - a.added);
-          }
           case 'name_asc':
             return a.name.localeCompare(b.name);
           default:
@@ -422,6 +512,23 @@ E621X.define('userEdits', ['utils', 'selectors', 'net', 'dom'], (U, SEL, Net, D)
 
       const startIdx = (currentPage - 1) * PAGE_SIZE;
       const pageItems = tags.slice(startIdx, startIdx + PAGE_SIZE);
+
+      // Lock pagination controls while categories are being fetched
+      btnPrev.disabled = true;
+      btnNext.disabled = true;
+
+      const visibleNames = pageItems.map(p => p.name);
+      const missing = visibleNames.filter(t => !tagCategoryCache.has(t));
+      if (missing.length > 0) {
+        isFetchingMissing = true;
+        try {
+          await fetchMissingCategories(visibleNames);
+        } finally {
+          isFetchingMissing = false;
+        }
+        // Discard stale renders triggered by fast filter or page changes
+        if (currentRenderId !== renderId) return;
+      }
 
       tableBody.replaceChildren();
 
@@ -449,8 +556,9 @@ E621X.define('userEdits', ['utils', 'selectors', 'net', 'dom'], (U, SEL, Net, D)
             text: catName
           });
 
+          const versionParam = filterUploadType === 'uploads_only' ? '&search[version]=1' : '';
           const addedLink = item.added > 0 ? D.el('a', {
-            href: `/post_versions?search[updater_id]=${userId}&search[tags_added]=${encodeURIComponent(item.name)}`,
+            href: `/post_versions?search[updater_id]=${userId}&search[tags_added]=${encodeURIComponent(item.name)}${versionParam}`,
             target: '_blank',
             rel: 'noopener',
             class: 'e621x-stats-count-link e621x-color-add',
@@ -468,7 +576,7 @@ E621X.define('userEdits', ['utils', 'selectors', 'net', 'dom'], (U, SEL, Net, D)
           }) : D.el('span', { class: 'e621x-stats-count-zero', text: '0' });
 
           const inPostsLink = item.inPosts > 0 ? D.el('a', {
-            href: `/post_versions?search[updater_id]=${userId}&search[tags]=${encodeURIComponent(item.name)}`,
+            href: `/post_versions?search[updater_id]=${userId}&search[tags]=${encodeURIComponent(item.name)}${versionParam}`,
             target: '_blank',
             rel: 'noopener',
             class: 'e621x-stats-count-link',
@@ -489,28 +597,7 @@ E621X.define('userEdits', ['utils', 'selectors', 'net', 'dom'], (U, SEL, Net, D)
         });
       }
 
-      // Fetch missing categories for the visible page in parallel
-      const visibleNames = pageItems.map(p => p.name);
-      fetchMissingCategories(visibleNames).then(() => {
-        const rows = tableBody.querySelectorAll('tr.e621x-stats-row');
-        rows.forEach((r, idx) => {
-          const item = pageItems[idx];
-          if (!item) return;
-          const cat = tagCategoryCache.get(item.name) ?? 0;
-          const catClass = `e621x-tag-type-${cat}`;
-          const catName = CATEGORY_NAMES[cat] || 'General';
-
-          const link = r.querySelector('.e621x-stats-tag-link');
-          if (link) link.className = `e621x-stats-tag-link ${catClass}`;
-          const badge = r.querySelector('.e621x-cat-badge');
-          if (badge) {
-            badge.className = `e621x-cat-badge ${catClass}`;
-            badge.textContent = catName;
-          }
-        });
-      });
-
-      // Pagination
+      // Pagination status and boundaries
       pageInfo.textContent = `Showing ${Math.min(totalMatching, startIdx + 1)}–${Math.min(totalMatching, startIdx + PAGE_SIZE)} of ${totalMatching} tags`;
       btnPrev.disabled = currentPage <= 1;
       btnNext.disabled = currentPage >= totalPages;
@@ -535,6 +622,12 @@ E621X.define('userEdits', ['utils', 'selectors', 'net', 'dom'], (U, SEL, Net, D)
       renderActiveTable();
     });
 
+    selectUploadType.addEventListener('change', () => {
+      filterUploadType = selectUploadType.value;
+      currentPage = 1;
+      renderActiveTable();
+    });
+
     selectCat.addEventListener('change', () => {
       filterCategory = selectCat.value;
       currentPage = 1;
@@ -542,6 +635,7 @@ E621X.define('userEdits', ['utils', 'selectors', 'net', 'dom'], (U, SEL, Net, D)
     });
 
     btnPrev.addEventListener('click', () => {
+      if (isFetchingMissing) return;
       if (currentPage > 1) {
         currentPage--;
         renderActiveTable();
@@ -550,6 +644,7 @@ E621X.define('userEdits', ['utils', 'selectors', 'net', 'dom'], (U, SEL, Net, D)
     });
 
     btnNext.addEventListener('click', () => {
+      if (isFetchingMissing) return;
       currentPage++;
       renderActiveTable();
       tableWrap.scrollTop = 0;
@@ -558,23 +653,39 @@ E621X.define('userEdits', ['utils', 'selectors', 'net', 'dom'], (U, SEL, Net, D)
     btnExportCsv.addEventListener('click', () => {
       if (!activeDataset) return;
       const rows = [
-        ['Tag', 'Category', 'Added Count', 'Removed Count', 'Net Change', 'Posts Count', 'Last Activity Date']
+        ['Tag', 'Category', 'Added Count', 'Removed Count', 'Posts Count', 'Last Activity Date']
       ];
-      Array.from(activeDataset.statsMap.values()).forEach(t => {
-        const cat = CATEGORY_NAMES[tagCategoryCache.get(t.name) ?? 0] || 'General';
+      Array.from(activeDataset.statsMap.values()).forEach(s => {
+        let added = s.added;
+        let removed = s.removed;
+        let inPosts = s.inPosts;
+        let lastDate = s.lastDate;
+
+        if (filterUploadType === 'uploads_only') {
+          added = s.uploadAdded;
+          removed = s.uploadRemoved;
+          inPosts = s.uploadInPosts;
+          lastDate = s.uploadLastDate;
+        } else if (filterUploadType === 'non_uploads') {
+          added = s.editAdded;
+          removed = s.editRemoved;
+          inPosts = s.editInPosts;
+          lastDate = s.editLastDate;
+        }
+
+        const cat = CATEGORY_NAMES[tagCategoryCache.get(s.name) ?? 0] || 'General';
         rows.push([
-          `"${t.name.replace(/"/g, '""')}"`,
+          `"${s.name.replace(/"/g, '""')}"`,
           `"${cat}"`,
-          t.added,
-          t.removed,
-          t.added - t.removed,
-          t.inPosts,
-          `"${formatShortDate(t.lastDate)}"`
+          added,
+          removed,
+          inPosts,
+          `"${formatShortDate(lastDate)}"`
         ]);
       });
       const csvContent = rows.map(r => r.join(',')).join('\n');
       const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-      U.downloadBlob(blob, `tag_stats_user_${userId}_${Date.now()}.csv`);
+      U.downloadBlob(blob, `tag_stats_user_${userId}_${filterUploadType}_${Date.now()}.csv`);
     });
 
     btnRefresh.addEventListener('click', () => {
@@ -604,8 +715,12 @@ E621X.define('userEdits', ['utils', 'selectors', 'net', 'dom'], (U, SEL, Net, D)
       paginationBar.style.display = 'none';
 
       const statsMap = new Map();
-      const uniquePosts = new Set();
+      const uniquePostsAll = new Set();
+      const uniquePostsUpload = new Set();
+      const uniquePostsEdit = new Set();
       let totalVersions = 0;
+      let uploadVersions = 0;
+      let editVersions = 0;
       let lowestId = null;
       let pageNum = 1;
       const PAGE_LIMIT = 320;
@@ -615,12 +730,27 @@ E621X.define('userEdits', ['utils', 'selectors', 'net', 'dom'], (U, SEL, Net, D)
         if (!stat) {
           stat = {
             name,
+            // Combined totals
             added: 0,
             removed: 0,
             inPosts: 0,
             postIds: new Set(),
             firstDate: 0,
-            lastDate: 0
+            lastDate: 0,
+            // Uploads only (version === 1)
+            uploadAdded: 0,
+            uploadRemoved: 0,
+            uploadInPosts: 0,
+            uploadPostIds: new Set(),
+            uploadFirstDate: 0,
+            uploadLastDate: 0,
+            // Non-uploads only (version > 1)
+            editAdded: 0,
+            editRemoved: 0,
+            editInPosts: 0,
+            editPostIds: new Set(),
+            editFirstDate: 0,
+            editLastDate: 0
           };
           statsMap.set(name, stat);
         }
@@ -657,7 +787,16 @@ E621X.define('userEdits', ['utils', 'selectors', 'net', 'dom'], (U, SEL, Net, D)
           for (const v of list) {
             totalVersions++;
             const postId = Number(v.post_id || v.id);
-            if (postId) uniquePosts.add(postId);
+            const isUpload = Number(v.version) === 1;
+
+            if (isUpload) {
+              uploadVersions++;
+              if (postId) uniquePostsUpload.add(postId);
+            } else {
+              editVersions++;
+              if (postId) uniquePostsEdit.add(postId);
+            }
+            if (postId) uniquePostsAll.add(postId);
 
             const vId = Number(v.id);
             if (vId && (lowestId === null || vId < lowestId)) {
@@ -676,6 +815,16 @@ E621X.define('userEdits', ['utils', 'selectors', 'net', 'dom'], (U, SEL, Net, D)
               s.added++;
               if (time > s.lastDate) s.lastDate = time;
               if (!s.firstDate || time < s.firstDate) s.firstDate = time;
+
+              if (isUpload) {
+                s.uploadAdded++;
+                if (time > s.uploadLastDate) s.uploadLastDate = time;
+                if (!s.uploadFirstDate || time < s.uploadFirstDate) s.uploadFirstDate = time;
+              } else {
+                s.editAdded++;
+                if (time > s.editLastDate) s.editLastDate = time;
+                if (!s.editFirstDate || time < s.editFirstDate) s.editFirstDate = time;
+              }
             });
 
             removed.forEach(tag => {
@@ -683,13 +832,35 @@ E621X.define('userEdits', ['utils', 'selectors', 'net', 'dom'], (U, SEL, Net, D)
               s.removed++;
               if (time > s.lastDate) s.lastDate = time;
               if (!s.firstDate || time < s.firstDate) s.firstDate = time;
+
+              if (isUpload) {
+                s.uploadRemoved++;
+                if (time > s.uploadLastDate) s.uploadLastDate = time;
+                if (!s.uploadFirstDate || time < s.uploadFirstDate) s.uploadFirstDate = time;
+              } else {
+                s.editRemoved++;
+                if (time > s.editLastDate) s.editLastDate = time;
+                if (!s.editFirstDate || time < s.editFirstDate) s.editFirstDate = time;
+              }
             });
 
             inPost.forEach(tag => {
               const s = getStat(tag);
-              if (postId) s.postIds.add(postId);
+              if (postId) {
+                s.postIds.add(postId);
+                if (isUpload) s.uploadPostIds.add(postId);
+                else s.editPostIds.add(postId);
+              }
               if (time > s.lastDate) s.lastDate = time;
               if (!s.firstDate || time < s.firstDate) s.firstDate = time;
+
+              if (isUpload) {
+                if (time > s.uploadLastDate) s.uploadLastDate = time;
+                if (!s.uploadFirstDate || time < s.uploadFirstDate) s.uploadFirstDate = time;
+              } else {
+                if (time > s.editLastDate) s.editLastDate = time;
+                if (!s.editFirstDate || time < s.editFirstDate) s.editFirstDate = time;
+              }
             });
           }
 
@@ -707,15 +878,22 @@ E621X.define('userEdits', ['utils', 'selectors', 'net', 'dom'], (U, SEL, Net, D)
         }
       }
 
-      // Compute inPosts count for each tag
+      // Compute inPosts counts
       for (const stat of statsMap.values()) {
         stat.inPosts = stat.postIds.size;
+        stat.uploadInPosts = stat.uploadPostIds.size;
+        stat.editInPosts = stat.editPostIds.size;
       }
 
       activeDataset = {
         statsMap,
         totalVersions,
-        uniquePosts: uniquePosts.size
+        uploadVersions,
+        editVersions,
+        uniquePosts: uniquePostsAll.size,
+        uniquePostsAll: uniquePostsAll.size,
+        uniquePostsUpload: uniquePostsUpload.size,
+        uniquePostsEdit: uniquePostsEdit.size
       };
 
       userStatsCache.set(userId, activeDataset);
@@ -724,25 +902,8 @@ E621X.define('userEdits', ['utils', 'selectors', 'net', 'dom'], (U, SEL, Net, D)
 
     function finishAndDisplay() {
       if (!activeDataset) return;
-      const { statsMap, totalVersions, uniquePosts } = activeDataset;
 
-      let totalAddedTags = 0;
-      let totalRemovedTags = 0;
-      let totalInPostsTags = 0;
-
-      for (const s of statsMap.values()) {
-        if (s.added > 0) totalAddedTags++;
-        if (s.removed > 0) totalRemovedTags++;
-        if (s.inPosts > 0) totalInPostsTags++;
-      }
-
-      summaryCardVersions.querySelector('.e621x-stats-summary-num').textContent = totalVersions.toLocaleString();
-      summaryCardPosts.querySelector('.e621x-stats-summary-num').textContent = uniquePosts.toLocaleString();
-      summaryCardAdded.querySelector('.e621x-stats-summary-num').textContent = totalAddedTags.toLocaleString();
-      summaryCardRemoved.querySelector('.e621x-stats-summary-num').textContent = totalRemovedTags.toLocaleString();
-      summaryCardPool.querySelector('.e621x-stats-summary-num').textContent = totalInPostsTags.toLocaleString();
-
-      // Completely remove the progress box from view without lingering "calculating" phrases
+      // Hide progress box and reveal dashboard
       progressBox.classList.add('hidden');
       progressBox.style.display = 'none';
 

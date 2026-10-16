@@ -25,7 +25,7 @@ E621X.define('tagScriptPreview', ['utils', 'selectors', 'net', 'dom', 'tagScript
 
   function isTagScriptMode() {
     const select = document.querySelector(SEL.modeSelect);
-    return select?.value === 'tag-script';
+    return select?.value === 'tag-script-ext';
   }
 
   function collectPageTags() {

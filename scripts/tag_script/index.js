@@ -17,7 +17,7 @@ E621X.define('tagScript',
     queueLink: 'e621x-tag-script-queue-link'
   };
 
-  const MODE_VALUE = 'tag-script';
+  const MODE_VALUE = 'tag-script-ext';
 
   let usesNative = false;
   let isProgrammaticInput = false;
@@ -304,11 +304,12 @@ E621X.define('tagScript',
     usesNative = Boolean(document.querySelector(SEL.nativeTagScriptField));
 
     if (!Array.from(select.options).some(o => o.value === MODE_VALUE)) {
-      select.append(new Option('Tag script', MODE_VALUE));
+      select.append(new Option('Tag Script (extension)', MODE_VALUE));
     }
     if (document.getElementById(IDS.ui)) return;
 
-    const ui = buildUi(!usesNative);
+    // Always create our dedicated field to keep extension mode isolated from native tag scripts
+    const ui = buildUi(true);
     modeBox.appendChild(ui);
 
     const ownField = document.getElementById(IDS.ownField);
