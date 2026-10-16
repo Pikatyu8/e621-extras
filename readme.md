@@ -46,6 +46,8 @@ Pressing Escape clears all active selections in Sticky Keys mode and closes open
 
 ### Installation and Development
 
+Download the [latest version of extension](https://github.com/Pikatyu8/e621-extras/releases/tag/v1.5.0), extract to folder.
+
 To load the extension in Chromium-based browsers, open `chrome://extensions`, enable Developer mode, click "Load unpacked", and select the project root directory.
 
 Build and maintenance scripts:
@@ -106,6 +108,8 @@ Build and maintenance scripts:
 Клавиша Escape снимает выбор со всех слотов в режиме Sticky Keys и закрывает окно дерева постов.
 
 ### Установка и разработка
+
+Скачайте [последнюю версию расширения](https://github.com/Pikatyu8/e621-extras/releases/tag/v1.5.0), распакуйте в папку.
 
 Для локальной установки в браузерах на базе Chromium необходимо перейти на страницу расширений (`chrome://extensions`), включить режим разработчика и выбрать опцию «Загрузить распакованное расширение», указав корневую папку проекта.
 
