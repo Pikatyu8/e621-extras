@@ -31,6 +31,9 @@ Renders a floating tooltip near the cursor showing all tag changes staged by the
 #### Specific Post Edits Filter
 Embeds a query panel on user profile pages for granular revision tracking. Allows filtering an editor's history by tags present in the post, tags added, or tags removed, with support for standard search operators. Includes an automated counter that tallies matching revisions via the API in real time.
 
+#### Tag Update Statistics
+Adds an interactive analytics dashboard to user profiles for inspecting an editor's complete tag contribution history. Fetches and aggregates all post revisions via cursor-based pagination, allowing users to sort tags by most frequently added, most removed, prevalence across updated posts, or recency, complete with native category color coding. Includes live progress tracking, instant tag search, category filters, direct links to filtered revision queries, and CSV export.
+
 #### Additional Interface Options
 The popup menu includes toggles to permanently suppress native thumbnail `title` tooltips, display the uploader's name with their rank styling in the post information sidebar, and adjust layout compatibility settings.
 
@@ -49,6 +52,8 @@ Pressing Escape clears all active selections in Sticky Keys mode and closes open
 Download the [latest version of extension](https://github.com/Pikatyu8/e621-extras/releases/tag/v1.5.0), extract to folder.
 
 To load the extension in Chromium-based browsers, open `chrome://extensions`, enable Developer mode, click "Load unpacked", and select the project root directory.
+
+
 
 Build and maintenance scripts:
 
@@ -93,6 +98,9 @@ Build and maintenance scripts:
 
 #### Фильтр правок в профиле пользователя
 Встраивает форму на страницы пользователей для точечной выборки истории изменений. Позволяет фильтровать записи по наличию конкретных тегов в посте, а также по добавленным или удаленным тегам. Содержит функцию подсчета подходящих правок через API без необходимости загружать страницы каталога вручную.
+
+#### Статистика обновлений тегов (Tag Update Statistics)
+Добавляет интерактивную панель аналитики на страницы профилей пользователей для детального изучения всей истории правок тегов. Загружает и агрегирует все версии постов редактора через API, позволяя сортировать теги по количеству добавлений, снятий, частоте встречаемости в обновлённых постах или по дате, с сохранением фирменной цветовой подсветки категорий e621. Включает отслеживание прогресса загрузки в реальном времени, мгновенную фильтрацию по имени, прямые ссылки на выборки версий и экспорт данных в CSV.
 
 #### Дополнительные интерфейсные опции
 Всплывающее окно расширения содержит переключатели для полного скрытия стандартных браузерных подсказок `title` у миниатюр, отображения имени автора публикации с классом его ранга в блоке информации о посте, а также настройки базовых параметров отображения и совместимости со сторонними скриптами разметки.
