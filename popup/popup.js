@@ -227,7 +227,21 @@ document.addEventListener('DOMContentLoaded', async () => {
     setButtonsDisabled(true);
 
     try {
-      const response = await chrome.tabs.sendMessage(tab.id, { action });
+      let response = null;
+
+      try {
+        response = await chrome.tabs.sendMessage(tab.id, { action });
+      } catch (err) {}
+
+      if (!response && window.parent && window.parent !== window) {
+        response = await new Promise((resolve) => {
+          const channel = new MessageChannel();
+          channel.port1.onmessage = (e) => resolve(e.data);
+          window.parent.postMessage({ fromE621Popup: true, action }, '*', [channel.port2]);
+          setTimeout(() => resolve(null), 5000);
+        });
+      }
+
       setStatus(response?.status || (response?.ok === false ? 'Failed' : 'Done'));
     } catch (err) {
       const noReceiver = /Receiving end does not exist|message (channel|port) closed/i.test(err.message);

@@ -25,7 +25,7 @@
   };
 
   chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    if (sender.id !== chrome.runtime.id) return false;
+    if (chrome.runtime?.id && sender?.id && sender.id !== chrome.runtime.id) return false;
 
     const handler = handlers[request?.action];
     if (!handler) {
@@ -41,6 +41,26 @@
       })
       .then(result => sendResponse({ ok: result.ok, status: result.message }));
     return true;
+  });
+
+  window.addEventListener('message', async (event) => {
+    if (!event.data || !event.data.fromE621Popup) return;
+    const { action } = event.data;
+    const handler = handlers[action];
+    const port = event.ports && event.ports[0];
+
+    if (!handler) {
+      if (port) port.postMessage({ ok: false, status: 'Unknown action' });
+      return;
+    }
+
+    try {
+      const result = await Promise.resolve(handler(event.data));
+      if (port) port.postMessage({ ok: result.ok, status: result.message });
+    } catch (err) {
+      U.logWarn(`postMessage action ${action}`, err);
+      if (port) port.postMessage({ ok: false, status: err.message || String(err) });
+    }
   });
 
   (async function start() {
