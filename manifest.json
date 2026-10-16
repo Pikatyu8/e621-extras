@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "e621 extras",
-  "version": "1.4.2",
+  "version": "1.5.0",
   "description": "Downvotes-to-blacklist manager, post tree viewer, hover zoom and tag scripts for regular members of e621 and e926.",
   "permissions": ["storage", "alarms", "unlimitedStorage"],
   "host_permissions": [
