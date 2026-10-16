@@ -153,9 +153,11 @@ E621X.define('tagScriptRunner',
     if (!changes.trim()) return U.showToast(`Post #${postId}: No changes needed`);
 
     const queueEnabled = await Queue.isEnabled();
+    const queueCount = await Queue.getQueueCount();
     const isTimeout = await Queue.isTimeoutActive();
 
-    if (queueEnabled && isTimeout) {
+    // If queue is non-empty, do not attempt immediate edit or slot check: append directly to queue
+    if (queueEnabled && (queueCount > 0 || isTimeout)) {
       await Queue.enqueueFromThumb(thumb, {
         changes,
         reason: getReason()
@@ -164,7 +166,9 @@ E621X.define('tagScriptRunner',
       thumb.classList.add('e621x-thumb-queued');
       thumb.dataset.tags = applyLocalTagDiff(thumb.dataset.tags, changes);
       const remMs = await Queue.getRemainingTimeoutMs();
-      U.showToast(`Hourly limit active. Post #${postId} queued (${Queue.formatDuration(remMs)} left).`);
+      U.showToast(queueCount > 0
+        ? `Added to queue (#${postId}). Position: ${queueCount + 1}`
+        : `Hourly limit active. Post #${postId} queued (${Queue.formatDuration(remMs)} left).`);
       await syncQueuedOutlines();
       return;
     }
@@ -331,9 +335,11 @@ E621X.define('tagScriptRunner',
       if (!plan.items.length) return U.showToast('No changes needed');
 
       const queueEnabled = await Queue.isEnabled();
+      const queueCount = await Queue.getQueueCount();
       const isTimeout = await Queue.isTimeoutActive();
 
-      if (queueEnabled && isTimeout) {
+      // If queue already has items or timeout is active, enqueue all without checking slots
+      if (queueEnabled && (queueCount > 0 || isTimeout)) {
         for (const item of plan.items) {
           await Queue.enqueueFromThumb(item.thumb, {
             changes: item.changes,
@@ -342,7 +348,7 @@ E621X.define('tagScriptRunner',
           item.thumb.classList.add('e621x-thumb-queued');
           item.thumb.dataset.tags = applyLocalTagDiff(item.thumb.dataset.tags, item.changes);
         }
-        U.showToast(`Queued ${plan.items.length} posts (hourly timeout active)`);
+        U.showToast(`Queued ${plan.items.length} posts`);
         await syncQueuedOutlines();
         return;
       }

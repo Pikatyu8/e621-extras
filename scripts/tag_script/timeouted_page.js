@@ -163,10 +163,10 @@ E621X.define('timeoutedPage',
         return;
       }
 
-      // Check which posts lack local cache (base64 image or stats)
+      // Check which posts lack metadata
       const missingIds = ids.filter(id => {
         const it = queue[id];
-        return !it || !it.thumbnailDataUrl || it.score === undefined;
+        return !it || it.score === undefined;
       });
 
       const fetchedMap = new Map();
@@ -177,22 +177,10 @@ E621X.define('timeoutedPage',
           for (const p of posts) {
             fetchedMap.set(p.id, p);
             const previewUrl = p.preview?.url || '';
-            let b64 = null;
             if (previewUrl) {
-              b64 = await Queue.fetchImageAsBase64(previewUrl);
+              const b64 = await Queue.fetchImageAsBase64(previewUrl);
+              if (b64) await Queue.saveImage(p.id, b64);
             }
-            await Queue.updatePostCache(p.id, {
-              thumbnailDataUrl: b64 || previewUrl,
-              score: p.score?.total ?? 0,
-              favCount: p.fav_count ?? 0,
-              commentCount: p.comment_count ?? 0,
-              rating: p.rating || 's',
-              fileExt: p.file?.ext || 'jpg',
-              tags: U.getPostTagString(p),
-              flags: p.flags || {},
-              hasParent: Boolean(p.relationships?.parent_id),
-              hasChildren: Boolean(p.relationships?.has_children)
-            });
           }
         } catch (err) {
           U.logWarn('timeouted page fetch missing', err);
@@ -204,6 +192,7 @@ E621X.define('timeoutedPage',
       for (const id of ids) {
         const item = queue[id] || {};
         const fetched = fetchedMap.get(id);
+        const storedImage = await Queue.getImage(id);
 
         const post = fetched || {
           id,
@@ -216,7 +205,7 @@ E621X.define('timeoutedPage',
           flags: item.flags || '',
           has_parent: item.hasParent ?? false,
           has_children: item.hasChildren ?? false,
-          preview: { url: item.thumbnailDataUrl || item.previewUrl || '' }
+          preview: { url: storedImage || item.previewUrl || '' }
         };
 
         grid.appendChild(createQueueCard(post, item, handleRemove));

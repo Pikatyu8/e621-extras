@@ -44,6 +44,13 @@ globalThis.E621_CONSTANTS = Object.freeze({
     SHOW_POST_TREE: 'showPostTree',
     FETCH_IMAGE: 'fetchImageAsDataUrl',
     PROCESS_TAG_QUEUE: 'processTagQueue',
-    CLEAR_TAG_QUEUE: 'clearTagQueue'
+    CLEAR_TAG_QUEUE: 'clearTagQueue',
+    ENQUEUE_TAG_SCRIPT: 'enqueueTagScript',
+    DEQUEUE_TAG_SCRIPT: 'dequeueTagScript',
+    SAVE_IMAGE: 'saveImage',
+    GET_IMAGE: 'getImage',
+    DELETE_IMAGE: 'deleteImage',
+    CLEAR_IMAGES: 'clearImages',
+    SET_CSRF_TOKEN: 'setCsrfToken'
   })
 });

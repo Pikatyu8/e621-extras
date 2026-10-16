@@ -1,13 +1,10 @@
+/* Tag script queue client: delegates mutations and processing to background.js
+ * and uses IndexedDB for image storage to avoid storage quota issues. */
 E621X.define('tagScriptQueue', ['utils', 'net'], (U, Net) => {
   'use strict';
   const { STORAGE_KEYS: KEYS, ACTIONS } = E621_CONSTANTS;
   const HOURLY_EDIT_LIMIT = 150;
   const ONE_HOUR_MS = 60 * 60 * 1000;
-  const CLOCK_BUFFER_MS = 3000;
-  const LOCK_KEY = 'e621_queue_processing_lock';
-  const LOCK_TIMEOUT_MS = 25000;
-
-  let autoProcessTimer = null;
 
   async function isEnabled() {
     return Boolean(await U.storageGet(KEYS.QUEUE_TAG_SCRIPTS_ENABLED, false));
@@ -19,25 +16,6 @@ E621X.define('tagScriptQueue', ['utils', 'net'], (U, Net) => {
 
   async function getTimeoutUntil() {
     return Number(await U.storageGet(KEYS.QUEUE_TIMEOUT_UNTIL, 0)) || 0;
-  }
-
-  async function setTimeoutUntil(timestamp) {
-    await U.storageSet(KEYS.QUEUE_TIMEOUT_UNTIL, timestamp);
-    const delay = timestamp - Date.now();
-    if (delay > 0) {
-      scheduleAutoProcess(delay);
-    } else if (autoProcessTimer) {
-      clearTimeout(autoProcessTimer);
-      autoProcessTimer = null;
-    }
-  }
-
-  async function getSlotSchedule() {
-    return (await U.storageGet(KEYS.QUEUE_SLOT_TIMESTAMPS, [])) || [];
-  }
-
-  async function setSlotSchedule(slots) {
-    await U.storageSet(KEYS.QUEUE_SLOT_TIMESTAMPS, slots);
   }
 
   async function isTimeoutActive() {
@@ -55,22 +33,49 @@ E621X.define('tagScriptQueue', ['utils', 'net'], (U, Net) => {
     return (await U.storageGet(KEYS.TAG_SCRIPT_QUEUE, {})) || {};
   }
 
-  /* Merge tag diff tokens when queuing edits to an already queued post */
-  function mergeDiffs(oldDiff = '', newDiff = '') {
-    const tokenMap = new Map();
-    const parse = (str) => String(str || '').split(/\s+/).filter(Boolean);
+  async function getQueueCount() {
+    const q = await getQueue();
+    return Object.keys(q).length;
+  }
 
-    parse(oldDiff).forEach(token => {
-      const key = token.startsWith('-') ? token.slice(1).toLowerCase() : token.toLowerCase();
-      tokenMap.set(key, token);
-    });
+  async function getSlotSchedule() {
+    return (await U.storageGet(KEYS.QUEUE_SLOT_TIMESTAMPS, [])) || [];
+  }
 
-    parse(newDiff).forEach(token => {
-      const key = token.startsWith('-') ? token.slice(1).toLowerCase() : token.toLowerCase();
-      tokenMap.set(key, token);
-    });
+  // ---------- IndexedDB image operations via background ----------
+  async function saveImage(postId, dataUrl) {
+    if (!dataUrl) return;
+    try {
+      await chrome.runtime.sendMessage({ action: ACTIONS.SAVE_IMAGE, postId, dataUrl });
+    } catch (err) {
+      U.logWarn('saveImage to IndexedDB', err);
+    }
+  }
 
-    return Array.from(tokenMap.values()).join(' ');
+  async function getImage(postId) {
+    try {
+      const res = await chrome.runtime.sendMessage({ action: ACTIONS.GET_IMAGE, postId });
+      return res?.dataUrl || null;
+    } catch (err) {
+      U.logWarn('getImage from IndexedDB', err);
+      return null;
+    }
+  }
+
+  async function deleteImage(postId) {
+    try {
+      await chrome.runtime.sendMessage({ action: ACTIONS.DELETE_IMAGE, postId });
+    } catch (err) {
+      U.logWarn('deleteImage from IndexedDB', err);
+    }
+  }
+
+  async function clearImages() {
+    try {
+      await chrome.runtime.sendMessage({ action: ACTIONS.CLEAR_IMAGES });
+    } catch (err) {
+      U.logWarn('clearImages from IndexedDB', err);
+    }
   }
 
   /* Fetches image as Base64 via service worker (avoids CORS) */
@@ -79,9 +84,7 @@ E621X.define('tagScriptQueue', ['utils', 'net'], (U, Net) => {
     try {
       const res = await chrome.runtime.sendMessage({ action: ACTIONS.FETCH_IMAGE, url });
       if (res?.ok && res.dataUrl) return res.dataUrl;
-    } catch (_) {
-      // Swallowed safely
-    }
+    } catch (_) {}
     return null;
   }
 
@@ -110,7 +113,6 @@ E621X.define('tagScriptQueue', ['utils', 'net'], (U, Net) => {
     return null;
   }
 
-  /* Extracts full post details and statistics directly from thumbnail element */
   function extractThumbData(thumb) {
     if (!thumb) return {};
     const d = thumb.dataset || {};
@@ -133,32 +135,23 @@ E621X.define('tagScriptQueue', ['utils', 'net'], (U, Net) => {
 
   async function enqueue(postId, editData) {
     const id = Number(postId);
-    const queue = await getQueue();
-    const existing = queue[id];
+    const thumbnailDataUrl = editData.thumbnailDataUrl;
+    if (thumbnailDataUrl) {
+      await saveImage(id, thumbnailDataUrl);
+    }
 
-    queue[id] = {
-      id,
-      changes: existing ? mergeDiffs(existing.changes, editData.changes) : editData.changes,
-      reason: editData.reason || existing?.reason || '',
-      queuedAt: existing?.queuedAt || Date.now(),
-      previewUrl: editData.previewUrl || existing?.previewUrl || '',
-      thumbnailDataUrl: editData.thumbnailDataUrl || existing?.thumbnailDataUrl || '',
-      score: editData.score !== undefined ? editData.score : (existing?.score ?? 0),
-      favCount: editData.favCount !== undefined ? editData.favCount : (existing?.favCount ?? 0),
-      commentCount: editData.commentCount !== undefined ? editData.commentCount : (existing?.commentCount ?? 0),
-      rating: editData.rating || existing?.rating || 's',
-      fileExt: editData.fileExt || existing?.fileExt || 'jpg',
-      tags: editData.tags !== undefined ? editData.tags : (existing?.tags || ''),
-      flags: editData.flags !== undefined ? editData.flags : (existing?.flags || ''),
-      hasParent: editData.hasParent !== undefined ? editData.hasParent : (existing?.hasParent ?? false),
-      hasChildren: editData.hasChildren !== undefined ? editData.hasChildren : (existing?.hasChildren ?? false)
-    };
+    const sanitized = { ...editData };
+    delete sanitized.thumbnailDataUrl;
 
-    await U.storageSet(KEYS.TAG_SCRIPT_QUEUE, queue);
-    return queue;
+    const res = await chrome.runtime.sendMessage({
+      action: ACTIONS.ENQUEUE_TAG_SCRIPT,
+      postId: id,
+      editData: sanitized
+    });
+
+    return res?.queue || (await getQueue());
   }
 
-  /* Queues a post extracting its statistics and Base64 thumbnail directly from DOM element */
   async function enqueueFromThumb(thumb, editData) {
     const postId = Number(thumb.dataset.id);
     const meta = extractThumbData(thumb);
@@ -171,38 +164,35 @@ E621X.define('tagScriptQueue', ['utils', 'net'], (U, Net) => {
     });
   }
 
-  async function updatePostCache(postId, cacheData) {
-    const id = Number(postId);
-    const queue = await getQueue();
-    if (!queue[id]) return;
-
-    queue[id] = { ...queue[id], ...cacheData };
-    await U.storageSet(KEYS.TAG_SCRIPT_QUEUE, queue);
-  }
-
   async function dequeue(postId) {
     const id = Number(postId);
-    const queue = await getQueue();
-    if (queue[id]) {
-      delete queue[id];
-      await U.storageSet(KEYS.TAG_SCRIPT_QUEUE, queue);
-      if (Object.keys(queue).length === 0) {
-        await setSlotSchedule([]);
-        await setTimeoutUntil(0);
-      }
-    }
-    return queue;
+    await deleteImage(id);
+    const res = await chrome.runtime.sendMessage({
+      action: ACTIONS.DEQUEUE_TAG_SCRIPT,
+      postId: id
+    });
+    return res?.queue || (await getQueue());
   }
 
   async function clearQueue() {
-    await U.storageSet(KEYS.TAG_SCRIPT_QUEUE, {});
-    await setSlotSchedule([]);
-    await setTimeoutUntil(0);
+    await clearImages();
+    await chrome.runtime.sendMessage({ action: ACTIONS.CLEAR_TAG_QUEUE });
   }
 
-  /* Checks GET /posts/{id}.json to verify if a post or any applied tags are locked */
+  async function processQueue() {
+    try {
+      const res = await chrome.runtime.sendMessage({ action: ACTIONS.PROCESS_TAG_QUEUE });
+      if (res?.ok) {
+        return res;
+      }
+      return { total: 0, updated: 0, errors: 1, error: res?.error };
+    } catch (err) {
+      U.logWarn('processQueue request failed', err);
+      return { total: 0, updated: 0, errors: 1, error: err.message };
+    }
+  }
+
   async function checkPostLockStatus(postId, changes = '') {
-    // Fast path: inspect thumbnail in DOM first to avoid network request
     const thumb = document.querySelector(`article.thumbnail[data-id="${postId}"]`);
     if (thumb) {
       const flags = (thumb.dataset.flags || '').split(/\s+/);
@@ -241,9 +231,7 @@ E621X.define('tagScriptQueue', ['utils', 'net'], (U, Net) => {
         const lockedSet = new Set(lockedTags.map(t => String(t).trim().toLowerCase()));
         const tokens = String(changes).split(/\s+/).filter(Boolean);
         for (const token of tokens) {
-          if (token.includes(':') && !token.startsWith('-') && !token.startsWith('+')) {
-            continue;
-          }
+          if (token.includes(':') && !token.startsWith('-') && !token.startsWith('+')) continue;
           const cleanTag = token.replace(/^[-+]/, '').toLowerCase();
           if (lockedSet.has(cleanTag)) {
             return { isLocked: true, reason: `Tag "${cleanTag}" is locked on post #${postId}` };
@@ -262,18 +250,15 @@ E621X.define('tagScriptQueue', ['utils', 'net'], (U, Net) => {
     }
   }
 
-  /* Checks if status and server response body explicitly indicate edit rate limit */
   function isHourlyLimitResponse(status, errorText) {
     if (status === 429) return true;
     if (status === 403) {
       const msg = String(errorText || '').toLowerCase();
-      // Only match specific rate limiting/throttling phrases to prevent permanent bans from triggering infinite loops
       return msg.includes('hourly limit') || msg.includes('limit exceeded') || msg.includes('throttl');
     }
     return false;
   }
 
-  /* Parse error responses matching OpenAPI schemas */
   async function parseErrorBody(res) {
     try {
       const data = await res.json();
@@ -283,58 +268,8 @@ E621X.define('tagScriptQueue', ['utils', 'net'], (U, Net) => {
         if (Array.isArray(data.errors)) return data.errors.join('; ');
       }
       if (data.message) return data.message;
-    } catch (_) {
-      // Ignored: fallback to status code
-    }
+    } catch (_) {}
     return `HTTP ${res.status}`;
-  }
-
-  /* Verifies against /post_versions.json whether the 150 edits/hour rolling limit is truly reached */
-  async function verifyHourlyLimitExceeded() {
-    try {
-      const user = U.getCurrentUser();
-      if (!user?.userId) return { isLimit: false, nextAvailableMs: 0, slots: [] };
-
-      const data = await Net.fetchJson(`/post_versions.json?search[updater_id]=${user.userId}&limit=${HOURLY_EDIT_LIMIT}`);
-      const list = Array.isArray(data) ? data : (data?.post_versions || []);
-      const now = Date.now();
-
-      const recentTimestamps = [];
-      for (const item of list) {
-        const dateStr = item?.updated_at || item?.created_at;
-        if (!dateStr) continue;
-        const t = new Date(dateStr).getTime();
-        if (!Number.isNaN(t) && (now - t) < ONE_HOUR_MS) {
-          recentTimestamps.push(t);
-        }
-      }
-
-      if (recentTimestamps.length < HOURLY_EDIT_LIMIT) {
-        return { isLimit: false, nextAvailableMs: 0, slots: [] };
-      }
-
-      recentTimestamps.sort((a, b) => a - b);
-
-      const slots = [];
-      for (const t of recentTimestamps) {
-        slots.push(t + ONE_HOUR_MS + CLOCK_BUFFER_MS);
-      }
-
-      const queue = await getQueue();
-      const queueLen = Math.max(Object.keys(queue).length, slots.length);
-      while (slots.length < queueLen) {
-        const baseIdx = Math.max(0, slots.length - HOURLY_EDIT_LIMIT);
-        slots.push((slots[baseIdx] || now) + ONE_HOUR_MS);
-      }
-
-      const nextAvailableMs = Math.max(1000, slots[0] - now);
-      await setSlotSchedule(slots);
-
-      return { isLimit: true, nextAvailableMs, slots };
-    } catch (err) {
-      U.logWarn('verifyHourlyLimitExceeded', err);
-      return { isLimit: false, nextAvailableMs: 0, slots: [] };
-    }
   }
 
   function formatDuration(ms) {
@@ -345,156 +280,6 @@ E621X.define('tagScriptQueue', ['utils', 'net'], (U, Net) => {
     if (hours > 0) return `${hours}h ${mins}m`;
     if (mins > 0) return `${mins}m ${secs}s`;
     return `${secs}s`;
-  }
-
-  function scheduleAutoProcess(delayMs) {
-    if (autoProcessTimer) clearTimeout(autoProcessTimer);
-    if (delayMs <= 0 || delayMs > 24 * 60 * 60 * 1000) return;
-
-    autoProcessTimer = setTimeout(async () => {
-      autoProcessTimer = null;
-      if (!(await isEnabled())) return;
-
-      const until = await getTimeoutUntil();
-      if (Date.now() >= until) {
-        await setTimeoutUntil(0);
-        const queue = await getQueue();
-        if (Object.keys(queue).length > 0) {
-          U.showToast('Slot available: processing next queued post...');
-          await processQueue();
-        }
-      }
-    }, delayMs + 1000);
-  }
-
-  async function acquireLock() {
-    const lock = Number(await U.storageGet(LOCK_KEY, 0)) || 0;
-    if (Date.now() - lock < LOCK_TIMEOUT_MS) return false;
-    await U.storageSet(LOCK_KEY, Date.now());
-    return true;
-  }
-
-  async function releaseLock() {
-    await U.storageSet(LOCK_KEY, 0);
-  }
-
-  async function processQueue(onProgress = null) {
-    if (!(await acquireLock())) {
-      U.showToast('Queue is already being processed in another tab', true);
-      return { inProgress: true };
-    }
-
-    const queue = await getQueue();
-    const items = Object.values(queue);
-    if (!items.length) {
-      await releaseLock();
-      U.showToast('Tag script queue is empty');
-      return { total: 0, updated: 0, errors: 0 };
-    }
-
-    let updated = 0;
-    let errors = 0;
-    let hitLimit = false;
-    let slots = await getSlotSchedule();
-
-    try {
-      for (let i = 0; i < items.length; i++) {
-        const item = items[i];
-        await U.storageSet(LOCK_KEY, Date.now());
-
-        const scheduledTime = slots[0] || 0;
-        const now = Date.now();
-
-        if (scheduledTime > now) {
-          const waitMs = scheduledTime - now;
-          await setTimeoutUntil(scheduledTime);
-          hitLimit = true;
-          U.showToast(`Next slot opens in ${formatDuration(waitMs)}. Paused.`);
-          break;
-        }
-
-        if (typeof onProgress === 'function') {
-          onProgress({ index: i, total: items.length, current: item });
-        }
-        U.showToast(`Processing queue ${i + 1}/${items.length} (Post #${item.id})...`);
-
-        try {
-          const res = await Net.sendForm(`/posts/${item.id}.json`, 'PATCH', {
-            'post[tag_string_diff]': item.changes,
-            'post[edit_reason]': item.reason || ''
-          });
-
-          if (!res.ok) {
-            const errorMsg = await parseErrorBody(res);
-
-            if (isHourlyLimitResponse(res.status, errorMsg)) {
-              const check = await verifyHourlyLimitExceeded();
-              if (check.isLimit) {
-                const delay = check.nextAvailableMs;
-                await setTimeoutUntil(Date.now() + delay);
-                hitLimit = true;
-                U.showToast(`Hourly limit active. Next slot in ${formatDuration(delay)}.`, true);
-                break;
-              } else if (res.status === 429) {
-                const delay = 60 * 1000;
-                await setTimeoutUntil(Date.now() + delay);
-                hitLimit = true;
-                U.showToast('API rate limit reached (429). Pausing queue for 1m.', true);
-                break;
-              }
-              // If 403 and NOT a limit, fall through to dequeue (do not loop forever!)
-            }
-
-            await dequeue(item.id);
-            const isLockedMsg = /locked|is deleted|cannot be edited/i.test(errorMsg);
-            let lockReason = isLockedMsg ? errorMsg : '';
-            if (!isLockedMsg) {
-              const lockCheck = await checkPostLockStatus(item.id, item.changes);
-              if (lockCheck.isLocked) lockReason = lockCheck.reason;
-            }
-
-            const thumb = document.querySelector(`article.thumbnail[data-id="${item.id}"]`);
-            if (thumb && lockReason) {
-              thumb.classList.remove('e621x-thumb-queued', 'e621x-thumb-updated');
-              thumb.classList.add('e621x-thumb-locked');
-            }
-            U.showToast(`Post #${item.id} skipped: ${lockReason || errorMsg}`, true);
-            errors++;
-            continue;
-          }
-
-          // Successfully updated
-          await dequeue(item.id);
-          const thumb = document.querySelector(`article.thumbnail[data-id="${item.id}"]`);
-          if (thumb) {
-            thumb.classList.remove('e621x-thumb-queued', 'e621x-thumb-locked');
-            thumb.classList.add('e621x-thumb-updated');
-          }
-          if (slots.length > 0) {
-            slots.shift();
-            await setSlotSchedule(slots);
-          }
-          updated++;
-
-        } catch (err) {
-          errors++;
-          U.logWarn(`queued post #${item.id}`, err);
-        }
-      }
-    } finally {
-      await releaseLock();
-    }
-
-    if (!hitLimit) {
-      const remQueue = await getQueue();
-      if (Object.keys(remQueue).length === 0) {
-        await setSlotSchedule([]);
-        await setTimeoutUntil(0);
-      }
-      U.showToast(`Queue finished: ${updated} updated${errors ? `, ${errors} errors` : ''}`);
-    }
-
-    return { total: items.length, updated, errors, hitLimit };
   }
 
   async function getQueueTimingInfo() {
@@ -520,7 +305,6 @@ E621X.define('tagScriptQueue', ['utils', 'net'], (U, Net) => {
 
     const nextSlot = slots[0] || now;
     const nextMs = Math.max(0, nextSlot - now);
-
     const allSlotIdx = Math.min(count - 1, slots.length - 1);
     const allSlot = slots[allSlotIdx] || nextSlot;
     const allMs = Math.max(0, allSlot - now);
@@ -528,45 +312,34 @@ E621X.define('tagScriptQueue', ['utils', 'net'], (U, Net) => {
     return { count, nextMs, allMs, isTimeout: nextMs > 0, nextSlot, allSlot };
   }
 
-  async function init() {
-    const until = await getTimeoutUntil();
-    if (until > 0) {
-      if (Date.now() >= until) {
-        await setTimeoutUntil(0);
-        const queue = await getQueue();
-        if (Object.keys(queue).length > 0 && (await isEnabled())) {
-          setTimeout(() => processQueue(), 2000);
-        }
-      } else {
-        scheduleAutoProcess(until - Date.now());
-      }
-    }
-  }
+  async function init() {}
 
   return {
     init,
     isEnabled,
     setEnabled,
     getTimeoutUntil,
-    setTimeoutUntil,
     isTimeoutActive,
     getRemainingTimeoutMs,
     getQueueTimingInfo,
     getSlotSchedule,
     checkPostLockStatus,
-    verifyHourlyLimitExceeded,
     isHourlyLimitResponse,
     getQueue,
+    getQueueCount,
     enqueue,
     enqueueFromThumb,
     extractThumbData,
     fetchImageAsBase64,
-    updatePostCache,
     dequeue,
     clearQueue,
     formatDuration,
     processQueue,
     parseErrorBody,
+    saveImage,
+    getImage,
+    deleteImage,
+    clearImages,
     HOURLY_EDIT_LIMIT
   };
 });

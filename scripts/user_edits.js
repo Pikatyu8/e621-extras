@@ -189,15 +189,18 @@ E621X.define('userEdits', ['utils', 'selectors', 'net', 'dom'], (U, SEL, Net, D)
 
     // 1. Header
     const titleSpan = D.el('span', { class: 'e621x-stats-title', text: `Tag Update Statistics — ${userName} (#${userId})` });
+    function closeModal() {
+      abortFetch = true;
+      document.removeEventListener('keydown', handleKeydown);
+      overlay.remove();
+    }
+
     const closeBtn = D.el('button', {
       type: 'button',
       class: 'e621x-stats-close-btn',
       text: '×',
       'aria-label': 'Close',
-      onClick: () => {
-        abortFetch = true;
-        overlay.remove();
-      }
+      onClick: closeModal
     });
 
     const header = D.el('div', { class: 'e621x-stats-header' }, [
@@ -223,10 +226,7 @@ E621X.define('userEdits', ['utils', 'selectors', 'net', 'dom'], (U, SEL, Net, D)
     const btnCancel = D.button({
       text: 'Cancel',
       className: 'e621x-stats-btn',
-      onClick: () => {
-        abortFetch = true;
-        overlay.remove();
-      }
+      onClick: closeModal
     });
 
     const progressBox = D.el('div', { class: 'e621x-stats-progress-box' }, [
@@ -362,16 +362,14 @@ E621X.define('userEdits', ['utils', 'selectors', 'net', 'dom'], (U, SEL, Net, D)
     overlay.appendChild(dialog);
     document.body.appendChild(overlay);
 
-    // Escape key listener to close modal
-    const handleKeydown = (e) => {
+    // Keydown listener to close modal on Escape
+    function handleKeydown(e) {
       if (e.key === 'Escape') {
-        abortFetch = true;
-        overlay.remove();
-        document.removeEventListener('keydown', handleKeydown);
+        closeModal();
       }
-    };
-    document.addEventListener('keydown', handleKeydown);
+    }
 
+    document.addEventListener('keydown', handleKeydown);
     let activeDataset = null;
     let renderId = 0;
     let isFetchingMissing = false;

@@ -65,6 +65,10 @@
 
   (async function start() {
     await U.ensureStorageSchema();
+    const csrf = U.getCsrfToken();
+    if (csrf && chrome.runtime?.id) {
+      chrome.runtime.sendMessage({ action: ACTIONS.SET_CSRF_TOKEN, csrfToken: csrf }).catch(() => {});
+    }
     for (const name of ['uploader', 'userEdits', 'tree', 'blacklist', 'hoverZoom', 'tagScriptQueue', 'timeoutedPage', 'tagScript', 'tooltipsManager']) {
       try {
         await E621X.get(name).init();
