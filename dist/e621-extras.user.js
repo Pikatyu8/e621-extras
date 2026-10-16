@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name        e621 extras
-// @version     1.5.2
+// @version     1.5.3
 // @description Downvotes-to-blacklist manager, post tree viewer, hover zoom and tag scripts for regular members of e621 and e926.
 // @namespace   e621-extras
 // @author      Converter Script
@@ -780,7 +780,7 @@ console.log("Script start:",performance.now());const e=!0,t=e=>e,o="passthrough"
 			
 			
 			const EXTENSION_ASSETS_MAP = {
-			  "popup/popup.html": "<!DOCTYPE html>\r\n<html lang=\"en\">\r\n<head>\r\n  <meta charset=\"UTF-8\">\r\n  <title>e621 extras</title>\r\n  <style>\n* {\r\n  box-sizing: border-box;\r\n  margin: 0;\r\n  padding: 0;\r\n  font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif;\r\n  -webkit-font-smoothing: antialiased;\r\n}\r\n\r\nbody {\r\n  width: 290px;\r\n  background-color: #000000;\r\n  color: #ffffff;\r\n  padding: 14px;\r\n  user-select: none;\r\n}\r\n\r\n/* 1. Remove arrows from numeric input */\r\ninput::-webkit-outer-spin-button,\r\ninput::-webkit-inner-spin-button {\r\n  -webkit-appearance: none;\r\n  margin: 0;\r\n}\r\n\r\ninput[type=\"number\"] {\r\n  -moz-appearance: textfield;\r\n  appearance: textfield;\r\n}\r\n\r\n.container {\r\n  display: flex;\r\n  flex-direction: column;\r\n  gap: 12px;\r\n}\r\n\r\n.header {\r\n  display: flex;\r\n  align-items: center;\r\n  padding-bottom: 2px;\r\n}\r\n\r\n.title {\r\n  font-size: 13px;\r\n  font-weight: 600;\r\n  letter-spacing: 0.8px;\r\n  text-transform: uppercase;\r\n}\r\n\r\n/* Tabs */\r\n.tabs {\r\n  display: flex;\r\n  gap: 4px;\r\n  border-bottom: 1px solid #222222;\r\n  padding-bottom: 8px;\r\n}\r\n\r\n.tab-btn {\r\n  flex: 1;\r\n  background: #000000;\r\n  color: #666666;\r\n  border: 1px solid #222222;\r\n  padding: 6px 0;\r\n  font-size: 10px;\r\n  font-weight: 600;\r\n  letter-spacing: 0.5px;\r\n  cursor: pointer;\r\n  transition: all 0.15s ease;\r\n  text-align: center;\r\n}\r\n\r\n.tab-btn:hover {\r\n  color: #cccccc;\r\n  background-color: #0a0a0a;\r\n}\r\n\r\n.tab-btn.active {\r\n  background-color: #ffffff;\r\n  color: #000000;\r\n  border-color: #ffffff;\r\n}\r\n\r\n.tab-content {\r\n  display: flex;\r\n  flex-direction: column;\r\n  gap: 10px;\r\n}\r\n\r\n.section {\r\n  display: flex;\r\n  flex-direction: column;\r\n  gap: 8px;\r\n}\r\n\r\n.hidden {\r\n  display: none !important;\r\n}\r\n\r\n.btn {\r\n  width: 100%;\r\n  background: #000000;\r\n  color: #ffffff;\r\n  border: 1px solid #272727;\r\n  padding: 8px 12px;\r\n  font-size: 12px;\r\n  letter-spacing: 0.3px;\r\n  cursor: pointer;\r\n  display: flex;\r\n  justify-content: space-between;\r\n  align-items: center;\r\n  transition: background-color 0.15s ease, border-color 0.15s ease;\r\n}\r\n\r\n.btn:hover:not(:disabled) {\r\n  background-color: #141414;\r\n  border-color: #444444;\r\n}\r\n\r\n.btn:active:not(:disabled) {\r\n  background-color: #222222;\r\n}\r\n\r\n.btn:disabled {\r\n  color: #444444;\r\n  border-color: #181818;\r\n  cursor: not-allowed;\r\n}\r\n\r\n.btn-sub {\r\n  padding-left: 20px;\r\n  color: #aaaaaa;\r\n}\r\n\r\n.setting-row {\r\n  display: flex;\r\n  justify-content: space-between;\r\n  align-items: center;\r\n  background: #0a0a0a;\r\n  border: 1px solid #222222;\r\n  padding: 10px 12px;\r\n}\r\n\r\n.setting-block {\r\n  display: flex;\r\n  flex-direction: column;\r\n  gap: 8px;\r\n  background: #0a0a0a;\r\n  border: 1px solid #222222;\r\n  padding: 10px 12px;\r\n}\r\n\r\n.setting-info {\r\n  display: flex;\r\n  flex-direction: column;\r\n  gap: 2px;\r\n}\r\n\r\n.setting-label {\r\n  font-size: 12px;\r\n  color: #ffffff;\r\n}\r\n\r\n.setting-desc {\r\n  font-size: 10px;\r\n  color: #666666;\r\n}\r\n\r\n.btn-toggle-switch {\r\n  background: transparent;\r\n  border: none;\r\n  cursor: pointer;\r\n  padding: 0;\r\n}\r\n\r\n.input-inline-group {\r\n  display: flex;\r\n  gap: 6px;\r\n  align-items: center;\r\n}\r\n\r\n.input-minimal {\r\n  flex: 1;\r\n  background: #000000;\r\n  border: 1px solid #272727;\r\n  color: #ffffff;\r\n  padding: 6px 10px;\r\n  font-size: 12px;\r\n  outline: none;\r\n  transition: border-color 0.15s;\r\n}\r\n\r\n.input-minimal:focus {\r\n  border-color: #666666;\r\n}\r\n\r\n.btn-inline {\r\n  width: auto;\r\n  padding: 6px 14px;\r\n}\r\n\r\n.badge {\r\n  display: inline-block;\r\n  width: 36px;\r\n  text-align: center;\r\n  font-size: 10px;\r\n  border: 1px solid #444444;\r\n  padding: 2px 0;\r\n  text-transform: uppercase;\r\n  color: #ffffff;\r\n  background-color: transparent;\r\n  font-weight: 500;\r\n}\r\n\r\n.badge.on {\r\n  background-color: #ffffff;\r\n  color: #000000;\r\n  border-color: #ffffff;\r\n}\r\n\r\n.footer {\r\n  border-top: 1px solid #222222;\r\n  padding-top: 8px;\r\n}\r\n\r\n.status-msg {\r\n  font-size: 11px;\r\n  color: #888888;\r\n  line-height: 1.4;\r\n  min-height: 16px;\r\n  word-break: break-word;\r\n}\r\n\r\n/* 2. Screen styles for third-party pages */\r\n.offline-view {\r\n  display: flex;\r\n  flex-direction: column;\r\n  align-items: center;\r\n  justify-content: center;\r\n  min-height: 160px;\r\n  text-align: center;\r\n  gap: 14px;\r\n  padding: 8px 0;\r\n}\r\n\r\n.offline-text {\r\n  font-size: 12px;\r\n  color: #888888;\r\n  line-height: 1.4;\r\n}\r\n\r\n.offline-links {\r\n  display: flex;\r\n  flex-direction: column;\r\n  gap: 8px;\r\n  width: 100%;\r\n}\r\n\r\n.offline-link {\r\n  display: block;\r\n  text-decoration: none;\r\n  color: #ffffff;\r\n  background-color: #0a0a0a;\r\n  border: 1px solid #222222;\r\n  padding: 8px 0;\r\n  font-size: 12px;\r\n  letter-spacing: 0.5px;\r\n  transition: background-color 0.15s, border-color 0.15s;\r\n}\r\n\r\n.offline-link:hover {\r\n  background-color: #141414;\r\n  border-color: #444444;\r\n}\n</style>\r\n</head>\r\n<body>\r\n  <!-- Shown on non-e621 pages -->\r\n  <div id=\"offlineView\" class=\"offline-view hidden\">\r\n    <p class=\"offline-text\">extension works on these webpages:</p>\r\n    <div class=\"offline-links\">\r\n      <a href=\"https://e621.net\" target=\"_blank\" class=\"offline-link\">e621.net</a>\r\n      <a href=\"https://e926.net\" target=\"_blank\" class=\"offline-link\">e926.net</a>\r\n    </div>\r\n  </div>\r\n\r\n  <!-- Main UI -->\r\n  <div id=\"mainView\" class=\"container\">\r\n    <header class=\"header\">\r\n      <h1 class=\"title\">e621 extras</h1>\r\n    </header>\r\n\r\n    <nav class=\"tabs\">\r\n      <button class=\"tab-btn active\" data-tab=\"main\">MAIN</button>\r\n      <button class=\"tab-btn\" data-tab=\"blck\">BLCK</button>\r\n      <button class=\"tab-btn\" data-tab=\"tagscr\">TAGSCR</button>\r\n      <button class=\"tab-btn\" data-tab=\"hz\">HZ</button>\r\n    </nav>\r\n\r\n    <!-- Tab 1: MAIN -->\r\n    <main id=\"tab-main\" class=\"tab-content\">\r\n      <div class=\"setting-row\">\r\n        <div class=\"setting-info\">\r\n          <span class=\"setting-label\">Hide Thumbnail Tooltips</span>\r\n          <span class=\"setting-desc\">Suppress browser tooltip on thumbnails</span>\r\n        </div>\r\n        <button id=\"btnHideTooltipsToggle\" class=\"btn-toggle-switch\">\r\n          <span id=\"hideTooltipsBadge\" class=\"badge\">OFF</span>\r\n        </button>\r\n      </div>\r\n\r\n      <div class=\"setting-row\">\r\n        <div class=\"setting-info\">\r\n          <span class=\"setting-label\">Tracking FPS</span>\r\n          <span class=\"setting-desc\">0 = Monitor Hz (or limit for weak PCs)</span>\r\n        </div>\r\n        <input type=\"number\" id=\"inputTrackingFps\" class=\"input-minimal\" placeholder=\"0\" min=\"0\" max=\"360\" style=\"width: 58px; flex: none; text-align: center;\" />\r\n      </div>\r\n\r\n      <div class=\"setting-row\">\r\n        <div class=\"setting-info\">\r\n          <span class=\"setting-label\">Show Uploader</span>\r\n          <span class=\"setting-desc\">Under status in post details</span>\r\n        </div>\r\n        <button id=\"btnShowUploader\" class=\"btn-toggle-switch\">\r\n          <span id=\"showUploaderBadge\" class=\"badge on\">ON</span>\r\n        </button>\r\n      </div>\r\n\r\n      <div class=\"setting-block\">\r\n        <span class=\"setting-label\">Show Post Tree</span>\r\n        <div class=\"input-inline-group\">\r\n          <input type=\"number\" id=\"inputTreePostId\" class=\"input-minimal\" placeholder=\"post id\" />\r\n          <button id=\"btnShowTreePopup\" class=\"btn btn-inline\">Show</button>\r\n        </div>\r\n      </div>\r\n    </main>\r\n\r\n    <!-- Tab 2: BLCK -->\r\n    <main id=\"tab-blck\" class=\"tab-content hidden\">\r\n      <div class=\"section\">\r\n        <button id=\"btnAutoUpdate\" class=\"btn\" title=\"Keep the blacklist in sync with your downvotes automatically\">\r\n          <span>Auto Update</span>\r\n          <span id=\"autoUpdateState\" class=\"badge\">OFF</span>\r\n        </button>\r\n        <button id=\"btnSyncApi\" class=\"btn btn-sub hidden\" title=\"Re-fetch downvotes and update the blacklist\">↳ Sync via API</button>\r\n      </div>\r\n\r\n      <div id=\"manualActions\" class=\"section\">\r\n        <button id=\"btnBackup\" class=\"btn\" title=\"Save the current blacklist in the extension\">Backup Current Blacklist</button>\r\n        <button id=\"btnLoadDownvotes\" class=\"btn\" title=\"Fetch your downvoted posts from the site into the extension\">Load Downvotes</button>\r\n        <button id=\"btnUpload\" class=\"btn\" title=\"Add the loaded downvotes to your blacklist as id:N rules\">Upload to Blacklist</button>\r\n        <button id=\"btnUnload\" class=\"btn\" title=\"Remove those id:N rules from your blacklist\">Unload from Blacklist</button>\r\n      </div>\r\n    </main>\r\n\r\n    <!-- Tab 3: TAGSCR -->\r\n    <main id=\"tab-tagscr\" class=\"tab-content hidden\">\r\n      <div class=\"setting-row\">\r\n        <div class=\"setting-info\">\r\n          <span class=\"setting-label\">Tag Script Preview (Ctrl)</span>\r\n          <span class=\"setting-desc\">View active tag scripts</span>\r\n        </div>\r\n        <button id=\"btnCtrlPreviewToggle\" class=\"btn-toggle-switch\">\r\n          <span id=\"ctrlPreviewBadge\" class=\"badge on\">ON</span>\r\n        </button>\r\n      </div>\r\n\r\n      <div class=\"setting-row\">\r\n        <div class=\"setting-info\">\r\n          <span class=\"setting-label\">Sticky Preview (Ctrl)</span>\r\n          <span class=\"setting-desc\">Toggle with Ctrl instead of holding</span>\r\n        </div>\r\n        <button id=\"btnCtrlStickyToggle\" class=\"btn-toggle-switch\">\r\n          <span id=\"ctrlStickyBadge\" class=\"badge\">OFF</span>\r\n        </button>\r\n      </div>\r\n\r\n      <div class=\"setting-row\">\r\n        <div class=\"setting-info\">\r\n          <span class=\"setting-label\">Queued Tag Scripts</span>\r\n          <span class=\"setting-desc\">Queue edits during hourly limits</span>\r\n        </div>\r\n        <button id=\"btnQueueToggle\" class=\"btn-toggle-switch\">\r\n          <span id=\"queueBadge\" class=\"badge\">OFF</span>\r\n        </button>\r\n      </div>\r\n\r\n      <div id=\"queueBlock\" class=\"setting-block hidden\">\r\n        <div class=\"setting-info\">\r\n          <span class=\"setting-label\">Tag Script Queue</span>\r\n          <span id=\"queueStatusText\" class=\"setting-desc\">0 posts queued</span>\r\n        </div>\r\n        <div class=\"input-inline-group\">\r\n          <a id=\"btnOpenTimeouted\" href=\"https://e621.net/posts/timeouted\" target=\"_blank\" class=\"btn btn-inline\">View Queue</a>\r\n          <button id=\"btnProcessQueue\" class=\"btn btn-inline\">Process Now</button>\r\n        </div>\r\n      </div>\r\n    </main>\r\n\r\n    <!-- Tab 4: HZ -->\r\n    <main id=\"tab-hz\" class=\"tab-content hidden\">\r\n      <div class=\"setting-row\">\r\n        <div class=\"setting-info\">\r\n          <span class=\"setting-label\">Hover Zoom (Shift)</span>\r\n          <span class=\"setting-desc\">Hold Shift while hovering</span>\r\n        </div>\r\n        <button id=\"btnHzToggle\" class=\"btn-toggle-switch\">\r\n          <span id=\"hzBadge\" class=\"badge on\">ON</span>\r\n        </button>\r\n      </div>\r\n\r\n      <div class=\"setting-row\">\r\n        <div class=\"setting-info\">\r\n          <span class=\"setting-label\">Load Sample on Hover</span>\r\n          <span class=\"setting-desc\">Load sample image instead of full</span>\r\n        </div>\r\n        <button id=\"btnHzSampleToggle\" class=\"btn-toggle-switch\">\r\n          <span id=\"hzSampleBadge\" class=\"badge on\">ON</span>\r\n        </button>\r\n      </div>\r\n    </main>\r\n\r\n    <footer class=\"footer\">\r\n      <div id=\"statusMessage\" class=\"status-msg\">Ready</div>\r\n    </footer>\r\n  </div>\r\n\r\n  <script>\n/* Shared by content scripts, popup and background — single source of truth for keys and message names. */\r\nglobalThis.E621_CONSTANTS = Object.freeze({\r\n  SCHEMA_VERSION: 1,\r\n\r\n  STORAGE_KEYS: Object.freeze({\r\n    SCHEMA_VERSION: 'e621_schema_version',\r\n    DOWNVOTES: 'e621_downvoted_posts',\r\n    BLACKLIST_BACKUP: 'e621_clean_blacklist_backup',\r\n    BLACKLIST_LOCKED: 'e621_load_blacklist_disabled',\r\n    AUTO_UPDATE: 'e621_auto_update_enabled',\r\n    SHOW_UPLOADER: 'e621_extra_show_uploader',\r\n    ACTIVE_POPUP_TAB: 'e621_active_popup_tab',\r\n\r\n    /* Hover Zoom keys */\r\n    HZ_ENABLED: 'e621_hz_enabled',\r\n    HZ_LOAD_SAMPLE: 'e621_hz_load_sample',\r\n    HZ_TAGS: 'e621_hz_tags',\r\n    HZ_TIME: 'e621_hz_time',\r\n    HZ_AUDIO: 'e621_hz_audio',\r\n    HZ_DELAY: 'e621_hz_delay',\r\n    HZ_STICKY: 'e621_hz_sticky',\r\n\r\n    /* Queued / Timeouted Tag Scripts keys */\r\n    QUEUE_TAG_SCRIPTS_ENABLED: 'e621_queue_tag_scripts_enabled',\r\n    TAG_SCRIPT_QUEUE: 'e621_tag_script_queue',\r\n    QUEUE_TIMEOUT_UNTIL: 'e621_queue_timeout_until',\r\n    QUEUE_SLOT_TIMESTAMPS: 'e621_queue_slot_timestamps',\r\n\r\n    /* Preview & Tooltip suppression & Performance */\r\n    CTRL_PREVIEW_ENABLED: 'e621_ctrl_preview_enabled',\r\n    CTRL_PREVIEW_STICKY: 'e621_ctrl_preview_sticky',\r\n    CTRL_STICKY_ACTIVE: 'e621_ctrl_sticky_active',\r\n    HIDE_THUMB_TOOLTIPS: 'e621_hide_thumb_tooltips',\r\n    TRACKING_FPS: 'e621_tracking_fps'\r\n  }),\r\n\r\n  ACTIONS: Object.freeze({\r\n    BACKUP_BLACKLIST: 'backupBlacklist',\r\n    LOAD_DOWNVOTES: 'loadDownvotes',\r\n    UPLOAD_DOWNVOTES: 'uploadDownvotes',\r\n    UNLOAD_DOWNVOTES: 'unloadDownvotes',\r\n    SYNC_API: 'syncApi',\r\n    TOGGLE_AUTO_UPDATE: 'toggleAutoUpdate',\r\n    SHOW_POST_TREE: 'showPostTree',\r\n    FETCH_IMAGE: 'fetchImageAsDataUrl',\r\n    PROCESS_TAG_QUEUE: 'processTagQueue',\r\n    CLEAR_TAG_QUEUE: 'clearTagQueue'\r\n  })\r\n});\n</script>\r\n  <script>\ndocument.addEventListener('DOMContentLoaded', async () => {\r\n  const { STORAGE_KEYS: KEYS, ACTIONS } = E621_CONSTANTS;\r\n  const $ = (id) => document.getElementById(id);\r\n\r\n  const mainView = $('mainView');\r\n  const offlineView = $('offlineView');\r\n  const statusMsg = $('statusMessage');\r\n  const tabBtns = document.querySelectorAll('.tab-btn');\r\n  const tabs = {\r\n    main: $('tab-main'),\r\n    blck: $('tab-blck'),\r\n    tagscr: $('tab-tagscr'),\r\n    hz: $('tab-hz')\r\n  };\r\n\r\n  const autoUpdateState = $('autoUpdateState');\r\n  const btnSyncApi = $('btnSyncApi');\r\n  const manualActions = $('manualActions');\r\n  const btnBackup = $('btnBackup');\r\n  const showUploaderBadge = $('showUploaderBadge');\r\n  const inputTreePostId = $('inputTreePostId');\r\n\r\n  const setStatus = (text) => { statusMsg.textContent = text; };\r\n  const setButtonsDisabled = (disabled) =>\r\n    document.querySelectorAll('.btn').forEach(b => { b.disabled = disabled; });\r\n\r\n  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });\r\n  const isE621 = tab?.url && /^https:\\/\\/(e621|e926)\\.net\\//.test(tab.url);\r\n\r\n  if (!isE621) {\r\n    mainView.classList.add('hidden');\r\n    offlineView.classList.remove('hidden');\r\n    return;\r\n  }\r\n\r\n  function showTab(name) {\r\n    tabBtns.forEach(b => b.classList.toggle('active', b.dataset.tab === name));\r\n    Object.entries(tabs).forEach(([key, node]) => node.classList.toggle('hidden', key !== name));\r\n  }\r\n\r\n  tabBtns.forEach(btn => btn.addEventListener('click', () => {\r\n    showTab(btn.dataset.tab);\r\n    chrome.storage.local.set({ [KEYS.ACTIVE_POPUP_TAB]: btn.dataset.tab });\r\n  }));\r\n\r\n  const postMatch = tab.url.match(/\\/posts\\/(\\d+)/);\r\n  if (postMatch) inputTreePostId.value = postMatch[1];\r\n\r\n  const btnHzToggle = $('btnHzToggle');\r\n  const hzBadge = $('hzBadge');\r\n  const btnHzSampleToggle = $('btnHzSampleToggle');\r\n  const hzSampleBadge = $('hzSampleBadge');\r\n\r\n  const btnCtrlPreviewToggle = $('btnCtrlPreviewToggle');\r\n  const ctrlPreviewBadge = $('ctrlPreviewBadge');\r\n  const btnCtrlStickyToggle = $('btnCtrlStickyToggle');\r\n  const ctrlStickyBadge = $('ctrlStickyBadge');\r\n  const inputTrackingFps = $('inputTrackingFps');\r\n  const btnHideTooltipsToggle = $('btnHideTooltipsToggle');\r\n  const hideTooltipsBadge = $('hideTooltipsBadge');\r\n\r\n  const btnQueueToggle = $('btnQueueToggle');\r\n  const queueBadge = $('queueBadge');\r\n  const queueBlock = $('queueBlock');\r\n  const queueStatusText = $('queueStatusText');\r\n  const btnProcessQueue = $('btnProcessQueue');\r\n  const btnOpenTimeouted = $('btnOpenTimeouted');\r\n\r\n  if (btnOpenTimeouted && tab.url) {\r\n    const isE926 = /^https:\\/\\/e926\\.net/i.test(tab.url);\r\n    btnOpenTimeouted.href = isE926 ? 'https://e926.net/posts/timeouted' : 'https://e621.net/posts/timeouted';\r\n  }\r\n\r\n  function formatTime(ms) {\r\n    const totalSec = Math.ceil(ms / 1000);\r\n    const mins = Math.floor(totalSec / 60);\r\n    const secs = totalSec % 60;\r\n    return mins > 0 ? `${mins}m ${secs}s` : `${secs}s`;\r\n  }\r\n\r\n  async function refreshUI() {\r\n    const data = await chrome.storage.local.get([\r\n      KEYS.AUTO_UPDATE,\r\n      KEYS.BLACKLIST_LOCKED,\r\n      KEYS.SHOW_UPLOADER,\r\n      KEYS.HZ_ENABLED,\r\n      KEYS.HZ_LOAD_SAMPLE,\r\n      KEYS.CTRL_PREVIEW_ENABLED,\r\n      KEYS.CTRL_PREVIEW_STICKY,\r\n      KEYS.TRACKING_FPS,\r\n      KEYS.HIDE_THUMB_TOOLTIPS,\r\n      KEYS.QUEUE_TAG_SCRIPTS_ENABLED,\r\n      KEYS.TAG_SCRIPT_QUEUE,\r\n      KEYS.QUEUE_TIMEOUT_UNTIL,\r\n      KEYS.QUEUE_SLOT_TIMESTAMPS\r\n    ]);\r\n\r\n    const isAuto = Boolean(data[KEYS.AUTO_UPDATE]);\r\n    const isLocked = Boolean(data[KEYS.BLACKLIST_LOCKED]);\r\n\r\n    const hzEnabled = data[KEYS.HZ_ENABLED] !== false;\r\n    hzBadge.textContent = hzEnabled ? 'ON' : 'OFF';\r\n    hzBadge.classList.toggle('on', hzEnabled);\r\n\r\n    const hzSample = data[KEYS.HZ_LOAD_SAMPLE] !== false;\r\n    hzSampleBadge.textContent = hzSample ? 'ON' : 'OFF';\r\n    hzSampleBadge.classList.toggle('on', hzSample);\r\n\r\n    const ctrlPreview = data[KEYS.CTRL_PREVIEW_ENABLED] !== false;\r\n    ctrlPreviewBadge.textContent = ctrlPreview ? 'ON' : 'OFF';\r\n    ctrlPreviewBadge.classList.toggle('on', ctrlPreview);\r\n\r\n    const ctrlSticky = Boolean(data[KEYS.CTRL_PREVIEW_STICKY]);\r\n    ctrlStickyBadge.textContent = ctrlSticky ? 'ON' : 'OFF';\r\n    ctrlStickyBadge.classList.toggle('on', ctrlSticky);\r\n\r\n    if (inputTrackingFps && document.activeElement !== inputTrackingFps) {\r\n      inputTrackingFps.value = Number(data[KEYS.TRACKING_FPS]) || 0;\r\n    }\r\n\r\n    const hideTooltips = Boolean(data[KEYS.HIDE_THUMB_TOOLTIPS]);\r\n    hideTooltipsBadge.textContent = hideTooltips ? 'ON' : 'OFF';\r\n    hideTooltipsBadge.classList.toggle('on', hideTooltips);\r\n\r\n    const queueEnabled = Boolean(data[KEYS.QUEUE_TAG_SCRIPTS_ENABLED]);\r\n    queueBadge.textContent = queueEnabled ? 'ON' : 'OFF';\r\n    queueBadge.classList.toggle('on', queueEnabled);\r\n    queueBlock.classList.toggle('hidden', !queueEnabled);\r\n\r\n    const queue = data[KEYS.TAG_SCRIPT_QUEUE] || {};\r\n    const count = Object.keys(queue).length;\r\n    const slots = data[KEYS.QUEUE_SLOT_TIMESTAMPS] || [];\r\n    const timeoutUntil = Number(data[KEYS.QUEUE_TIMEOUT_UNTIL]) || 0;\r\n    const now = Date.now();\r\n\r\n    const nextSlot = slots[0] || timeoutUntil;\r\n    const isTimeout = nextSlot > now;\r\n\r\n    if (isTimeout && count > 0) {\r\n      const nextMs = Math.max(0, nextSlot - now);\r\n      const allSlotIdx = Math.min(count - 1, slots.length - 1);\r\n      const allSlot = slots[allSlotIdx] || nextSlot;\r\n      const allMs = Math.max(0, allSlot - now);\r\n\r\n      if (count > 1) {\r\n        queueStatusText.textContent = `${count} queued (next: ${formatTime(nextMs)}, all: ${formatTime(allMs)})`;\r\n      } else {\r\n        queueStatusText.textContent = `1 queued (ready in ${formatTime(nextMs)})`;\r\n      }\r\n    } else {\r\n      queueStatusText.textContent = `${count} posts queued (ready)`;\r\n    }\r\n\r\n    setButtonsDisabled(false);\r\n    autoUpdateState.textContent = isAuto ? 'ON' : 'OFF';\r\n    autoUpdateState.classList.toggle('on', isAuto);\r\n    btnSyncApi.classList.toggle('hidden', !isAuto);\r\n    manualActions.classList.toggle('hidden', isAuto);\r\n    if (!isAuto) btnBackup.disabled = isLocked;\r\n\r\n    const showUploader = data[KEYS.SHOW_UPLOADER] !== false;\r\n    showUploaderBadge.textContent = showUploader ? 'ON' : 'OFF';\r\n    showUploaderBadge.classList.toggle('on', showUploader);\r\n  }\r\n\r\n  btnHzToggle?.addEventListener('click', async () => {\r\n    const data = await chrome.storage.local.get([KEYS.HZ_ENABLED]);\r\n    await chrome.storage.local.set({ [KEYS.HZ_ENABLED]: data[KEYS.HZ_ENABLED] === false });\r\n    await refreshUI();\r\n  });\r\n\r\n  btnHzSampleToggle?.addEventListener('click', async () => {\r\n    const data = await chrome.storage.local.get([KEYS.HZ_LOAD_SAMPLE]);\r\n    const current = data[KEYS.HZ_LOAD_SAMPLE] !== false;\r\n    await chrome.storage.local.set({ [KEYS.HZ_LOAD_SAMPLE]: !current });\r\n    await refreshUI();\r\n  });\r\n\r\n  btnCtrlPreviewToggle?.addEventListener('click', async () => {\r\n    const data = await chrome.storage.local.get([KEYS.CTRL_PREVIEW_ENABLED]);\r\n    const current = data[KEYS.CTRL_PREVIEW_ENABLED] !== false;\r\n    await chrome.storage.local.set({ [KEYS.CTRL_PREVIEW_ENABLED]: !current });\r\n    if (current) {\r\n      await chrome.storage.local.set({ [KEYS.CTRL_STICKY_ACTIVE]: false });\r\n    }\r\n    await refreshUI();\r\n  });\r\n\r\n  btnCtrlStickyToggle?.addEventListener('click', async () => {\r\n    const data = await chrome.storage.local.get([KEYS.CTRL_PREVIEW_STICKY]);\r\n    const current = Boolean(data[KEYS.CTRL_PREVIEW_STICKY]);\r\n    await chrome.storage.local.set({ [KEYS.CTRL_PREVIEW_STICKY]: !current });\r\n    if (current) {\r\n      await chrome.storage.local.set({ [KEYS.CTRL_STICKY_ACTIVE]: false });\r\n    }\r\n    await refreshUI();\r\n  });\r\n\r\n  inputTrackingFps?.addEventListener('change', async () => {\r\n    let val = parseInt(inputTrackingFps.value, 10);\r\n    if (isNaN(val) || val < 0) val = 0;\r\n    if (val > 360) val = 360;\r\n    inputTrackingFps.value = val;\r\n    await chrome.storage.local.set({ [KEYS.TRACKING_FPS]: val });\r\n  });\r\n\r\n  inputTrackingFps?.addEventListener('keydown', (e) => {\r\n    if (e.key === 'Enter') inputTrackingFps.blur();\r\n  });\r\n\r\n  btnHideTooltipsToggle?.addEventListener('click', async () => {\r\n    const data = await chrome.storage.local.get([KEYS.HIDE_THUMB_TOOLTIPS]);\r\n    const current = Boolean(data[KEYS.HIDE_THUMB_TOOLTIPS]);\r\n    await chrome.storage.local.set({ [KEYS.HIDE_THUMB_TOOLTIPS]: !current });\r\n    await refreshUI();\r\n  });\r\n\r\n  btnQueueToggle?.addEventListener('click', async () => {\r\n    const data = await chrome.storage.local.get([KEYS.QUEUE_TAG_SCRIPTS_ENABLED]);\r\n    await chrome.storage.local.set({ [KEYS.QUEUE_TAG_SCRIPTS_ENABLED]: !data[KEYS.QUEUE_TAG_SCRIPTS_ENABLED] });\r\n    await refreshUI();\r\n  });\r\n\r\n  async function sendAction(action) {\r\n    const enabling = action === ACTIONS.TOGGLE_AUTO_UPDATE && autoUpdateState.textContent === 'OFF';\r\n    setStatus(enabling ? 'Syncing API & enabling...' : 'Processing...');\r\n    setButtonsDisabled(true);\r\n\r\n    try {\r\n      let response = null;\r\n\r\n      try {\r\n        response = await chrome.tabs.sendMessage(tab.id, { action });\r\n      } catch (err) {}\r\n\r\n      if (!response && window.parent && window.parent !== window) {\r\n        response = await new Promise((resolve) => {\r\n          const channel = new MessageChannel();\r\n          channel.port1.onmessage = (e) => resolve(e.data);\r\n          window.parent.postMessage({ fromE621Popup: true, action }, '*', [channel.port2]);\r\n          setTimeout(() => resolve(null), 5000);\r\n        });\r\n      }\r\n\r\n      setStatus(response?.status || (response?.ok === false ? 'Failed' : 'Done'));\r\n    } catch (err) {\r\n      const noReceiver = /Receiving end does not exist|message (channel|port) closed/i.test(err.message);\r\n      setStatus(noReceiver ? 'Error: Refresh the page' : `Error: ${err.message}`);\r\n    } finally {\r\n      await refreshUI();\r\n    }\r\n  }\r\n\r\n  $('btnAutoUpdate').addEventListener('click', () => sendAction(ACTIONS.TOGGLE_AUTO_UPDATE));\r\n  btnSyncApi.addEventListener('click', () => sendAction(ACTIONS.SYNC_API));\r\n  btnBackup.addEventListener('click', () => sendAction(ACTIONS.BACKUP_BLACKLIST));\r\n  $('btnLoadDownvotes').addEventListener('click', () => sendAction(ACTIONS.LOAD_DOWNVOTES));\r\n  $('btnUpload').addEventListener('click', () => sendAction(ACTIONS.UPLOAD_DOWNVOTES));\r\n  $('btnUnload').addEventListener('click', () => sendAction(ACTIONS.UNLOAD_DOWNVOTES));\r\n  btnProcessQueue?.addEventListener('click', () => sendAction(ACTIONS.PROCESS_TAG_QUEUE));\r\n\r\n  $('btnShowUploader').addEventListener('click', async () => {\r\n    const data = await chrome.storage.local.get([KEYS.SHOW_UPLOADER]);\r\n    await chrome.storage.local.set({ [KEYS.SHOW_UPLOADER]: data[KEYS.SHOW_UPLOADER] === false });\r\n    await refreshUI();\r\n  });\r\n\r\n  $('btnShowTreePopup').addEventListener('click', async () => {\r\n    const id = Number(inputTreePostId.value.trim());\r\n    if (!Number.isInteger(id) || id <= 0) return setStatus('Enter a valid post ID');\r\n    try {\r\n      await chrome.tabs.sendMessage(tab.id, { action: ACTIONS.SHOW_POST_TREE, postId: id });\r\n      window.close();\r\n    } catch (err) {\r\n      setStatus('Error: Refresh the page');\r\n    }\r\n  });\r\n\r\n  const stored = await chrome.storage.local.get([KEYS.ACTIVE_POPUP_TAB]);\r\n  const validTabs = ['main', 'blck', 'tagscr', 'hz'];\r\n  let initialTab = 'main';\r\n  if (stored[KEYS.ACTIVE_POPUP_TAB] === 'extra') {\r\n    initialTab = 'tagscr';\r\n  } else if (validTabs.includes(stored[KEYS.ACTIVE_POPUP_TAB])) {\r\n    initialTab = stored[KEYS.ACTIVE_POPUP_TAB];\r\n  }\r\n  showTab(initialTab);\r\n\r\n  await refreshUI();\r\n\r\n  const liveTimer = setInterval(refreshUI, 1000);\r\n  window.addEventListener('unload', () => clearInterval(liveTimer));\r\n});\n</script>\r\n</body>\r\n</html>"
+			  "popup/popup.html": "<!DOCTYPE html>\r\n<html lang=\"en\">\r\n<head>\r\n  <meta charset=\"UTF-8\">\r\n  <title>e621 extras</title>\r\n  <style>\n* {\r\n  box-sizing: border-box;\r\n  margin: 0;\r\n  padding: 0;\r\n  font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif;\r\n  -webkit-font-smoothing: antialiased;\r\n}\r\n\r\nbody {\r\n  width: 290px;\r\n  background-color: #000000;\r\n  color: #ffffff;\r\n  padding: 14px;\r\n  user-select: none;\r\n}\r\n\r\n/* 1. Remove arrows from numeric input */\r\ninput::-webkit-outer-spin-button,\r\ninput::-webkit-inner-spin-button {\r\n  -webkit-appearance: none;\r\n  margin: 0;\r\n}\r\n\r\ninput[type=\"number\"] {\r\n  -moz-appearance: textfield;\r\n  appearance: textfield;\r\n}\r\n\r\n.container {\r\n  display: flex;\r\n  flex-direction: column;\r\n  gap: 12px;\r\n}\r\n\r\n.header {\r\n  display: flex;\r\n  align-items: center;\r\n  padding-bottom: 2px;\r\n}\r\n\r\n.title {\r\n  font-size: 13px;\r\n  font-weight: 600;\r\n  letter-spacing: 0.8px;\r\n  text-transform: uppercase;\r\n}\r\n\r\n/* Tabs */\r\n.tabs {\r\n  display: flex;\r\n  gap: 4px;\r\n  border-bottom: 1px solid #222222;\r\n  padding-bottom: 8px;\r\n}\r\n\r\n.tab-btn {\r\n  flex: 1;\r\n  background: #000000;\r\n  color: #666666;\r\n  border: 1px solid #222222;\r\n  padding: 6px 0;\r\n  font-size: 10px;\r\n  font-weight: 600;\r\n  letter-spacing: 0.5px;\r\n  cursor: pointer;\r\n  transition: all 0.15s ease;\r\n  text-align: center;\r\n}\r\n\r\n.tab-btn:hover {\r\n  color: #cccccc;\r\n  background-color: #0a0a0a;\r\n}\r\n\r\n.tab-btn.active {\r\n  background-color: #ffffff;\r\n  color: #000000;\r\n  border-color: #ffffff;\r\n}\r\n\r\n.tab-content {\r\n  display: flex;\r\n  flex-direction: column;\r\n  gap: 10px;\r\n}\r\n\r\n.section {\r\n  display: flex;\r\n  flex-direction: column;\r\n  gap: 8px;\r\n}\r\n\r\n.hidden {\r\n  display: none !important;\r\n}\r\n\r\n.btn {\r\n  width: 100%;\r\n  background: #000000;\r\n  color: #ffffff;\r\n  border: 1px solid #272727;\r\n  padding: 8px 12px;\r\n  font-size: 12px;\r\n  letter-spacing: 0.3px;\r\n  cursor: pointer;\r\n  display: flex;\r\n  justify-content: space-between;\r\n  align-items: center;\r\n  transition: background-color 0.15s ease, border-color 0.15s ease;\r\n}\r\n\r\n.btn:hover:not(:disabled) {\r\n  background-color: #141414;\r\n  border-color: #444444;\r\n}\r\n\r\n.btn:active:not(:disabled) {\r\n  background-color: #222222;\r\n}\r\n\r\n.btn:disabled {\r\n  color: #444444;\r\n  border-color: #181818;\r\n  cursor: not-allowed;\r\n}\r\n\r\n.btn-sub {\r\n  padding-left: 20px;\r\n  color: #aaaaaa;\r\n}\r\n\r\n.setting-row {\r\n  display: flex;\r\n  justify-content: space-between;\r\n  align-items: center;\r\n  background: #0a0a0a;\r\n  border: 1px solid #222222;\r\n  padding: 10px 12px;\r\n}\r\n\r\n.setting-block {\r\n  display: flex;\r\n  flex-direction: column;\r\n  gap: 8px;\r\n  background: #0a0a0a;\r\n  border: 1px solid #222222;\r\n  padding: 10px 12px;\r\n}\r\n\r\n.setting-info {\r\n  display: flex;\r\n  flex-direction: column;\r\n  gap: 2px;\r\n}\r\n\r\n.setting-label {\r\n  font-size: 12px;\r\n  color: #ffffff;\r\n}\r\n\r\n.setting-desc {\r\n  font-size: 10px;\r\n  color: #666666;\r\n}\r\n\r\n.btn-toggle-switch {\r\n  background: transparent;\r\n  border: none;\r\n  cursor: pointer;\r\n  padding: 0;\r\n}\r\n\r\n.input-inline-group {\r\n  display: flex;\r\n  gap: 6px;\r\n  align-items: center;\r\n}\r\n\r\n.input-minimal {\r\n  flex: 1;\r\n  background: #000000;\r\n  border: 1px solid #272727;\r\n  color: #ffffff;\r\n  padding: 6px 10px;\r\n  font-size: 12px;\r\n  outline: none;\r\n  transition: border-color 0.15s;\r\n}\r\n\r\n.input-minimal:focus {\r\n  border-color: #666666;\r\n}\r\n\r\n.btn-inline {\r\n  width: auto;\r\n  padding: 6px 14px;\r\n}\r\n\r\n.badge {\r\n  display: inline-block;\r\n  width: 36px;\r\n  text-align: center;\r\n  font-size: 10px;\r\n  border: 1px solid #444444;\r\n  padding: 2px 0;\r\n  text-transform: uppercase;\r\n  color: #ffffff;\r\n  background-color: transparent;\r\n  font-weight: 500;\r\n}\r\n\r\n.badge.on {\r\n  background-color: #ffffff;\r\n  color: #000000;\r\n  border-color: #ffffff;\r\n}\r\n\r\n.footer {\r\n  border-top: 1px solid #222222;\r\n  padding-top: 8px;\r\n}\r\n\r\n.status-msg {\r\n  font-size: 11px;\r\n  color: #888888;\r\n  line-height: 1.4;\r\n  min-height: 16px;\r\n  word-break: break-word;\r\n}\r\n\r\n/* 2. Screen styles for third-party pages */\r\n.offline-view {\r\n  display: flex;\r\n  flex-direction: column;\r\n  align-items: center;\r\n  justify-content: center;\r\n  min-height: 160px;\r\n  text-align: center;\r\n  gap: 14px;\r\n  padding: 8px 0;\r\n}\r\n\r\n.offline-text {\r\n  font-size: 12px;\r\n  color: #888888;\r\n  line-height: 1.4;\r\n}\r\n\r\n.offline-links {\r\n  display: flex;\r\n  flex-direction: column;\r\n  gap: 8px;\r\n  width: 100%;\r\n}\r\n\r\n.offline-link {\r\n  display: block;\r\n  text-decoration: none;\r\n  color: #ffffff;\r\n  background-color: #0a0a0a;\r\n  border: 1px solid #222222;\r\n  padding: 8px 0;\r\n  font-size: 12px;\r\n  letter-spacing: 0.5px;\r\n  transition: background-color 0.15s, border-color 0.15s;\r\n}\r\n\r\n.offline-link:hover {\r\n  background-color: #141414;\r\n  border-color: #444444;\r\n}\n</style>\r\n</head>\r\n<body>\r\n  <!-- Shown on non-e621 pages -->\r\n  <div id=\"offlineView\" class=\"offline-view hidden\">\r\n    <p class=\"offline-text\">extension works on these webpages:</p>\r\n    <div class=\"offline-links\">\r\n      <a href=\"https://e621.net\" target=\"_blank\" class=\"offline-link\">e621.net</a>\r\n      <a href=\"https://e926.net\" target=\"_blank\" class=\"offline-link\">e926.net</a>\r\n    </div>\r\n  </div>\r\n\r\n  <!-- Main UI -->\r\n  <div id=\"mainView\" class=\"container\">\r\n    <header class=\"header\">\r\n      <h1 class=\"title\">e621 extras</h1>\r\n    </header>\r\n\r\n    <nav class=\"tabs\">\r\n      <button class=\"tab-btn active\" data-tab=\"main\">MAIN</button>\r\n      <button class=\"tab-btn\" data-tab=\"blck\">BLCK</button>\r\n      <button class=\"tab-btn\" data-tab=\"tagscr\">TAGSCR</button>\r\n      <button class=\"tab-btn\" data-tab=\"hz\">HZ</button>\r\n    </nav>\r\n\r\n    <!-- Tab 1: MAIN -->\r\n    <main id=\"tab-main\" class=\"tab-content\">\r\n      <div class=\"setting-row\">\r\n        <div class=\"setting-info\">\r\n          <span class=\"setting-label\">Hide Thumbnail Tooltips</span>\r\n          <span class=\"setting-desc\">Suppress browser tooltip on thumbnails</span>\r\n        </div>\r\n        <button id=\"btnHideTooltipsToggle\" class=\"btn-toggle-switch\">\r\n          <span id=\"hideTooltipsBadge\" class=\"badge\">OFF</span>\r\n        </button>\r\n      </div>\r\n\r\n      <div class=\"setting-row\">\r\n        <div class=\"setting-info\">\r\n          <span class=\"setting-label\">Tracking FPS</span>\r\n          <span class=\"setting-desc\">0 = Monitor Hz (or limit for weak PCs)</span>\r\n        </div>\r\n        <input type=\"number\" id=\"inputTrackingFps\" class=\"input-minimal\" placeholder=\"0\" min=\"0\" max=\"360\" style=\"width: 58px; flex: none; text-align: center;\" />\r\n      </div>\r\n\r\n      <div class=\"setting-row\">\r\n        <div class=\"setting-info\">\r\n          <span class=\"setting-label\">Show Uploader</span>\r\n          <span class=\"setting-desc\">Under status in post details</span>\r\n        </div>\r\n        <button id=\"btnShowUploader\" class=\"btn-toggle-switch\">\r\n          <span id=\"showUploaderBadge\" class=\"badge on\">ON</span>\r\n        </button>\r\n      </div>\r\n\r\n      <div class=\"setting-block\">\r\n        <span class=\"setting-label\">Show Post Tree</span>\r\n        <div class=\"input-inline-group\">\r\n          <input type=\"number\" id=\"inputTreePostId\" class=\"input-minimal\" placeholder=\"post id\" />\r\n          <button id=\"btnShowTreePopup\" class=\"btn btn-inline\">Show</button>\r\n        </div>\r\n      </div>\r\n    </main>\r\n\r\n    <!-- Tab 2: BLCK -->\r\n    <main id=\"tab-blck\" class=\"tab-content hidden\">\r\n      <div class=\"section\">\r\n        <button id=\"btnAutoUpdate\" class=\"btn\" title=\"Keep the blacklist in sync with your downvotes automatically\">\r\n          <span>Auto Update</span>\r\n          <span id=\"autoUpdateState\" class=\"badge\">OFF</span>\r\n        </button>\r\n        <button id=\"btnSyncApi\" class=\"btn btn-sub hidden\" title=\"Re-fetch downvotes and update the blacklist\">↳ Sync via API</button>\r\n      </div>\r\n\r\n      <div id=\"manualActions\" class=\"section\">\r\n        <button id=\"btnBackup\" class=\"btn\" title=\"Save the current blacklist in the extension\">Backup Current Blacklist</button>\r\n        <button id=\"btnLoadDownvotes\" class=\"btn\" title=\"Fetch your downvoted posts from the site into the extension\">Load Downvotes</button>\r\n        <button id=\"btnUpload\" class=\"btn\" title=\"Add the loaded downvotes to your blacklist as id:N rules\">Upload to Blacklist</button>\r\n        <button id=\"btnUnload\" class=\"btn\" title=\"Remove those id:N rules from your blacklist\">Unload from Blacklist</button>\r\n      </div>\r\n    </main>\r\n\r\n    <!-- Tab 3: TAGSCR -->\r\n    <main id=\"tab-tagscr\" class=\"tab-content hidden\">\r\n      <div class=\"setting-row\">\r\n        <div class=\"setting-info\">\r\n          <span class=\"setting-label\">Tag Script Preview (Ctrl)</span>\r\n          <span class=\"setting-desc\">View active tag scripts</span>\r\n        </div>\r\n        <button id=\"btnCtrlPreviewToggle\" class=\"btn-toggle-switch\">\r\n          <span id=\"ctrlPreviewBadge\" class=\"badge on\">ON</span>\r\n        </button>\r\n      </div>\r\n\r\n      <div class=\"setting-row\">\r\n        <div class=\"setting-info\">\r\n          <span class=\"setting-label\">Sticky Preview (Ctrl)</span>\r\n          <span class=\"setting-desc\">Toggle with Ctrl instead of holding</span>\r\n        </div>\r\n        <button id=\"btnCtrlStickyToggle\" class=\"btn-toggle-switch\">\r\n          <span id=\"ctrlStickyBadge\" class=\"badge\">OFF</span>\r\n        </button>\r\n      </div>\r\n\r\n      <div class=\"setting-row\">\r\n        <div class=\"setting-info\">\r\n          <span class=\"setting-label\">Queued Tag Scripts</span>\r\n          <span class=\"setting-desc\">Queue edits during hourly limits</span>\r\n        </div>\r\n        <button id=\"btnQueueToggle\" class=\"btn-toggle-switch\">\r\n          <span id=\"queueBadge\" class=\"badge\">OFF</span>\r\n        </button>\r\n      </div>\r\n\r\n      <div id=\"queueBlock\" class=\"setting-block hidden\">\r\n        <div class=\"setting-info\">\r\n          <span class=\"setting-label\">Tag Script Queue</span>\r\n          <span id=\"queueStatusText\" class=\"setting-desc\">0 posts queued</span>\r\n        </div>\r\n        <div class=\"input-inline-group\">\r\n          <a id=\"btnOpenTimeouted\" href=\"https://e621.net/posts/timeouted\" target=\"_blank\" class=\"btn btn-inline\">View Queue</a>\r\n          <button id=\"btnProcessQueue\" class=\"btn btn-inline\">Process Now</button>\r\n        </div>\r\n      </div>\r\n    </main>\r\n\r\n    <!-- Tab 4: HZ -->\r\n    <main id=\"tab-hz\" class=\"tab-content hidden\">\r\n      <div class=\"setting-row\">\r\n        <div class=\"setting-info\">\r\n          <span class=\"setting-label\">Hover Zoom (Shift)</span>\r\n          <span class=\"setting-desc\">Hold Shift while hovering</span>\r\n        </div>\r\n        <button id=\"btnHzToggle\" class=\"btn-toggle-switch\">\r\n          <span id=\"hzBadge\" class=\"badge on\">ON</span>\r\n        </button>\r\n      </div>\r\n\r\n      <div class=\"setting-row\">\r\n        <div class=\"setting-info\">\r\n          <span class=\"setting-label\">Load Sample on Hover</span>\r\n          <span class=\"setting-desc\">Load sample image instead of full</span>\r\n        </div>\r\n        <button id=\"btnHzSampleToggle\" class=\"btn-toggle-switch\">\r\n          <span id=\"hzSampleBadge\" class=\"badge on\">ON</span>\r\n        </button>\r\n      </div>\r\n    </main>\r\n\r\n    <footer class=\"footer\">\r\n      <div id=\"statusMessage\" class=\"status-msg\">Ready</div>\r\n    </footer>\r\n  </div>\r\n\r\n  <script>\n/* Shared by content scripts, popup and background — single source of truth for keys and message names. */\r\nglobalThis.E621_CONSTANTS = Object.freeze({\r\n  SCHEMA_VERSION: 1,\r\n\r\n  STORAGE_KEYS: Object.freeze({\r\n    SCHEMA_VERSION: 'e621_schema_version',\r\n    DOWNVOTES: 'e621_downvoted_posts',\r\n    BLACKLIST_BACKUP: 'e621_clean_blacklist_backup',\r\n    BLACKLIST_LOCKED: 'e621_load_blacklist_disabled',\r\n    AUTO_UPDATE: 'e621_auto_update_enabled',\r\n    SHOW_UPLOADER: 'e621_extra_show_uploader',\r\n    ACTIVE_POPUP_TAB: 'e621_active_popup_tab',\r\n\r\n    /* Hover Zoom keys */\r\n    HZ_ENABLED: 'e621_hz_enabled',\r\n    HZ_LOAD_SAMPLE: 'e621_hz_load_sample',\r\n    HZ_TAGS: 'e621_hz_tags',\r\n    HZ_TIME: 'e621_hz_time',\r\n    HZ_AUDIO: 'e621_hz_audio',\r\n    HZ_DELAY: 'e621_hz_delay',\r\n    HZ_STICKY: 'e621_hz_sticky',\r\n\r\n    /* Queued / Timeouted Tag Scripts keys */\r\n    QUEUE_TAG_SCRIPTS_ENABLED: 'e621_queue_tag_scripts_enabled',\r\n    TAG_SCRIPT_QUEUE: 'e621_tag_script_queue',\r\n    QUEUE_TIMEOUT_UNTIL: 'e621_queue_timeout_until',\r\n    QUEUE_SLOT_TIMESTAMPS: 'e621_queue_slot_timestamps',\r\n\r\n    /* Preview & Tooltip suppression & Performance */\r\n    CTRL_PREVIEW_ENABLED: 'e621_ctrl_preview_enabled',\r\n    CTRL_PREVIEW_STICKY: 'e621_ctrl_preview_sticky',\r\n    CTRL_STICKY_ACTIVE: 'e621_ctrl_sticky_active',\r\n    HIDE_THUMB_TOOLTIPS: 'e621_hide_thumb_tooltips',\r\n    TRACKING_FPS: 'e621_tracking_fps'\r\n  }),\r\n\r\n  ACTIONS: Object.freeze({\r\n    BACKUP_BLACKLIST: 'backupBlacklist',\r\n    LOAD_DOWNVOTES: 'loadDownvotes',\r\n    UPLOAD_DOWNVOTES: 'uploadDownvotes',\r\n    UNLOAD_DOWNVOTES: 'unloadDownvotes',\r\n    SYNC_API: 'syncApi',\r\n    TOGGLE_AUTO_UPDATE: 'toggleAutoUpdate',\r\n    SHOW_POST_TREE: 'showPostTree',\r\n    FETCH_IMAGE: 'fetchImageAsDataUrl',\r\n    PROCESS_TAG_QUEUE: 'processTagQueue',\r\n    CLEAR_TAG_QUEUE: 'clearTagQueue',\r\n    ENQUEUE_TAG_SCRIPT: 'enqueueTagScript',\r\n    DEQUEUE_TAG_SCRIPT: 'dequeueTagScript',\r\n    SAVE_IMAGE: 'saveImage',\r\n    GET_IMAGE: 'getImage',\r\n    DELETE_IMAGE: 'deleteImage',\r\n    CLEAR_IMAGES: 'clearImages',\r\n    SET_CSRF_TOKEN: 'setCsrfToken'\r\n  })\r\n});\n</script>\r\n  <script>\ndocument.addEventListener('DOMContentLoaded', async () => {\r\n  const { STORAGE_KEYS: KEYS, ACTIONS } = E621_CONSTANTS;\r\n  const $ = (id) => document.getElementById(id);\r\n\r\n  const mainView = $('mainView');\r\n  const offlineView = $('offlineView');\r\n  const statusMsg = $('statusMessage');\r\n  const tabBtns = document.querySelectorAll('.tab-btn');\r\n  const tabs = {\r\n    main: $('tab-main'),\r\n    blck: $('tab-blck'),\r\n    tagscr: $('tab-tagscr'),\r\n    hz: $('tab-hz')\r\n  };\r\n\r\n  const autoUpdateState = $('autoUpdateState');\r\n  const btnSyncApi = $('btnSyncApi');\r\n  const manualActions = $('manualActions');\r\n  const btnBackup = $('btnBackup');\r\n  const showUploaderBadge = $('showUploaderBadge');\r\n  const inputTreePostId = $('inputTreePostId');\r\n\r\n  const setStatus = (text) => { statusMsg.textContent = text; };\r\n  const setButtonsDisabled = (disabled) =>\r\n    document.querySelectorAll('.btn').forEach(b => { b.disabled = disabled; });\r\n\r\n  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });\r\n  const isE621 = tab?.url && /^https:\\/\\/(e621|e926)\\.net\\//.test(tab.url);\r\n\r\n  if (!isE621) {\r\n    mainView.classList.add('hidden');\r\n    offlineView.classList.remove('hidden');\r\n    return;\r\n  }\r\n\r\n  function showTab(name) {\r\n    tabBtns.forEach(b => b.classList.toggle('active', b.dataset.tab === name));\r\n    Object.entries(tabs).forEach(([key, node]) => node.classList.toggle('hidden', key !== name));\r\n  }\r\n\r\n  tabBtns.forEach(btn => btn.addEventListener('click', () => {\r\n    showTab(btn.dataset.tab);\r\n    chrome.storage.local.set({ [KEYS.ACTIVE_POPUP_TAB]: btn.dataset.tab });\r\n  }));\r\n\r\n  const postMatch = tab.url.match(/\\/posts\\/(\\d+)/);\r\n  if (postMatch) inputTreePostId.value = postMatch[1];\r\n\r\n  const btnHzToggle = $('btnHzToggle');\r\n  const hzBadge = $('hzBadge');\r\n  const btnHzSampleToggle = $('btnHzSampleToggle');\r\n  const hzSampleBadge = $('hzSampleBadge');\r\n\r\n  const btnCtrlPreviewToggle = $('btnCtrlPreviewToggle');\r\n  const ctrlPreviewBadge = $('ctrlPreviewBadge');\r\n  const btnCtrlStickyToggle = $('btnCtrlStickyToggle');\r\n  const ctrlStickyBadge = $('ctrlStickyBadge');\r\n  const inputTrackingFps = $('inputTrackingFps');\r\n  const btnHideTooltipsToggle = $('btnHideTooltipsToggle');\r\n  const hideTooltipsBadge = $('hideTooltipsBadge');\r\n\r\n  const btnQueueToggle = $('btnQueueToggle');\r\n  const queueBadge = $('queueBadge');\r\n  const queueBlock = $('queueBlock');\r\n  const queueStatusText = $('queueStatusText');\r\n  const btnProcessQueue = $('btnProcessQueue');\r\n  const btnOpenTimeouted = $('btnOpenTimeouted');\r\n\r\n  if (btnOpenTimeouted && tab.url) {\r\n    const isE926 = /^https:\\/\\/e926\\.net/i.test(tab.url);\r\n    btnOpenTimeouted.href = isE926 ? 'https://e926.net/posts/timeouted' : 'https://e621.net/posts/timeouted';\r\n  }\r\n\r\n  function formatTime(ms) {\r\n    const totalSec = Math.ceil(ms / 1000);\r\n    const mins = Math.floor(totalSec / 60);\r\n    const secs = totalSec % 60;\r\n    return mins > 0 ? `${mins}m ${secs}s` : `${secs}s`;\r\n  }\r\n\r\n  async function refreshUI() {\r\n    const data = await chrome.storage.local.get([\r\n      KEYS.AUTO_UPDATE,\r\n      KEYS.BLACKLIST_LOCKED,\r\n      KEYS.SHOW_UPLOADER,\r\n      KEYS.HZ_ENABLED,\r\n      KEYS.HZ_LOAD_SAMPLE,\r\n      KEYS.CTRL_PREVIEW_ENABLED,\r\n      KEYS.CTRL_PREVIEW_STICKY,\r\n      KEYS.TRACKING_FPS,\r\n      KEYS.HIDE_THUMB_TOOLTIPS,\r\n      KEYS.QUEUE_TAG_SCRIPTS_ENABLED,\r\n      KEYS.TAG_SCRIPT_QUEUE,\r\n      KEYS.QUEUE_TIMEOUT_UNTIL,\r\n      KEYS.QUEUE_SLOT_TIMESTAMPS\r\n    ]);\r\n\r\n    const isAuto = Boolean(data[KEYS.AUTO_UPDATE]);\r\n    const isLocked = Boolean(data[KEYS.BLACKLIST_LOCKED]);\r\n\r\n    const hzEnabled = data[KEYS.HZ_ENABLED] !== false;\r\n    hzBadge.textContent = hzEnabled ? 'ON' : 'OFF';\r\n    hzBadge.classList.toggle('on', hzEnabled);\r\n\r\n    const hzSample = data[KEYS.HZ_LOAD_SAMPLE] !== false;\r\n    hzSampleBadge.textContent = hzSample ? 'ON' : 'OFF';\r\n    hzSampleBadge.classList.toggle('on', hzSample);\r\n\r\n    const ctrlPreview = data[KEYS.CTRL_PREVIEW_ENABLED] !== false;\r\n    ctrlPreviewBadge.textContent = ctrlPreview ? 'ON' : 'OFF';\r\n    ctrlPreviewBadge.classList.toggle('on', ctrlPreview);\r\n\r\n    const ctrlSticky = Boolean(data[KEYS.CTRL_PREVIEW_STICKY]);\r\n    ctrlStickyBadge.textContent = ctrlSticky ? 'ON' : 'OFF';\r\n    ctrlStickyBadge.classList.toggle('on', ctrlSticky);\r\n\r\n    if (inputTrackingFps && document.activeElement !== inputTrackingFps) {\r\n      inputTrackingFps.value = Number(data[KEYS.TRACKING_FPS]) || 0;\r\n    }\r\n\r\n    const hideTooltips = Boolean(data[KEYS.HIDE_THUMB_TOOLTIPS]);\r\n    hideTooltipsBadge.textContent = hideTooltips ? 'ON' : 'OFF';\r\n    hideTooltipsBadge.classList.toggle('on', hideTooltips);\r\n\r\n    const queueEnabled = Boolean(data[KEYS.QUEUE_TAG_SCRIPTS_ENABLED]);\r\n    queueBadge.textContent = queueEnabled ? 'ON' : 'OFF';\r\n    queueBadge.classList.toggle('on', queueEnabled);\r\n    queueBlock.classList.toggle('hidden', !queueEnabled);\r\n\r\n    const queue = data[KEYS.TAG_SCRIPT_QUEUE] || {};\r\n    const count = Object.keys(queue).length;\r\n    const slots = data[KEYS.QUEUE_SLOT_TIMESTAMPS] || [];\r\n    const timeoutUntil = Number(data[KEYS.QUEUE_TIMEOUT_UNTIL]) || 0;\r\n    const now = Date.now();\r\n\r\n    const nextSlot = slots[0] || timeoutUntil;\r\n    const isTimeout = nextSlot > now;\r\n\r\n    if (isTimeout && count > 0) {\r\n      const nextMs = Math.max(0, nextSlot - now);\r\n      const allSlotIdx = Math.min(count - 1, slots.length - 1);\r\n      const allSlot = slots[allSlotIdx] || nextSlot;\r\n      const allMs = Math.max(0, allSlot - now);\r\n\r\n      if (count > 1) {\r\n        queueStatusText.textContent = `${count} queued (next: ${formatTime(nextMs)}, all: ${formatTime(allMs)})`;\r\n      } else {\r\n        queueStatusText.textContent = `1 queued (ready in ${formatTime(nextMs)})`;\r\n      }\r\n    } else {\r\n      queueStatusText.textContent = `${count} posts queued (ready)`;\r\n    }\r\n\r\n    setButtonsDisabled(false);\r\n    autoUpdateState.textContent = isAuto ? 'ON' : 'OFF';\r\n    autoUpdateState.classList.toggle('on', isAuto);\r\n    btnSyncApi.classList.toggle('hidden', !isAuto);\r\n    manualActions.classList.toggle('hidden', isAuto);\r\n    if (!isAuto) btnBackup.disabled = isLocked;\r\n\r\n    const showUploader = data[KEYS.SHOW_UPLOADER] !== false;\r\n    showUploaderBadge.textContent = showUploader ? 'ON' : 'OFF';\r\n    showUploaderBadge.classList.toggle('on', showUploader);\r\n  }\r\n\r\n  btnHzToggle?.addEventListener('click', async () => {\r\n    const data = await chrome.storage.local.get([KEYS.HZ_ENABLED]);\r\n    await chrome.storage.local.set({ [KEYS.HZ_ENABLED]: data[KEYS.HZ_ENABLED] === false });\r\n    await refreshUI();\r\n  });\r\n\r\n  btnHzSampleToggle?.addEventListener('click', async () => {\r\n    const data = await chrome.storage.local.get([KEYS.HZ_LOAD_SAMPLE]);\r\n    const current = data[KEYS.HZ_LOAD_SAMPLE] !== false;\r\n    await chrome.storage.local.set({ [KEYS.HZ_LOAD_SAMPLE]: !current });\r\n    await refreshUI();\r\n  });\r\n\r\n  btnCtrlPreviewToggle?.addEventListener('click', async () => {\r\n    const data = await chrome.storage.local.get([KEYS.CTRL_PREVIEW_ENABLED]);\r\n    const current = data[KEYS.CTRL_PREVIEW_ENABLED] !== false;\r\n    await chrome.storage.local.set({ [KEYS.CTRL_PREVIEW_ENABLED]: !current });\r\n    if (current) {\r\n      await chrome.storage.local.set({ [KEYS.CTRL_STICKY_ACTIVE]: false });\r\n    }\r\n    await refreshUI();\r\n  });\r\n\r\n  btnCtrlStickyToggle?.addEventListener('click', async () => {\r\n    const data = await chrome.storage.local.get([KEYS.CTRL_PREVIEW_STICKY]);\r\n    const current = Boolean(data[KEYS.CTRL_PREVIEW_STICKY]);\r\n    await chrome.storage.local.set({ [KEYS.CTRL_PREVIEW_STICKY]: !current });\r\n    if (current) {\r\n      await chrome.storage.local.set({ [KEYS.CTRL_STICKY_ACTIVE]: false });\r\n    }\r\n    await refreshUI();\r\n  });\r\n\r\n  inputTrackingFps?.addEventListener('change', async () => {\r\n    let val = parseInt(inputTrackingFps.value, 10);\r\n    if (isNaN(val) || val < 0) val = 0;\r\n    if (val > 360) val = 360;\r\n    inputTrackingFps.value = val;\r\n    await chrome.storage.local.set({ [KEYS.TRACKING_FPS]: val });\r\n  });\r\n\r\n  inputTrackingFps?.addEventListener('keydown', (e) => {\r\n    if (e.key === 'Enter') inputTrackingFps.blur();\r\n  });\r\n\r\n  btnHideTooltipsToggle?.addEventListener('click', async () => {\r\n    const data = await chrome.storage.local.get([KEYS.HIDE_THUMB_TOOLTIPS]);\r\n    const current = Boolean(data[KEYS.HIDE_THUMB_TOOLTIPS]);\r\n    await chrome.storage.local.set({ [KEYS.HIDE_THUMB_TOOLTIPS]: !current });\r\n    await refreshUI();\r\n  });\r\n\r\n  btnQueueToggle?.addEventListener('click', async () => {\r\n    const data = await chrome.storage.local.get([KEYS.QUEUE_TAG_SCRIPTS_ENABLED]);\r\n    await chrome.storage.local.set({ [KEYS.QUEUE_TAG_SCRIPTS_ENABLED]: !data[KEYS.QUEUE_TAG_SCRIPTS_ENABLED] });\r\n    await refreshUI();\r\n  });\r\n\r\n  async function sendAction(action) {\r\n    const enabling = action === ACTIONS.TOGGLE_AUTO_UPDATE && autoUpdateState.textContent === 'OFF';\r\n    setStatus(enabling ? 'Syncing API & enabling...' : 'Processing...');\r\n    setButtonsDisabled(true);\r\n\r\n    try {\r\n      let response = null;\r\n\r\n      try {\r\n        response = await chrome.tabs.sendMessage(tab.id, { action });\r\n      } catch (err) {}\r\n\r\n      if (!response && window.parent && window.parent !== window) {\r\n        response = await new Promise((resolve) => {\r\n          const channel = new MessageChannel();\r\n          channel.port1.onmessage = (e) => resolve(e.data);\r\n          window.parent.postMessage({ fromE621Popup: true, action }, '*', [channel.port2]);\r\n          setTimeout(() => resolve(null), 5000);\r\n        });\r\n      }\r\n\r\n      setStatus(response?.status || (response?.ok === false ? 'Failed' : 'Done'));\r\n    } catch (err) {\r\n      const noReceiver = /Receiving end does not exist|message (channel|port) closed/i.test(err.message);\r\n      setStatus(noReceiver ? 'Error: Refresh the page' : `Error: ${err.message}`);\r\n    } finally {\r\n      await refreshUI();\r\n    }\r\n  }\r\n\r\n  $('btnAutoUpdate').addEventListener('click', () => sendAction(ACTIONS.TOGGLE_AUTO_UPDATE));\r\n  btnSyncApi.addEventListener('click', () => sendAction(ACTIONS.SYNC_API));\r\n  btnBackup.addEventListener('click', () => sendAction(ACTIONS.BACKUP_BLACKLIST));\r\n  $('btnLoadDownvotes').addEventListener('click', () => sendAction(ACTIONS.LOAD_DOWNVOTES));\r\n  $('btnUpload').addEventListener('click', () => sendAction(ACTIONS.UPLOAD_DOWNVOTES));\r\n  $('btnUnload').addEventListener('click', () => sendAction(ACTIONS.UNLOAD_DOWNVOTES));\r\n  btnProcessQueue?.addEventListener('click', () => sendAction(ACTIONS.PROCESS_TAG_QUEUE));\r\n\r\n  $('btnShowUploader').addEventListener('click', async () => {\r\n    const data = await chrome.storage.local.get([KEYS.SHOW_UPLOADER]);\r\n    await chrome.storage.local.set({ [KEYS.SHOW_UPLOADER]: data[KEYS.SHOW_UPLOADER] === false });\r\n    await refreshUI();\r\n  });\r\n\r\n  $('btnShowTreePopup').addEventListener('click', async () => {\r\n    const id = Number(inputTreePostId.value.trim());\r\n    if (!Number.isInteger(id) || id <= 0) return setStatus('Enter a valid post ID');\r\n    try {\r\n      await chrome.tabs.sendMessage(tab.id, { action: ACTIONS.SHOW_POST_TREE, postId: id });\r\n      window.close();\r\n    } catch (err) {\r\n      setStatus('Error: Refresh the page');\r\n    }\r\n  });\r\n\r\n  const stored = await chrome.storage.local.get([KEYS.ACTIVE_POPUP_TAB]);\r\n  const validTabs = ['main', 'blck', 'tagscr', 'hz'];\r\n  let initialTab = 'main';\r\n  if (stored[KEYS.ACTIVE_POPUP_TAB] === 'extra') {\r\n    initialTab = 'tagscr';\r\n  } else if (validTabs.includes(stored[KEYS.ACTIVE_POPUP_TAB])) {\r\n    initialTab = stored[KEYS.ACTIVE_POPUP_TAB];\r\n  }\r\n  showTab(initialTab);\r\n\r\n  await refreshUI();\r\n\r\n  const liveTimer = setInterval(refreshUI, 1000);\r\n  window.addEventListener('unload', () => clearInterval(liveTimer));\r\n});\n</script>\r\n</body>\r\n</html>"
 			};
 			
 // #endregion
@@ -1922,14 +1922,78 @@ console.log("Script start:",performance.now());const e=!0,t=e=>e,o="passthrough"
 	  function executeBackgroundScripts(){
 	    with(backgroundPolyfill){
 	      // BG: background.js
-	/* Service worker: fetches images for SVG export, checks tag queue timeouts,
-	 * and automatically processes queues when the hourly limit expires. */
+	/* Service worker: manages tag script queue, IndexedDB image storage,
+	 * and background tag script execution without requiring open tabs. */
 	importScripts('scripts/constants.js');
 	
 	const { ACTIONS, STORAGE_KEYS: KEYS } = E621_CONSTANTS;
 	const ALLOWED_HOST = /^(?:[a-z0-9-]+\.)*e(?:621|926)\.net$/i;
 	const BASE64_CHUNK = 0x8000;
+	const HOURLY_EDIT_LIMIT = 150;
+	const ONE_HOUR_MS = 60 * 60 * 1000;
+	const CLOCK_BUFFER_MS = 3000;
 	
+	// ---------- IndexedDB image store ----------
+	const DB_NAME = 'e621_extras_db';
+	const DB_VERSION = 1;
+	const STORE_NAME = 'post_images';
+	
+	function openDatabase() {
+	  return new Promise((resolve, reject) => {
+	    const req = indexedDB.open(DB_NAME, DB_VERSION);
+	    req.onupgradeneeded = () => {
+	      const db = req.result;
+	      if (!db.objectStoreNames.contains(STORE_NAME)) {
+	        db.createObjectStore(STORE_NAME, { keyPath: 'postId' });
+	      }
+	    };
+	    req.onsuccess = () => resolve(req.result);
+	    req.onerror = () => reject(req.error);
+	  });
+	}
+	
+	async function idbSaveImage(postId, dataUrl) {
+	  if (!dataUrl) return;
+	  const db = await openDatabase();
+	  return new Promise((resolve, reject) => {
+	    const tx = db.transaction(STORE_NAME, 'readwrite');
+	    tx.objectStore(STORE_NAME).put({ postId: Number(postId), dataUrl, savedAt: Date.now() });
+	    tx.oncomplete = () => resolve();
+	    tx.onerror = () => reject(tx.error);
+	  });
+	}
+	
+	async function idbGetImage(postId) {
+	  const db = await openDatabase();
+	  return new Promise((resolve, reject) => {
+	    const tx = db.transaction(STORE_NAME, 'readonly');
+	    const req = tx.objectStore(STORE_NAME).get(Number(postId));
+	    req.onsuccess = () => resolve(req.result?.dataUrl || null);
+	    req.onerror = () => reject(req.error);
+	  });
+	}
+	
+	async function idbDeleteImage(postId) {
+	  const db = await openDatabase();
+	  return new Promise((resolve, reject) => {
+	    const tx = db.transaction(STORE_NAME, 'readwrite');
+	    tx.objectStore(STORE_NAME).delete(Number(postId));
+	    tx.oncomplete = () => resolve();
+	    tx.onerror = () => reject(tx.error);
+	  });
+	}
+	
+	async function idbClearImages() {
+	  const db = await openDatabase();
+	  return new Promise((resolve, reject) => {
+	    const tx = db.transaction(STORE_NAME, 'readwrite');
+	    tx.objectStore(STORE_NAME).clear();
+	    tx.oncomplete = () => resolve();
+	    tx.onerror = () => reject(tx.error);
+	  });
+	}
+	
+	// ---------- Image fetch helpers ----------
 	function toBase64(bytes) {
 	  let binary = '';
 	  for (let i = 0; i < bytes.length; i += BASE64_CHUNK) {
@@ -1951,50 +2015,366 @@ console.log("Script start:",performance.now());const e=!0,t=e=>e,o="passthrough"
 	  return `data:${type};base64,${toBase64(bytes)}`;
 	}
 	
-	chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
-	  if (sender.id !== chrome.runtime.id) return false;
-	  if (msg?.action === ACTIONS.FETCH_IMAGE) {
-	    fetchImageAsDataUrl(msg.url)
-	      .then(dataUrl => sendResponse({ ok: true, dataUrl }))
-	      .catch(err => sendResponse({ ok: false, error: err.message }));
-	    return true;
+	// ---------- Queue synchronization mutex ----------
+	let queueTail = Promise.resolve();
+	function runQueueOp(task) {
+	  const next = queueTail.then(task);
+	  queueTail = next.catch(err => console.warn('[background] queueOp error:', err));
+	  return next;
+	}
+	
+	// ---------- CSRF token management ----------
+	let cachedCsrfToken = null;
+	async function getCsrfToken(forceFresh = false) {
+	  if (cachedCsrfToken && !forceFresh) return cachedCsrfToken;
+	  try {
+	    const res = await fetch('https://e621.net/posts', { credentials: 'include' });
+	    if (!res.ok) return null;
+	    const html = await res.text();
+	    const match = html.match(/<meta\s+name=["']csrf-token["']\s+content=["']([^"']+)["']/i);
+	    if (match?.[1]) {
+	      cachedCsrfToken = match[1];
+	      return cachedCsrfToken;
+	    }
+	  } catch (err) {
+	    console.warn('[background] Failed to fetch CSRF token:', err);
+	  }
+	  return null;
+	}
+	
+	// ---------- Queue state operations ----------
+	function mergeDiffs(oldDiff = '', newDiff = '') {
+	  const tokenMap = new Map();
+	  const parse = (str) => String(str || '').split(/\s+/).filter(Boolean);
+	
+	  parse(oldDiff).forEach(token => {
+	    const key = token.startsWith('-') ? token.slice(1).toLowerCase() : token.toLowerCase();
+	    tokenMap.set(key, token);
+	  });
+	
+	  parse(newDiff).forEach(token => {
+	    const key = token.startsWith('-') ? token.slice(1).toLowerCase() : token.toLowerCase();
+	    tokenMap.set(key, token);
+	  });
+	
+	  return Array.from(tokenMap.values()).join(' ');
+	}
+	
+	async function enqueuePost(postId, editData) {
+	  const id = Number(postId);
+	  const data = await chrome.storage.local.get([KEYS.TAG_SCRIPT_QUEUE]);
+	  const queue = data[KEYS.TAG_SCRIPT_QUEUE] || {};
+	  const existing = queue[id];
+	
+	  queue[id] = {
+	    id,
+	    changes: existing ? mergeDiffs(existing.changes, editData.changes) : editData.changes,
+	    reason: editData.reason || existing?.reason || '',
+	    queuedAt: existing?.queuedAt || Date.now(),
+	    previewUrl: editData.previewUrl || existing?.previewUrl || '',
+	    score: editData.score !== undefined ? editData.score : (existing?.score ?? 0),
+	    favCount: editData.favCount !== undefined ? editData.favCount : (existing?.favCount ?? 0),
+	    commentCount: editData.commentCount !== undefined ? editData.commentCount : (existing?.commentCount ?? 0),
+	    rating: editData.rating || existing?.rating || 's',
+	    fileExt: editData.fileExt || existing?.fileExt || 'jpg',
+	    tags: editData.tags !== undefined ? editData.tags : (existing?.tags || ''),
+	    flags: editData.flags !== undefined ? editData.flags : (existing?.flags || ''),
+	    hasParent: editData.hasParent !== undefined ? editData.hasParent : (existing?.hasParent ?? false),
+	    hasChildren: editData.hasChildren !== undefined ? editData.hasChildren : (existing?.hasChildren ?? false)
+	  };
+	
+	  await chrome.storage.local.set({ [KEYS.TAG_SCRIPT_QUEUE]: queue });
+	  return queue;
+	}
+	
+	async function dequeuePost(postId) {
+	  const id = Number(postId);
+	  const data = await chrome.storage.local.get([KEYS.TAG_SCRIPT_QUEUE]);
+	  const queue = data[KEYS.TAG_SCRIPT_QUEUE] || {};
+	  if (queue[id]) {
+	    delete queue[id];
+	    await chrome.storage.local.set({ [KEYS.TAG_SCRIPT_QUEUE]: queue });
+	    await idbDeleteImage(id);
+	    if (Object.keys(queue).length === 0) {
+	      await chrome.storage.local.set({
+	        [KEYS.QUEUE_SLOT_TIMESTAMPS]: [],
+	        [KEYS.QUEUE_TIMEOUT_UNTIL]: 0
+	      });
+	    }
+	  }
+	  return queue;
+	}
+	
+	async function clearTagQueue() {
+	  await chrome.storage.local.set({
+	    [KEYS.TAG_SCRIPT_QUEUE]: {},
+	    [KEYS.QUEUE_SLOT_TIMESTAMPS]: [],
+	    [KEYS.QUEUE_TIMEOUT_UNTIL]: 0
+	  });
+	  await idbClearImages();
+	}
+	
+	// ---------- Background Queue Processor ----------
+	function isHourlyLimitResponse(status, errorText) {
+	  if (status === 429) return true;
+	  if (status === 403) {
+	    const msg = String(errorText || '').toLowerCase();
+	    return msg.includes('hourly limit') || msg.includes('limit exceeded') || msg.includes('throttl');
 	  }
 	  return false;
-	});
+	}
 	
-	// Periodic alarm: resets expired timeouts and triggers auto-queue processing on open tabs
-	chrome.alarms.onAlarm.addListener(async (alarm) => {
-	  if (alarm.name === 'tagQueueCheck') {
-	    const data = await chrome.storage.local.get([
-	      KEYS.QUEUE_TAG_SCRIPTS_ENABLED,
-	      KEYS.QUEUE_TIMEOUT_UNTIL,
-	      KEYS.TAG_SCRIPT_QUEUE
-	    ]);
+	async function verifyHourlyLimitExceeded() {
+	  try {
+	    const meRes = await fetch('https://e621.net/users/me.json', { credentials: 'include' });
+	    if (!meRes.ok) return { isLimit: false, nextAvailableMs: 0, slots: [] };
+	    const me = await meRes.json();
+	    if (!me?.id) return { isLimit: false, nextAvailableMs: 0, slots: [] };
 	
-	    if (!data[KEYS.QUEUE_TAG_SCRIPTS_ENABLED]) return;
+	    const url = `https://e621.net/post_versions.json?search[updater_id]=${me.id}&limit=${HOURLY_EDIT_LIMIT}`;
+	    const vRes = await fetch(url, { credentials: 'include' });
+	    if (!vRes.ok) return { isLimit: false, nextAvailableMs: 0, slots: [] };
+	    const list = await vRes.json();
+	    const versions = Array.isArray(list) ? list : (list?.post_versions || []);
+	    const now = Date.now();
 	
-	    const until = Number(data[KEYS.QUEUE_TIMEOUT_UNTIL]) || 0;
-	    const isExpired = until > 0 && Date.now() >= until;
-	
-	    if (isExpired) {
-	      await chrome.storage.local.set({ [KEYS.QUEUE_TIMEOUT_UNTIL]: 0 });
-	    }
-	
-	    const queue = data[KEYS.TAG_SCRIPT_QUEUE] || {};
-	    const hasItems = Object.keys(queue).length > 0;
-	    const isReady = until === 0 || Date.now() >= until;
-	
-	    if (hasItems && isReady) {
-	      const tabs = await chrome.tabs.query({ url: ['https://e621.net/*', 'https://e926.net/*'] });
-	      for (const tab of tabs) {
-	        try {
-	          const res = await chrome.tabs.sendMessage(tab.id, { action: ACTIONS.PROCESS_TAG_QUEUE });
-	          if (res?.ok) break;
-	        } catch (_) {
-	          // Tab may not have finished loading or was closed
-	        }
+	    const recentTimestamps = [];
+	    for (const item of versions) {
+	      const dateStr = item?.updated_at || item?.created_at;
+	      if (!dateStr) continue;
+	      const t = new Date(dateStr).getTime();
+	      if (!Number.isNaN(t) && (now - t) < ONE_HOUR_MS) {
+	        recentTimestamps.push(t);
 	      }
 	    }
+	
+	    if (recentTimestamps.length < HOURLY_EDIT_LIMIT) {
+	      return { isLimit: false, nextAvailableMs: 0, slots: [] };
+	    }
+	
+	    recentTimestamps.sort((a, b) => a - b);
+	    const slots = recentTimestamps.map(t => t + ONE_HOUR_MS + CLOCK_BUFFER_MS);
+	
+	    const data = await chrome.storage.local.get([KEYS.TAG_SCRIPT_QUEUE]);
+	    const queue = data[KEYS.TAG_SCRIPT_QUEUE] || {};
+	    const queueLen = Math.max(Object.keys(queue).length, slots.length);
+	    while (slots.length < queueLen) {
+	      const baseIdx = Math.max(0, slots.length - HOURLY_EDIT_LIMIT);
+	      slots.push((slots[baseIdx] || now) + ONE_HOUR_MS);
+	    }
+	
+	    const nextAvailableMs = Math.max(1000, slots[0] - now);
+	    await chrome.storage.local.set({ [KEYS.QUEUE_SLOT_TIMESTAMPS]: slots });
+	    return { isLimit: true, nextAvailableMs, slots };
+	  } catch (err) {
+	    console.warn('[background] verifyHourlyLimitExceeded error:', err);
+	    return { isLimit: false, nextAvailableMs: 0, slots: [] };
+	  }
+	}
+	
+	async function processQueueInBackground() {
+	  const data = await chrome.storage.local.get([
+	    KEYS.QUEUE_TAG_SCRIPTS_ENABLED,
+	    KEYS.TAG_SCRIPT_QUEUE,
+	    KEYS.QUEUE_TIMEOUT_UNTIL,
+	    KEYS.QUEUE_SLOT_TIMESTAMPS
+	  ]);
+	
+	  if (!data[KEYS.QUEUE_TAG_SCRIPTS_ENABLED]) {
+	    return { total: 0, updated: 0, errors: 0, disabled: true };
+	  }
+	
+	  const queue = data[KEYS.TAG_SCRIPT_QUEUE] || {};
+	  const items = Object.values(queue);
+	  if (!items.length) {
+	    await chrome.storage.local.set({
+	      [KEYS.QUEUE_SLOT_TIMESTAMPS]: [],
+	      [KEYS.QUEUE_TIMEOUT_UNTIL]: 0
+	    });
+	    return { total: 0, updated: 0, errors: 0 };
+	  }
+	
+	  const now = Date.now();
+	  let slots = data[KEYS.QUEUE_SLOT_TIMESTAMPS] || [];
+	  const scheduledTime = slots[0] || Number(data[KEYS.QUEUE_TIMEOUT_UNTIL]) || 0;
+	
+	  if (scheduledTime > now) {
+	    chrome.alarms.create('tagQueueCheck', { when: scheduledTime + 500 });
+	    return { total: items.length, updated: 0, errors: 0, hitLimit: true };
+	  }
+	
+	  let csrf = await getCsrfToken();
+	  let updated = 0;
+	  let errors = 0;
+	  let hitLimit = false;
+	
+	  for (let i = 0; i < items.length; i++) {
+	    const item = items[i];
+	    const currentSlots = (await chrome.storage.local.get([KEYS.QUEUE_SLOT_TIMESTAMPS]))[KEYS.QUEUE_SLOT_TIMESTAMPS] || [];
+	    const nextSlot = currentSlots[0] || 0;
+	
+	    if (nextSlot > Date.now()) {
+	      hitLimit = true;
+	      await chrome.storage.local.set({ [KEYS.QUEUE_TIMEOUT_UNTIL]: nextSlot });
+	      chrome.alarms.create('tagQueueCheck', { when: nextSlot + 500 });
+	      break;
+	    }
+	
+	    try {
+	      let res = await fetch(`https://e621.net/posts/${item.id}.json`, {
+	        method: 'PATCH',
+	        headers: {
+	          'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+	          'X-CSRF-Token': csrf || ''
+	        },
+	        body: new URLSearchParams({
+	          'post[tag_string_diff]': item.changes,
+	          'post[edit_reason]': item.reason || ''
+	        }).toString(),
+	        credentials: 'include'
+	      });
+	
+	      if (res.status === 403) {
+	        csrf = await getCsrfToken(true);
+	        res = await fetch(`https://e621.net/posts/${item.id}.json`, {
+	          method: 'PATCH',
+	          headers: {
+	            'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+	            'X-CSRF-Token': csrf || ''
+	          },
+	          body: new URLSearchParams({
+	            'post[tag_string_diff]': item.changes,
+	            'post[edit_reason]': item.reason || ''
+	          }).toString(),
+	          credentials: 'include'
+	        });
+	      }
+	
+	      if (!res.ok) {
+	        let errorText = '';
+	        try {
+	          const jsonErr = await res.json();
+	          errorText = jsonErr.reason || jsonErr.message || JSON.stringify(jsonErr);
+	        } catch (_) {
+	          errorText = await res.text().catch(() => '');
+	        }
+	
+	        if (isHourlyLimitResponse(res.status, errorText)) {
+	          const check = await verifyHourlyLimitExceeded();
+	          const delay = check.isLimit ? check.nextAvailableMs : (res.status === 429 ? 60000 : 30000);
+	          const resumeAt = Date.now() + delay;
+	          await chrome.storage.local.set({ [KEYS.QUEUE_TIMEOUT_UNTIL]: resumeAt });
+	          chrome.alarms.create('tagQueueCheck', { when: resumeAt + 500 });
+	          hitLimit = true;
+	          break;
+	        }
+	
+	        // Post cannot be edited or tag is locked — dequeue to avoid blocking the queue
+	        await dequeuePost(item.id);
+	        errors++;
+	        continue;
+	      }
+	
+	      // Success
+	      await dequeuePost(item.id);
+	      const remainingSlots = (await chrome.storage.local.get([KEYS.QUEUE_SLOT_TIMESTAMPS]))[KEYS.QUEUE_SLOT_TIMESTAMPS] || [];
+	      if (remainingSlots.length > 0) {
+	        remainingSlots.shift();
+	        await chrome.storage.local.set({ [KEYS.QUEUE_SLOT_TIMESTAMPS]: remainingSlots });
+	      }
+	      updated++;
+	    } catch (err) {
+	      console.warn(`[background] Error processing queued post #${item.id}:`, err);
+	      errors++;
+	    }
+	  }
+	
+	  if (!hitLimit) {
+	    const rem = (await chrome.storage.local.get([KEYS.TAG_SCRIPT_QUEUE]))[KEYS.TAG_SCRIPT_QUEUE] || {};
+	    if (Object.keys(rem).length === 0) {
+	      await chrome.storage.local.set({
+	        [KEYS.QUEUE_SLOT_TIMESTAMPS]: [],
+	        [KEYS.QUEUE_TIMEOUT_UNTIL]: 0
+	      });
+	    }
+	  }
+	
+	  return { total: items.length, updated, errors, hitLimit };
+	}
+	
+	// ---------- Message Router ----------
+	chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+	  if (sender.id !== chrome.runtime.id) return false;
+	
+	  switch (msg?.action) {
+	    case ACTIONS.FETCH_IMAGE:
+	      fetchImageAsDataUrl(msg.url)
+	        .then(dataUrl => sendResponse({ ok: true, dataUrl }))
+	        .catch(err => sendResponse({ ok: false, error: err.message }));
+	      return true;
+	
+	    case ACTIONS.SAVE_IMAGE:
+	      idbSaveImage(msg.postId, msg.dataUrl)
+	        .then(() => sendResponse({ ok: true }))
+	        .catch(err => sendResponse({ ok: false, error: err.message }));
+	      return true;
+	
+	    case ACTIONS.GET_IMAGE:
+	      idbGetImage(msg.postId)
+	        .then(dataUrl => sendResponse({ ok: true, dataUrl }))
+	        .catch(err => sendResponse({ ok: false, error: err.message }));
+	      return true;
+	
+	    case ACTIONS.DELETE_IMAGE:
+	      idbDeleteImage(msg.postId)
+	        .then(() => sendResponse({ ok: true }))
+	        .catch(err => sendResponse({ ok: false, error: err.message }));
+	      return true;
+	
+	    case ACTIONS.CLEAR_IMAGES:
+	      idbClearImages()
+	        .then(() => sendResponse({ ok: true }))
+	        .catch(err => sendResponse({ ok: false, error: err.message }));
+	      return true;
+	
+	    case ACTIONS.ENQUEUE_TAG_SCRIPT:
+	      runQueueOp(() => enqueuePost(msg.postId, msg.editData))
+	        .then(queue => sendResponse({ ok: true, queue }))
+	        .catch(err => sendResponse({ ok: false, error: err.message }));
+	      return true;
+	
+	    case ACTIONS.DEQUEUE_TAG_SCRIPT:
+	      runQueueOp(() => dequeuePost(msg.postId))
+	        .then(queue => sendResponse({ ok: true, queue }))
+	        .catch(err => sendResponse({ ok: false, error: err.message }));
+	      return true;
+	
+	    case ACTIONS.CLEAR_TAG_QUEUE:
+	      runQueueOp(() => clearTagQueue())
+	        .then(() => sendResponse({ ok: true }))
+	        .catch(err => sendResponse({ ok: false, error: err.message }));
+	      return true;
+	
+	    case ACTIONS.PROCESS_TAG_QUEUE:
+	      runQueueOp(() => processQueueInBackground())
+	        .then(res => sendResponse({ ok: true, ...res }))
+	        .catch(err => sendResponse({ ok: false, error: err.message }));
+	      return true;
+	
+	    case ACTIONS.SET_CSRF_TOKEN:
+	      if (msg.csrfToken) cachedCsrfToken = msg.csrfToken;
+	      sendResponse({ ok: true });
+	      return false;
+	
+	    default:
+	      return false;
+	  }
+	});
+	
+	// Periodic alarm: triggers background processing even when all e621 tabs are closed
+	chrome.alarms.onAlarm.addListener(async (alarm) => {
+	  if (alarm.name === 'tagQueueCheck') {
+	    await runQueueOp(() => processQueueInBackground());
 	  }
 	});
 	
@@ -2028,7 +2408,7 @@ console.log("Script start:",performance.now());const e=!0,t=e=>e,o="passthrough"
    // #endregion
     // #region Orchestration Logic
 	// Other globals currently defined at this spot: SCRIPT_NAME, _log, _warn, _error
-	const INJECTED_MANIFEST = {"manifest_version":3,"name":"e621 extras","version":"1.5.2","description":"Downvotes-to-blacklist manager, post tree viewer, hover zoom and tag scripts for regular members of e621 and e926.","permissions":["storage","alarms","unlimitedStorage"],"optional_permissions":[],"content_scripts":[{"matches":["https://e621.net/*","https://e926.net/*"],"css":["styles/extras.css"],"js":["scripts/constants.js","scripts/core.js","scripts/selectors.js","scripts/utils.js","scripts/net.js","scripts/ui/dom.js","scripts/ui/layout.js","scripts/ui/thumbnail.js","scripts/ui/dtext.js","scripts/ui/tooltips.js","scripts/blacklist.js","scripts/uploader.js","scripts/user_edits.js","scripts/tree/data.js","scripts/tree/export.js","scripts/tree/modal.js","scripts/hover_zoom/data.js","scripts/hover_zoom/index.js","scripts/tag_script/engine.js","scripts/tag_script/queue.js","scripts/tag_script/timeouted_page.js","scripts/tag_script/logger.js","scripts/tag_script/storage.js","scripts/tag_script/runner.js","scripts/tag_script/preview.js","scripts/tag_script/index.js","scripts/content.js"],"run_at":"document_end"}],"options_ui":{},"browser_action":{},"page_action":{},"action":{"default_popup":"popup/popup.html","default_title":"e621 extras"},"icons":{},"web_accessible_resources":[],"background":{"service_worker":"background.js"},"_id":"e621-extras"};
+	const INJECTED_MANIFEST = {"manifest_version":3,"name":"e621 extras","version":"1.5.3","description":"Downvotes-to-blacklist manager, post tree viewer, hover zoom and tag scripts for regular members of e621 and e926.","permissions":["storage","alarms","unlimitedStorage"],"optional_permissions":[],"content_scripts":[{"matches":["https://e621.net/*","https://e926.net/*"],"css":["styles/extras.css"],"js":["scripts/constants.js","scripts/core.js","scripts/selectors.js","scripts/utils.js","scripts/net.js","scripts/ui/dom.js","scripts/ui/layout.js","scripts/ui/thumbnail.js","scripts/ui/dtext.js","scripts/ui/tooltips.js","scripts/blacklist.js","scripts/uploader.js","scripts/user_edits.js","scripts/tree/data.js","scripts/tree/export.js","scripts/tree/modal.js","scripts/hover_zoom/data.js","scripts/hover_zoom/index.js","scripts/tag_script/engine.js","scripts/tag_script/queue.js","scripts/tag_script/timeouted_page.js","scripts/tag_script/logger.js","scripts/tag_script/storage.js","scripts/tag_script/runner.js","scripts/tag_script/preview.js","scripts/tag_script/index.js","scripts/content.js"],"run_at":"document_end"}],"options_ui":{},"browser_action":{},"page_action":{},"action":{"default_popup":"popup/popup.html","default_title":"e621 extras"},"icons":{},"web_accessible_resources":[],"background":{"service_worker":"background.js"},"_id":"e621-extras"};
 	const CONTENT_SCRIPT_CONFIGS_FOR_MATCHING = [
 	  {
 	    "matches": [
@@ -2421,7 +2801,14 @@ console.log("Script start:",performance.now());const e=!0,t=e=>e,o="passthrough"
 			    SHOW_POST_TREE: 'showPostTree',
 			    FETCH_IMAGE: 'fetchImageAsDataUrl',
 			    PROCESS_TAG_QUEUE: 'processTagQueue',
-			    CLEAR_TAG_QUEUE: 'clearTagQueue'
+			    CLEAR_TAG_QUEUE: 'clearTagQueue',
+			    ENQUEUE_TAG_SCRIPT: 'enqueueTagScript',
+			    DEQUEUE_TAG_SCRIPT: 'dequeueTagScript',
+			    SAVE_IMAGE: 'saveImage',
+			    GET_IMAGE: 'getImage',
+			    DELETE_IMAGE: 'deleteImage',
+			    CLEAR_IMAGES: 'clearImages',
+			    SET_CSRF_TOKEN: 'setCsrfToken'
 			  })
 			});
 			// END: scripts/constants.js
@@ -3890,15 +4277,18 @@ console.log("Script start:",performance.now());const e=!0,t=e=>e,o="passthrough"
 			
 			    // 1. Header
 			    const titleSpan = D.el('span', { class: 'e621x-stats-title', text: `Tag Update Statistics — ${userName} (#${userId})` });
+			    function closeModal() {
+			      abortFetch = true;
+			      document.removeEventListener('keydown', handleKeydown);
+			      overlay.remove();
+			    }
+			
 			    const closeBtn = D.el('button', {
 			      type: 'button',
 			      class: 'e621x-stats-close-btn',
 			      text: '×',
 			      'aria-label': 'Close',
-			      onClick: () => {
-			        abortFetch = true;
-			        overlay.remove();
-			      }
+			      onClick: closeModal
 			    });
 			
 			    const header = D.el('div', { class: 'e621x-stats-header' }, [
@@ -3924,10 +4314,7 @@ console.log("Script start:",performance.now());const e=!0,t=e=>e,o="passthrough"
 			    const btnCancel = D.button({
 			      text: 'Cancel',
 			      className: 'e621x-stats-btn',
-			      onClick: () => {
-			        abortFetch = true;
-			        overlay.remove();
-			      }
+			      onClick: closeModal
 			    });
 			
 			    const progressBox = D.el('div', { class: 'e621x-stats-progress-box' }, [
@@ -4063,16 +4450,14 @@ console.log("Script start:",performance.now());const e=!0,t=e=>e,o="passthrough"
 			    overlay.appendChild(dialog);
 			    document.body.appendChild(overlay);
 			
-			    // Escape key listener to close modal
-			    const handleKeydown = (e) => {
+			    // Keydown listener to close modal on Escape
+			    function handleKeydown(e) {
 			      if (e.key === 'Escape') {
-			        abortFetch = true;
-			        overlay.remove();
-			        document.removeEventListener('keydown', handleKeydown);
+			        closeModal();
 			      }
-			    };
-			    document.addEventListener('keydown', handleKeydown);
+			    }
 			
+			    document.addEventListener('keydown', handleKeydown);
 			    let activeDataset = null;
 			    let renderId = 0;
 			    let isFetchingMissing = false;
@@ -5914,16 +6299,13 @@ console.log("Script start:",performance.now());const e=!0,t=e=>e,o="passthrough"
 			// END: scripts/tag_script/engine.js
 			
 			// START: scripts/tag_script/queue.js
+			/* Tag script queue client: delegates mutations and processing to background.js
+			 * and uses IndexedDB for image storage to avoid storage quota issues. */
 			E621X.define('tagScriptQueue', ['utils', 'net'], (U, Net) => {
 			  'use strict';
 			  const { STORAGE_KEYS: KEYS, ACTIONS } = E621_CONSTANTS;
 			  const HOURLY_EDIT_LIMIT = 150;
 			  const ONE_HOUR_MS = 60 * 60 * 1000;
-			  const CLOCK_BUFFER_MS = 3000;
-			  const LOCK_KEY = 'e621_queue_processing_lock';
-			  const LOCK_TIMEOUT_MS = 25000;
-			
-			  let autoProcessTimer = null;
 			
 			  async function isEnabled() {
 			    return Boolean(await U.storageGet(KEYS.QUEUE_TAG_SCRIPTS_ENABLED, false));
@@ -5935,25 +6317,6 @@ console.log("Script start:",performance.now());const e=!0,t=e=>e,o="passthrough"
 			
 			  async function getTimeoutUntil() {
 			    return Number(await U.storageGet(KEYS.QUEUE_TIMEOUT_UNTIL, 0)) || 0;
-			  }
-			
-			  async function setTimeoutUntil(timestamp) {
-			    await U.storageSet(KEYS.QUEUE_TIMEOUT_UNTIL, timestamp);
-			    const delay = timestamp - Date.now();
-			    if (delay > 0) {
-			      scheduleAutoProcess(delay);
-			    } else if (autoProcessTimer) {
-			      clearTimeout(autoProcessTimer);
-			      autoProcessTimer = null;
-			    }
-			  }
-			
-			  async function getSlotSchedule() {
-			    return (await U.storageGet(KEYS.QUEUE_SLOT_TIMESTAMPS, [])) || [];
-			  }
-			
-			  async function setSlotSchedule(slots) {
-			    await U.storageSet(KEYS.QUEUE_SLOT_TIMESTAMPS, slots);
 			  }
 			
 			  async function isTimeoutActive() {
@@ -5971,22 +6334,49 @@ console.log("Script start:",performance.now());const e=!0,t=e=>e,o="passthrough"
 			    return (await U.storageGet(KEYS.TAG_SCRIPT_QUEUE, {})) || {};
 			  }
 			
-			  /* Merge tag diff tokens when queuing edits to an already queued post */
-			  function mergeDiffs(oldDiff = '', newDiff = '') {
-			    const tokenMap = new Map();
-			    const parse = (str) => String(str || '').split(/\s+/).filter(Boolean);
+			  async function getQueueCount() {
+			    const q = await getQueue();
+			    return Object.keys(q).length;
+			  }
 			
-			    parse(oldDiff).forEach(token => {
-			      const key = token.startsWith('-') ? token.slice(1).toLowerCase() : token.toLowerCase();
-			      tokenMap.set(key, token);
-			    });
+			  async function getSlotSchedule() {
+			    return (await U.storageGet(KEYS.QUEUE_SLOT_TIMESTAMPS, [])) || [];
+			  }
 			
-			    parse(newDiff).forEach(token => {
-			      const key = token.startsWith('-') ? token.slice(1).toLowerCase() : token.toLowerCase();
-			      tokenMap.set(key, token);
-			    });
+			  // ---------- IndexedDB image operations via background ----------
+			  async function saveImage(postId, dataUrl) {
+			    if (!dataUrl) return;
+			    try {
+			      await chrome.runtime.sendMessage({ action: ACTIONS.SAVE_IMAGE, postId, dataUrl });
+			    } catch (err) {
+			      U.logWarn('saveImage to IndexedDB', err);
+			    }
+			  }
 			
-			    return Array.from(tokenMap.values()).join(' ');
+			  async function getImage(postId) {
+			    try {
+			      const res = await chrome.runtime.sendMessage({ action: ACTIONS.GET_IMAGE, postId });
+			      return res?.dataUrl || null;
+			    } catch (err) {
+			      U.logWarn('getImage from IndexedDB', err);
+			      return null;
+			    }
+			  }
+			
+			  async function deleteImage(postId) {
+			    try {
+			      await chrome.runtime.sendMessage({ action: ACTIONS.DELETE_IMAGE, postId });
+			    } catch (err) {
+			      U.logWarn('deleteImage from IndexedDB', err);
+			    }
+			  }
+			
+			  async function clearImages() {
+			    try {
+			      await chrome.runtime.sendMessage({ action: ACTIONS.CLEAR_IMAGES });
+			    } catch (err) {
+			      U.logWarn('clearImages from IndexedDB', err);
+			    }
 			  }
 			
 			  /* Fetches image as Base64 via service worker (avoids CORS) */
@@ -5995,9 +6385,7 @@ console.log("Script start:",performance.now());const e=!0,t=e=>e,o="passthrough"
 			    try {
 			      const res = await chrome.runtime.sendMessage({ action: ACTIONS.FETCH_IMAGE, url });
 			      if (res?.ok && res.dataUrl) return res.dataUrl;
-			    } catch (_) {
-			      // Swallowed safely
-			    }
+			    } catch (_) {}
 			    return null;
 			  }
 			
@@ -6026,7 +6414,6 @@ console.log("Script start:",performance.now());const e=!0,t=e=>e,o="passthrough"
 			    return null;
 			  }
 			
-			  /* Extracts full post details and statistics directly from thumbnail element */
 			  function extractThumbData(thumb) {
 			    if (!thumb) return {};
 			    const d = thumb.dataset || {};
@@ -6049,32 +6436,23 @@ console.log("Script start:",performance.now());const e=!0,t=e=>e,o="passthrough"
 			
 			  async function enqueue(postId, editData) {
 			    const id = Number(postId);
-			    const queue = await getQueue();
-			    const existing = queue[id];
+			    const thumbnailDataUrl = editData.thumbnailDataUrl;
+			    if (thumbnailDataUrl) {
+			      await saveImage(id, thumbnailDataUrl);
+			    }
 			
-			    queue[id] = {
-			      id,
-			      changes: existing ? mergeDiffs(existing.changes, editData.changes) : editData.changes,
-			      reason: editData.reason || existing?.reason || '',
-			      queuedAt: existing?.queuedAt || Date.now(),
-			      previewUrl: editData.previewUrl || existing?.previewUrl || '',
-			      thumbnailDataUrl: editData.thumbnailDataUrl || existing?.thumbnailDataUrl || '',
-			      score: editData.score !== undefined ? editData.score : (existing?.score ?? 0),
-			      favCount: editData.favCount !== undefined ? editData.favCount : (existing?.favCount ?? 0),
-			      commentCount: editData.commentCount !== undefined ? editData.commentCount : (existing?.commentCount ?? 0),
-			      rating: editData.rating || existing?.rating || 's',
-			      fileExt: editData.fileExt || existing?.fileExt || 'jpg',
-			      tags: editData.tags !== undefined ? editData.tags : (existing?.tags || ''),
-			      flags: editData.flags !== undefined ? editData.flags : (existing?.flags || ''),
-			      hasParent: editData.hasParent !== undefined ? editData.hasParent : (existing?.hasParent ?? false),
-			      hasChildren: editData.hasChildren !== undefined ? editData.hasChildren : (existing?.hasChildren ?? false)
-			    };
+			    const sanitized = { ...editData };
+			    delete sanitized.thumbnailDataUrl;
 			
-			    await U.storageSet(KEYS.TAG_SCRIPT_QUEUE, queue);
-			    return queue;
+			    const res = await chrome.runtime.sendMessage({
+			      action: ACTIONS.ENQUEUE_TAG_SCRIPT,
+			      postId: id,
+			      editData: sanitized
+			    });
+			
+			    return res?.queue || (await getQueue());
 			  }
 			
-			  /* Queues a post extracting its statistics and Base64 thumbnail directly from DOM element */
 			  async function enqueueFromThumb(thumb, editData) {
 			    const postId = Number(thumb.dataset.id);
 			    const meta = extractThumbData(thumb);
@@ -6087,38 +6465,35 @@ console.log("Script start:",performance.now());const e=!0,t=e=>e,o="passthrough"
 			    });
 			  }
 			
-			  async function updatePostCache(postId, cacheData) {
-			    const id = Number(postId);
-			    const queue = await getQueue();
-			    if (!queue[id]) return;
-			
-			    queue[id] = { ...queue[id], ...cacheData };
-			    await U.storageSet(KEYS.TAG_SCRIPT_QUEUE, queue);
-			  }
-			
 			  async function dequeue(postId) {
 			    const id = Number(postId);
-			    const queue = await getQueue();
-			    if (queue[id]) {
-			      delete queue[id];
-			      await U.storageSet(KEYS.TAG_SCRIPT_QUEUE, queue);
-			      if (Object.keys(queue).length === 0) {
-			        await setSlotSchedule([]);
-			        await setTimeoutUntil(0);
-			      }
-			    }
-			    return queue;
+			    await deleteImage(id);
+			    const res = await chrome.runtime.sendMessage({
+			      action: ACTIONS.DEQUEUE_TAG_SCRIPT,
+			      postId: id
+			    });
+			    return res?.queue || (await getQueue());
 			  }
 			
 			  async function clearQueue() {
-			    await U.storageSet(KEYS.TAG_SCRIPT_QUEUE, {});
-			    await setSlotSchedule([]);
-			    await setTimeoutUntil(0);
+			    await clearImages();
+			    await chrome.runtime.sendMessage({ action: ACTIONS.CLEAR_TAG_QUEUE });
 			  }
 			
-			  /* Checks GET /posts/{id}.json to verify if a post or any applied tags are locked */
+			  async function processQueue() {
+			    try {
+			      const res = await chrome.runtime.sendMessage({ action: ACTIONS.PROCESS_TAG_QUEUE });
+			      if (res?.ok) {
+			        return res;
+			      }
+			      return { total: 0, updated: 0, errors: 1, error: res?.error };
+			    } catch (err) {
+			      U.logWarn('processQueue request failed', err);
+			      return { total: 0, updated: 0, errors: 1, error: err.message };
+			    }
+			  }
+			
 			  async function checkPostLockStatus(postId, changes = '') {
-			    // Fast path: inspect thumbnail in DOM first to avoid network request
 			    const thumb = document.querySelector(`article.thumbnail[data-id="${postId}"]`);
 			    if (thumb) {
 			      const flags = (thumb.dataset.flags || '').split(/\s+/);
@@ -6157,9 +6532,7 @@ console.log("Script start:",performance.now());const e=!0,t=e=>e,o="passthrough"
 			        const lockedSet = new Set(lockedTags.map(t => String(t).trim().toLowerCase()));
 			        const tokens = String(changes).split(/\s+/).filter(Boolean);
 			        for (const token of tokens) {
-			          if (token.includes(':') && !token.startsWith('-') && !token.startsWith('+')) {
-			            continue;
-			          }
+			          if (token.includes(':') && !token.startsWith('-') && !token.startsWith('+')) continue;
 			          const cleanTag = token.replace(/^[-+]/, '').toLowerCase();
 			          if (lockedSet.has(cleanTag)) {
 			            return { isLocked: true, reason: `Tag "${cleanTag}" is locked on post #${postId}` };
@@ -6178,18 +6551,15 @@ console.log("Script start:",performance.now());const e=!0,t=e=>e,o="passthrough"
 			    }
 			  }
 			
-			  /* Checks if status and server response body explicitly indicate edit rate limit */
 			  function isHourlyLimitResponse(status, errorText) {
 			    if (status === 429) return true;
 			    if (status === 403) {
 			      const msg = String(errorText || '').toLowerCase();
-			      // Only match specific rate limiting/throttling phrases to prevent permanent bans from triggering infinite loops
 			      return msg.includes('hourly limit') || msg.includes('limit exceeded') || msg.includes('throttl');
 			    }
 			    return false;
 			  }
 			
-			  /* Parse error responses matching OpenAPI schemas */
 			  async function parseErrorBody(res) {
 			    try {
 			      const data = await res.json();
@@ -6199,58 +6569,8 @@ console.log("Script start:",performance.now());const e=!0,t=e=>e,o="passthrough"
 			        if (Array.isArray(data.errors)) return data.errors.join('; ');
 			      }
 			      if (data.message) return data.message;
-			    } catch (_) {
-			      // Ignored: fallback to status code
-			    }
+			    } catch (_) {}
 			    return `HTTP ${res.status}`;
-			  }
-			
-			  /* Verifies against /post_versions.json whether the 150 edits/hour rolling limit is truly reached */
-			  async function verifyHourlyLimitExceeded() {
-			    try {
-			      const user = U.getCurrentUser();
-			      if (!user?.userId) return { isLimit: false, nextAvailableMs: 0, slots: [] };
-			
-			      const data = await Net.fetchJson(`/post_versions.json?search[updater_id]=${user.userId}&limit=${HOURLY_EDIT_LIMIT}`);
-			      const list = Array.isArray(data) ? data : (data?.post_versions || []);
-			      const now = Date.now();
-			
-			      const recentTimestamps = [];
-			      for (const item of list) {
-			        const dateStr = item?.updated_at || item?.created_at;
-			        if (!dateStr) continue;
-			        const t = new Date(dateStr).getTime();
-			        if (!Number.isNaN(t) && (now - t) < ONE_HOUR_MS) {
-			          recentTimestamps.push(t);
-			        }
-			      }
-			
-			      if (recentTimestamps.length < HOURLY_EDIT_LIMIT) {
-			        return { isLimit: false, nextAvailableMs: 0, slots: [] };
-			      }
-			
-			      recentTimestamps.sort((a, b) => a - b);
-			
-			      const slots = [];
-			      for (const t of recentTimestamps) {
-			        slots.push(t + ONE_HOUR_MS + CLOCK_BUFFER_MS);
-			      }
-			
-			      const queue = await getQueue();
-			      const queueLen = Math.max(Object.keys(queue).length, slots.length);
-			      while (slots.length < queueLen) {
-			        const baseIdx = Math.max(0, slots.length - HOURLY_EDIT_LIMIT);
-			        slots.push((slots[baseIdx] || now) + ONE_HOUR_MS);
-			      }
-			
-			      const nextAvailableMs = Math.max(1000, slots[0] - now);
-			      await setSlotSchedule(slots);
-			
-			      return { isLimit: true, nextAvailableMs, slots };
-			    } catch (err) {
-			      U.logWarn('verifyHourlyLimitExceeded', err);
-			      return { isLimit: false, nextAvailableMs: 0, slots: [] };
-			    }
 			  }
 			
 			  function formatDuration(ms) {
@@ -6261,156 +6581,6 @@ console.log("Script start:",performance.now());const e=!0,t=e=>e,o="passthrough"
 			    if (hours > 0) return `${hours}h ${mins}m`;
 			    if (mins > 0) return `${mins}m ${secs}s`;
 			    return `${secs}s`;
-			  }
-			
-			  function scheduleAutoProcess(delayMs) {
-			    if (autoProcessTimer) clearTimeout(autoProcessTimer);
-			    if (delayMs <= 0 || delayMs > 24 * 60 * 60 * 1000) return;
-			
-			    autoProcessTimer = setTimeout(async () => {
-			      autoProcessTimer = null;
-			      if (!(await isEnabled())) return;
-			
-			      const until = await getTimeoutUntil();
-			      if (Date.now() >= until) {
-			        await setTimeoutUntil(0);
-			        const queue = await getQueue();
-			        if (Object.keys(queue).length > 0) {
-			          U.showToast('Slot available: processing next queued post...');
-			          await processQueue();
-			        }
-			      }
-			    }, delayMs + 1000);
-			  }
-			
-			  async function acquireLock() {
-			    const lock = Number(await U.storageGet(LOCK_KEY, 0)) || 0;
-			    if (Date.now() - lock < LOCK_TIMEOUT_MS) return false;
-			    await U.storageSet(LOCK_KEY, Date.now());
-			    return true;
-			  }
-			
-			  async function releaseLock() {
-			    await U.storageSet(LOCK_KEY, 0);
-			  }
-			
-			  async function processQueue(onProgress = null) {
-			    if (!(await acquireLock())) {
-			      U.showToast('Queue is already being processed in another tab', true);
-			      return { inProgress: true };
-			    }
-			
-			    const queue = await getQueue();
-			    const items = Object.values(queue);
-			    if (!items.length) {
-			      await releaseLock();
-			      U.showToast('Tag script queue is empty');
-			      return { total: 0, updated: 0, errors: 0 };
-			    }
-			
-			    let updated = 0;
-			    let errors = 0;
-			    let hitLimit = false;
-			    let slots = await getSlotSchedule();
-			
-			    try {
-			      for (let i = 0; i < items.length; i++) {
-			        const item = items[i];
-			        await U.storageSet(LOCK_KEY, Date.now());
-			
-			        const scheduledTime = slots[0] || 0;
-			        const now = Date.now();
-			
-			        if (scheduledTime > now) {
-			          const waitMs = scheduledTime - now;
-			          await setTimeoutUntil(scheduledTime);
-			          hitLimit = true;
-			          U.showToast(`Next slot opens in ${formatDuration(waitMs)}. Paused.`);
-			          break;
-			        }
-			
-			        if (typeof onProgress === 'function') {
-			          onProgress({ index: i, total: items.length, current: item });
-			        }
-			        U.showToast(`Processing queue ${i + 1}/${items.length} (Post #${item.id})...`);
-			
-			        try {
-			          const res = await Net.sendForm(`/posts/${item.id}.json`, 'PATCH', {
-			            'post[tag_string_diff]': item.changes,
-			            'post[edit_reason]': item.reason || ''
-			          });
-			
-			          if (!res.ok) {
-			            const errorMsg = await parseErrorBody(res);
-			
-			            if (isHourlyLimitResponse(res.status, errorMsg)) {
-			              const check = await verifyHourlyLimitExceeded();
-			              if (check.isLimit) {
-			                const delay = check.nextAvailableMs;
-			                await setTimeoutUntil(Date.now() + delay);
-			                hitLimit = true;
-			                U.showToast(`Hourly limit active. Next slot in ${formatDuration(delay)}.`, true);
-			                break;
-			              } else if (res.status === 429) {
-			                const delay = 60 * 1000;
-			                await setTimeoutUntil(Date.now() + delay);
-			                hitLimit = true;
-			                U.showToast('API rate limit reached (429). Pausing queue for 1m.', true);
-			                break;
-			              }
-			              // If 403 and NOT a limit, fall through to dequeue (do not loop forever!)
-			            }
-			
-			            await dequeue(item.id);
-			            const isLockedMsg = /locked|is deleted|cannot be edited/i.test(errorMsg);
-			            let lockReason = isLockedMsg ? errorMsg : '';
-			            if (!isLockedMsg) {
-			              const lockCheck = await checkPostLockStatus(item.id, item.changes);
-			              if (lockCheck.isLocked) lockReason = lockCheck.reason;
-			            }
-			
-			            const thumb = document.querySelector(`article.thumbnail[data-id="${item.id}"]`);
-			            if (thumb && lockReason) {
-			              thumb.classList.remove('e621x-thumb-queued', 'e621x-thumb-updated');
-			              thumb.classList.add('e621x-thumb-locked');
-			            }
-			            U.showToast(`Post #${item.id} skipped: ${lockReason || errorMsg}`, true);
-			            errors++;
-			            continue;
-			          }
-			
-			          // Successfully updated
-			          await dequeue(item.id);
-			          const thumb = document.querySelector(`article.thumbnail[data-id="${item.id}"]`);
-			          if (thumb) {
-			            thumb.classList.remove('e621x-thumb-queued', 'e621x-thumb-locked');
-			            thumb.classList.add('e621x-thumb-updated');
-			          }
-			          if (slots.length > 0) {
-			            slots.shift();
-			            await setSlotSchedule(slots);
-			          }
-			          updated++;
-			
-			        } catch (err) {
-			          errors++;
-			          U.logWarn(`queued post #${item.id}`, err);
-			        }
-			      }
-			    } finally {
-			      await releaseLock();
-			    }
-			
-			    if (!hitLimit) {
-			      const remQueue = await getQueue();
-			      if (Object.keys(remQueue).length === 0) {
-			        await setSlotSchedule([]);
-			        await setTimeoutUntil(0);
-			      }
-			      U.showToast(`Queue finished: ${updated} updated${errors ? `, ${errors} errors` : ''}`);
-			    }
-			
-			    return { total: items.length, updated, errors, hitLimit };
 			  }
 			
 			  async function getQueueTimingInfo() {
@@ -6436,7 +6606,6 @@ console.log("Script start:",performance.now());const e=!0,t=e=>e,o="passthrough"
 			
 			    const nextSlot = slots[0] || now;
 			    const nextMs = Math.max(0, nextSlot - now);
-			
 			    const allSlotIdx = Math.min(count - 1, slots.length - 1);
 			    const allSlot = slots[allSlotIdx] || nextSlot;
 			    const allMs = Math.max(0, allSlot - now);
@@ -6444,45 +6613,34 @@ console.log("Script start:",performance.now());const e=!0,t=e=>e,o="passthrough"
 			    return { count, nextMs, allMs, isTimeout: nextMs > 0, nextSlot, allSlot };
 			  }
 			
-			  async function init() {
-			    const until = await getTimeoutUntil();
-			    if (until > 0) {
-			      if (Date.now() >= until) {
-			        await setTimeoutUntil(0);
-			        const queue = await getQueue();
-			        if (Object.keys(queue).length > 0 && (await isEnabled())) {
-			          setTimeout(() => processQueue(), 2000);
-			        }
-			      } else {
-			        scheduleAutoProcess(until - Date.now());
-			      }
-			    }
-			  }
+			  async function init() {}
 			
 			  return {
 			    init,
 			    isEnabled,
 			    setEnabled,
 			    getTimeoutUntil,
-			    setTimeoutUntil,
 			    isTimeoutActive,
 			    getRemainingTimeoutMs,
 			    getQueueTimingInfo,
 			    getSlotSchedule,
 			    checkPostLockStatus,
-			    verifyHourlyLimitExceeded,
 			    isHourlyLimitResponse,
 			    getQueue,
+			    getQueueCount,
 			    enqueue,
 			    enqueueFromThumb,
 			    extractThumbData,
 			    fetchImageAsBase64,
-			    updatePostCache,
 			    dequeue,
 			    clearQueue,
 			    formatDuration,
 			    processQueue,
 			    parseErrorBody,
+			    saveImage,
+			    getImage,
+			    deleteImage,
+			    clearImages,
 			    HOURLY_EDIT_LIMIT
 			  };
 			});
@@ -6654,10 +6812,10 @@ console.log("Script start:",performance.now());const e=!0,t=e=>e,o="passthrough"
 			        return;
 			      }
 			
-			      // Check which posts lack local cache (base64 image or stats)
+			      // Check which posts lack metadata
 			      const missingIds = ids.filter(id => {
 			        const it = queue[id];
-			        return !it || !it.thumbnailDataUrl || it.score === undefined;
+			        return !it || it.score === undefined;
 			      });
 			
 			      const fetchedMap = new Map();
@@ -6668,22 +6826,10 @@ console.log("Script start:",performance.now());const e=!0,t=e=>e,o="passthrough"
 			          for (const p of posts) {
 			            fetchedMap.set(p.id, p);
 			            const previewUrl = p.preview?.url || '';
-			            let b64 = null;
 			            if (previewUrl) {
-			              b64 = await Queue.fetchImageAsBase64(previewUrl);
+			              const b64 = await Queue.fetchImageAsBase64(previewUrl);
+			              if (b64) await Queue.saveImage(p.id, b64);
 			            }
-			            await Queue.updatePostCache(p.id, {
-			              thumbnailDataUrl: b64 || previewUrl,
-			              score: p.score?.total ?? 0,
-			              favCount: p.fav_count ?? 0,
-			              commentCount: p.comment_count ?? 0,
-			              rating: p.rating || 's',
-			              fileExt: p.file?.ext || 'jpg',
-			              tags: U.getPostTagString(p),
-			              flags: p.flags || {},
-			              hasParent: Boolean(p.relationships?.parent_id),
-			              hasChildren: Boolean(p.relationships?.has_children)
-			            });
 			          }
 			        } catch (err) {
 			          U.logWarn('timeouted page fetch missing', err);
@@ -6695,6 +6841,7 @@ console.log("Script start:",performance.now());const e=!0,t=e=>e,o="passthrough"
 			      for (const id of ids) {
 			        const item = queue[id] || {};
 			        const fetched = fetchedMap.get(id);
+			        const storedImage = await Queue.getImage(id);
 			
 			        const post = fetched || {
 			          id,
@@ -6707,7 +6854,7 @@ console.log("Script start:",performance.now());const e=!0,t=e=>e,o="passthrough"
 			          flags: item.flags || '',
 			          has_parent: item.hasParent ?? false,
 			          has_children: item.hasChildren ?? false,
-			          preview: { url: item.thumbnailDataUrl || item.previewUrl || '' }
+			          preview: { url: storedImage || item.previewUrl || '' }
 			        };
 			
 			        grid.appendChild(createQueueCard(post, item, handleRemove));
@@ -7336,9 +7483,11 @@ console.log("Script start:",performance.now());const e=!0,t=e=>e,o="passthrough"
 			    if (!changes.trim()) return U.showToast(`Post #${postId}: No changes needed`);
 			
 			    const queueEnabled = await Queue.isEnabled();
+			    const queueCount = await Queue.getQueueCount();
 			    const isTimeout = await Queue.isTimeoutActive();
 			
-			    if (queueEnabled && isTimeout) {
+			    // If queue is non-empty, do not attempt immediate edit or slot check: append directly to queue
+			    if (queueEnabled && (queueCount > 0 || isTimeout)) {
 			      await Queue.enqueueFromThumb(thumb, {
 			        changes,
 			        reason: getReason()
@@ -7347,7 +7496,9 @@ console.log("Script start:",performance.now());const e=!0,t=e=>e,o="passthrough"
 			      thumb.classList.add('e621x-thumb-queued');
 			      thumb.dataset.tags = applyLocalTagDiff(thumb.dataset.tags, changes);
 			      const remMs = await Queue.getRemainingTimeoutMs();
-			      U.showToast(`Hourly limit active. Post #${postId} queued (${Queue.formatDuration(remMs)} left).`);
+			      U.showToast(queueCount > 0
+			        ? `Added to queue (#${postId}). Position: ${queueCount + 1}`
+			        : `Hourly limit active. Post #${postId} queued (${Queue.formatDuration(remMs)} left).`);
 			      await syncQueuedOutlines();
 			      return;
 			    }
@@ -7514,9 +7665,11 @@ console.log("Script start:",performance.now());const e=!0,t=e=>e,o="passthrough"
 			      if (!plan.items.length) return U.showToast('No changes needed');
 			
 			      const queueEnabled = await Queue.isEnabled();
+			      const queueCount = await Queue.getQueueCount();
 			      const isTimeout = await Queue.isTimeoutActive();
 			
-			      if (queueEnabled && isTimeout) {
+			      // If queue already has items or timeout is active, enqueue all without checking slots
+			      if (queueEnabled && (queueCount > 0 || isTimeout)) {
 			        for (const item of plan.items) {
 			          await Queue.enqueueFromThumb(item.thumb, {
 			            changes: item.changes,
@@ -7525,7 +7678,7 @@ console.log("Script start:",performance.now());const e=!0,t=e=>e,o="passthrough"
 			          item.thumb.classList.add('e621x-thumb-queued');
 			          item.thumb.dataset.tags = applyLocalTagDiff(item.thumb.dataset.tags, item.changes);
 			        }
-			        U.showToast(`Queued ${plan.items.length} posts (hourly timeout active)`);
+			        U.showToast(`Queued ${plan.items.length} posts`);
 			        await syncQueuedOutlines();
 			        return;
 			      }
@@ -8576,6 +8729,10 @@ console.log("Script start:",performance.now());const e=!0,t=e=>e,o="passthrough"
 			
 			  (async function start() {
 			    await U.ensureStorageSchema();
+			    const csrf = U.getCsrfToken();
+			    if (csrf && chrome.runtime?.id) {
+			      chrome.runtime.sendMessage({ action: ACTIONS.SET_CSRF_TOKEN, csrfToken: csrf }).catch(() => {});
+			    }
 			    for (const name of ['uploader', 'userEdits', 'tree', 'blacklist', 'hoverZoom', 'tagScriptQueue', 'timeoutedPage', 'tagScript', 'tooltipsManager']) {
 			      try {
 			        await E621X.get(name).init();
