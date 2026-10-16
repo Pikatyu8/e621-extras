@@ -100,22 +100,50 @@ function runQueueOp(task) {
 }
 
 // ---------- CSRF token management ----------
-let cachedCsrfToken = null;
 async function getCsrfToken(forceFresh = false) {
-  if (cachedCsrfToken && !forceFresh) return cachedCsrfToken;
+  if (!forceFresh && chrome.storage?.session) {
+    try {
+      const data = await chrome.storage.session.get('csrfToken');
+      if (data?.csrfToken) return data.csrfToken;
+    } catch (err) {
+      console.warn('[background] Failed to read csrfToken from storage.session:', err);
+    }
+  }
+
   try {
-    const res = await fetch('https://e621.net/posts', { credentials: 'include' });
+    // Lightweight fallback: root page HTML is significantly smaller than /posts
+    const res = await fetch('https://e621.net/', { credentials: 'include' });
     if (!res.ok) return null;
     const html = await res.text();
     const match = html.match(/<meta\s+name=["']csrf-token["']\s+content=["']([^"']+)["']/i);
     if (match?.[1]) {
-      cachedCsrfToken = match[1];
-      return cachedCsrfToken;
+      const token = match[1];
+      if (chrome.storage?.session) {
+        await chrome.storage.session.set({ csrfToken: token }).catch(() => {});
+      }
+      return token;
     }
   } catch (err) {
     console.warn('[background] Failed to fetch CSRF token:', err);
   }
   return null;
+}
+
+// ---------- Broadcast post status to tabs ----------
+async function broadcastPostStatus(postId, status, error = '') {
+  try {
+    const tabs = await chrome.tabs.query({ url: ['https://e621.net/*', 'https://e926.net/*'] });
+    for (const tab of tabs) {
+      chrome.tabs.sendMessage(tab.id, {
+        action: ACTIONS.TAG_SCRIPT_POST_STATUS,
+        postId: Number(postId),
+        status,
+        error
+      }).catch(() => {});
+    }
+  } catch (err) {
+    console.warn('[background] broadcastPostStatus error:', err);
+  }
 }
 
 // ---------- Queue state operations ----------
@@ -347,12 +375,14 @@ async function processQueueInBackground() {
 
         // Post cannot be edited or tag is locked — dequeue to avoid blocking the queue
         await dequeuePost(item.id);
+        await broadcastPostStatus(item.id, 'locked', errorText);
         errors++;
         continue;
       }
 
-      // Success
+      // Success: dequeue and notify tabs to turn yellow outline into green
       await dequeuePost(item.id);
+      await broadcastPostStatus(item.id, 'updated');
       const remainingSlots = (await chrome.storage.local.get([KEYS.QUEUE_SLOT_TIMESTAMPS]))[KEYS.QUEUE_SLOT_TIMESTAMPS] || [];
       if (remainingSlots.length > 0) {
         remainingSlots.shift();
@@ -438,7 +468,15 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       return true;
 
     case ACTIONS.SET_CSRF_TOKEN:
-      if (msg.csrfToken) cachedCsrfToken = msg.csrfToken;
+      if (msg.csrfToken && chrome.storage?.session) {
+        chrome.storage.session.set({ csrfToken: msg.csrfToken })
+          .then(() => sendResponse({ ok: true }))
+          .catch((err) => {
+            console.warn('[background] Failed to save csrfToken to storage.session:', err);
+            sendResponse({ ok: false, error: err.message });
+          });
+        return true;
+      }
       sendResponse({ ok: true });
       return false;
 

@@ -51,6 +51,7 @@ globalThis.E621_CONSTANTS = Object.freeze({
     GET_IMAGE: 'getImage',
     DELETE_IMAGE: 'deleteImage',
     CLEAR_IMAGES: 'clearImages',
-    SET_CSRF_TOKEN: 'setCsrfToken'
+    SET_CSRF_TOKEN: 'setCsrfToken',
+    TAG_SCRIPT_POST_STATUS: 'tagScriptPostStatus'
   })
 });

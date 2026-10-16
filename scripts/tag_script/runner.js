@@ -10,6 +10,31 @@ E621X.define('tagScriptRunner',
 
   let bulkRunning = false;
   const inFlight = new Set();
+  const updatedPostIds = new Set();
+  const lockedPostIds = new Set();
+
+  function onPostStatus(postId, status, error = '') {
+    const id = String(postId);
+    const thumb = document.querySelector(`article.thumbnail[data-id="${id}"]`);
+
+    if (status === 'updated') {
+      updatedPostIds.add(id);
+      lockedPostIds.delete(id);
+      if (thumb) {
+        thumb.classList.remove('e621x-thumb-queued', 'e621x-thumb-locked');
+        thumb.classList.add('e621x-thumb-updated');
+      }
+      U.showToast(`Post #${id} updated`);
+    } else if (status === 'locked') {
+      lockedPostIds.add(id);
+      updatedPostIds.delete(id);
+      if (thumb) {
+        thumb.classList.remove('e621x-thumb-queued', 'e621x-thumb-updated');
+        thumb.classList.add('e621x-thumb-locked');
+      }
+      U.showToast(`Post #${id} skipped: ${error || 'Locked'}`, true);
+    }
+  }
 
   const getScriptField = () =>
     document.getElementById('e621x-tag-script-field') || document.querySelector(SEL.nativeTagScriptField);
@@ -117,9 +142,25 @@ E621X.define('tagScriptRunner',
     document.querySelectorAll(SEL.thumbnail).forEach(thumb => {
       const id = String(thumb.dataset.id);
       const isQueued = queuedIds.has(id);
-      thumb.classList.toggle('e621x-thumb-queued', isQueued);
+      const wasQueued = thumb.classList.contains('e621x-thumb-queued');
+
       if (isQueued) {
         thumb.classList.remove('e621x-thumb-updated', 'e621x-thumb-locked');
+        thumb.classList.add('e621x-thumb-queued');
+      } else {
+        thumb.classList.remove('e621x-thumb-queued');
+
+        // If the post was queued on this page and is now finished, turn outline green
+        if (updatedPostIds.has(id) || wasQueued) {
+          if (!lockedPostIds.has(id)) {
+            thumb.classList.remove('e621x-thumb-locked');
+            thumb.classList.add('e621x-thumb-updated');
+            updatedPostIds.add(id);
+          } else {
+            thumb.classList.remove('e621x-thumb-updated');
+            thumb.classList.add('e621x-thumb-locked');
+          }
+        }
       }
     });
 
@@ -373,6 +414,7 @@ E621X.define('tagScriptRunner',
     handleApplyAll,
     readScript,
     getScriptField,
-    getReason
+    getReason,
+    onPostStatus
   };
 });

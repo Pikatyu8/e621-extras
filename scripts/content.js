@@ -21,6 +21,13 @@
     [ACTIONS.PROCESS_TAG_QUEUE]: async () => {
       const res = await queue.processQueue();
       return U.ok(`Queue processed: ${res.updated || 0} updated`);
+    },
+    [ACTIONS.TAG_SCRIPT_POST_STATUS]: (req) => {
+      const runner = E621X.get('tagScriptRunner');
+      if (runner?.onPostStatus) {
+        runner.onPostStatus(req.postId, req.status, req.error);
+      }
+      return U.ok();
     }
   };
 
