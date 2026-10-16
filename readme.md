@@ -49,6 +49,12 @@ Pressing Escape clears all active selections in Sticky Keys mode and closes open
 
 ### Installation and Development
 
+#### Userscript:
+
+having tampermonkey, install [userscript](https://github.com/Pikatyu8/e621-extras/blob/main/dist/e621-extras.user.js) from the dist folder
+
+#### Extension:
+
 Download the [latest version of extension](https://github.com/Pikatyu8/e621-extras/releases/tag/v1.5.0), extract to folder.
 
 To load the extension in Chromium-based browsers, open `chrome://extensions`, enable Developer mode, click "Load unpacked", and select the project root directory.
@@ -116,6 +122,12 @@ Build and maintenance scripts:
 Клавиша Escape снимает выбор со всех слотов в режиме Sticky Keys и закрывает окно дерева постов.
 
 ### Установка и разработка
+
+#### Юзерскрипт:
+
+Имея tampermonkey, установите [юзерскрипт](https://github.com/Pikatyu8/e621-extras/blob/main/dist/e621-extras.user.js) из папки dist
+
+#### Расширение:
 
 Скачайте [последнюю версию расширения](https://github.com/Pikatyu8/e621-extras/releases/tag/v1.5.0), распакуйте в папку.
 
