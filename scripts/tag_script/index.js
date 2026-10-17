@@ -408,7 +408,13 @@ E621X.define('tagScript',
     const syncMode = () => {
       const active = select.value === MODE_VALUE;
       ui.classList.toggle('is-visible', active);
+      const page = document.getElementById('page');
+
       if (active) {
+        if (page && page.getAttribute('data-mode-menu') !== MODE_VALUE) {
+          page.setAttribute('data-mode-menu', MODE_VALUE);
+        }
+
         const curPreset = Storage.getActivePresetName();
         updatePresetDropdown(curPreset);
         syncStickyUi();
@@ -424,6 +430,9 @@ E621X.define('tagScript',
         }
         Preview.syncPreview();
       } else {
+        if (page && page.getAttribute('data-mode-menu') === MODE_VALUE) {
+          page.setAttribute('data-mode-menu', select.value);
+        }
         Preview.hideTooltip();
       }
     };

@@ -58,6 +58,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   const inputTrackingFps = $('inputTrackingFps');
   const btnHideTooltipsToggle = $('btnHideTooltipsToggle');
   const hideTooltipsBadge = $('hideTooltipsBadge');
+  const btnAiHeuristicsToggle = $('btnAiHeuristicsToggle');
+  const aiHeuristicsBadge = $('aiHeuristicsBadge');
 
   const btnQueueToggle = $('btnQueueToggle');
   const queueBadge = $('queueBadge');
@@ -83,6 +85,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       KEYS.AUTO_UPDATE,
       KEYS.BLACKLIST_LOCKED,
       KEYS.SHOW_UPLOADER,
+      KEYS.AI_HEURISTICS_ENABLED,
       KEYS.HZ_ENABLED,
       KEYS.HZ_LOAD_SAMPLE,
       KEYS.CTRL_PREVIEW_ENABLED,
@@ -161,6 +164,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     const showUploader = data[KEYS.SHOW_UPLOADER] !== false;
     showUploaderBadge.textContent = showUploader ? 'ON' : 'OFF';
     showUploaderBadge.classList.toggle('on', showUploader);
+
+    const aiEnabled = data[KEYS.AI_HEURISTICS_ENABLED] !== false;
+    if (aiHeuristicsBadge) {
+      aiHeuristicsBadge.textContent = aiEnabled ? 'ON' : 'OFF';
+      aiHeuristicsBadge.classList.toggle('on', aiEnabled);
+    }
   }
 
   btnHzToggle?.addEventListener('click', async () => {
@@ -208,10 +217,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (e.key === 'Enter') inputTrackingFps.blur();
   });
 
-  btnHideTooltipsToggle?.addEventListener('click', async () => {
+btnHideTooltipsToggle?.addEventListener('click', async () => {
     const data = await chrome.storage.local.get([KEYS.HIDE_THUMB_TOOLTIPS]);
     const current = Boolean(data[KEYS.HIDE_THUMB_TOOLTIPS]);
     await chrome.storage.local.set({ [KEYS.HIDE_THUMB_TOOLTIPS]: !current });
+    await refreshUI();
+  });
+
+  btnAiHeuristicsToggle?.addEventListener('click', async () => {
+    const data = await chrome.storage.local.get([KEYS.AI_HEURISTICS_ENABLED]);
+    await chrome.storage.local.set({ [KEYS.AI_HEURISTICS_ENABLED]: data[KEYS.AI_HEURISTICS_ENABLED] === false });
     await refreshUI();
   });
 

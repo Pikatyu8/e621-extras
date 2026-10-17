@@ -76,7 +76,7 @@
     if (csrf && chrome.runtime?.id) {
       chrome.runtime.sendMessage({ action: ACTIONS.SET_CSRF_TOKEN, csrfToken: csrf }).catch(() => {});
     }
-    for (const name of ['uploader', 'userEdits', 'tree', 'blacklist', 'hoverZoom', 'tagScriptQueue', 'timeoutedPage', 'tagScript', 'tooltipsManager']) {
+    for (const name of ['uploader', 'userEdits', 'aiHeuristics', 'tree', 'blacklist', 'hoverZoom', 'tagScriptQueue', 'timeoutedPage', 'tagScript', 'tooltipsManager']) {
       try {
         await E621X.get(name).init();
       } catch (err) {

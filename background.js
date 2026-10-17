@@ -91,6 +91,23 @@ async function fetchImageAsDataUrl(rawUrl) {
   return `data:${type};base64,${toBase64(bytes)}`;
 }
 
+async function fetchHeaderBytes(rawUrl, maxBytes = 524288) {
+  const url = new URL(rawUrl);
+  if (url.protocol !== 'https:' || !ALLOWED_HOST.test(url.hostname)) {
+    throw new Error('Host not allowed');
+  }
+  // Request only the first 512KB since metadata chunks are located before IDAT / SOS
+  let res = await fetch(url.href, {
+    headers: { 'Range': `bytes=0-${maxBytes - 1}` }
+  });
+  if (!res.ok && res.status !== 206) {
+    res = await fetch(url.href);
+  }
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  const bytes = new Uint8Array(await res.arrayBuffer());
+  return toBase64(bytes);
+}
+
 // ---------- Queue synchronization mutex ----------
 let queueTail = Promise.resolve();
 function runQueueOp(task) {
@@ -416,6 +433,12 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     case ACTIONS.FETCH_IMAGE:
       fetchImageAsDataUrl(msg.url)
         .then(dataUrl => sendResponse({ ok: true, dataUrl }))
+        .catch(err => sendResponse({ ok: false, error: err.message }));
+      return true;
+
+    case ACTIONS.CHECK_AI_HEURISTICS:
+      fetchHeaderBytes(msg.url)
+        .then(base64Data => sendResponse({ ok: true, base64Data }))
         .catch(err => sendResponse({ ok: false, error: err.message }));
       return true;
 

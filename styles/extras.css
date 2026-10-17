@@ -72,6 +72,11 @@
 .e621x-notice-inline { display: inline-flex !important; align-items: center !important; gap: 6px !important; min-height: 32px !important; line-height: normal !important; margin: 0 !important; vertical-align: middle !important; }
 .e621x-tree-btn { margin-left: 8px; vertical-align: middle; }
 
+/* ===== Post Mode Background for Extension Tag Script ===== */
+#page[data-mode-menu="tag-script-ext"] .content {
+  background-color: #402769 !important;
+}
+
 /* ===== tag script panel ===== */
 #e621x-tag-script-ui { display: none; margin-top: 0.5em; flex-direction: column; gap: 6px; }
 #e621x-tag-script-ui.is-visible { display: flex; }
@@ -805,4 +810,94 @@
 .hidden,
 .e621x-stats-progress-box.hidden {
   display: none !important;
+}
+
+/* ===== Staff AI Heuristics ===== */
+.e621x-ai-row {
+  margin-top: 6px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 4px !important;
+}
+
+.e621x-ai-label {
+  font-weight: 600;
+  color: #b4c7d9;
+}
+
+.e621x-ai-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: bold;
+  letter-spacing: 0.3px;
+  width: fit-content;
+}
+
+.e621x-ai-badge--loading {
+  background: #334155;
+  color: #94a3b8;
+}
+
+.e621x-ai-badge--clean {
+  background: rgba(34, 197, 94, 0.15);
+  border: 1px solid #22c55e;
+  color: #86efac;
+}
+
+.e621x-ai-badge--warning {
+  background: rgba(234, 179, 8, 0.15);
+  border: 1px solid #eab308;
+  color: #fef08a;
+}
+
+.e621x-ai-badge--danger {
+  background: rgba(239, 68, 68, 0.2);
+  border: 1px solid #ef4444;
+  color: #fca5a5;
+  animation: pulse-danger 2s infinite ease-in-out;
+}
+
+.e621x-ai-badge--flagged {
+  background: rgba(59, 130, 246, 0.2);
+  border: 1px solid #3b82f6;
+  color: #93c5fd;
+}
+
+@keyframes pulse-danger {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
+}
+
+.e621x-ai-reasons {
+  font-size: 10px;
+  color: #cbd5e1;
+  word-break: break-word;
+  line-height: 1.3;
+}
+
+.e621x-ai-actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.e621x-ai-btn {
+  padding: 2px 8px !important;
+  font-size: 10px !important;
+  cursor: pointer;
+}
+
+.e621x-ai-raw {
+  max-height: 140px;
+  overflow-y: auto;
+  background: #0a1b32;
+  border: 1px solid #24416b;
+  border-radius: 3px;
+  padding: 6px;
+  font-size: 9px;
+  color: #94a3b8;
+  white-space: pre-wrap;
+  word-break: break-all;
 }

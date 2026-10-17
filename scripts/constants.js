@@ -3,6 +3,7 @@ globalThis.E621_CONSTANTS = Object.freeze({
   SCHEMA_VERSION: 1,
 
   STORAGE_KEYS: Object.freeze({
+    AI_HEURISTICS_ENABLED: 'e621_ai_heuristics_enabled',
     SCHEMA_VERSION: 'e621_schema_version',
     DOWNVOTES: 'e621_downvoted_posts',
     BLACKLIST_BACKUP: 'e621_clean_blacklist_backup',
@@ -35,6 +36,7 @@ globalThis.E621_CONSTANTS = Object.freeze({
   }),
 
   ACTIONS: Object.freeze({
+    CHECK_AI_HEURISTICS: 'checkAiHeuristics',
     BACKUP_BLACKLIST: 'backupBlacklist',
     LOAD_DOWNVOTES: 'loadDownvotes',
     UPLOAD_DOWNVOTES: 'uploadDownvotes',
