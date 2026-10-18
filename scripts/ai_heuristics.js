@@ -361,7 +361,7 @@ E621X.define('aiHeuristics', ['utils', 'selectors', 'net', 'dom'], (U, SEL, Net,
         if (!hasAiTag) {
           const btnAddTag = D.button({
             text: '+ ai_generated',
-            className: 'e621x-ai-btn',
+            className: 'st-button--sm',
             title: 'Tag this post as ai_generated immediately',
             onClick: () => applyAiGeneratedTag(postId, result.reason)
           });
@@ -370,7 +370,7 @@ E621X.define('aiHeuristics', ['utils', 'selectors', 'net', 'dom'], (U, SEL, Net,
 
         const btnCopy = D.button({
           text: 'Copy Reason',
-          className: 'e621x-ai-btn',
+          className: 'st-button--sm',
           title: 'Copy AI detection note to clipboard',
           onClick: () => {
             navigator.clipboard.writeText(`AI score: ${result.score}%\n${result.reason}`);
@@ -382,7 +382,7 @@ E621X.define('aiHeuristics', ['utils', 'selectors', 'net', 'dom'], (U, SEL, Net,
         if (result.rawText) {
           const btnToggle = D.button({
             text: 'Prompt/Meta',
-            className: 'e621x-ai-btn',
+            className: 'st-button--sm',
             onClick: () => {
               const box = li.querySelector('.e621x-ai-raw');
               if (box) box.classList.toggle('hidden');

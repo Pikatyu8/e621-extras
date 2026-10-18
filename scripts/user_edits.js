@@ -197,7 +197,7 @@ E621X.define('userEdits', ['utils', 'selectors', 'net', 'dom'], (U, SEL, Net, D)
 
     const closeBtn = D.el('button', {
       type: 'button',
-      class: 'e621x-stats-close-btn',
+      class: 'e621x-modal-close st-button kinetic',
       text: '×',
       'aria-label': 'Close',
       onClick: closeModal
@@ -216,7 +216,7 @@ E621X.define('userEdits', ['utils', 'selectors', 'net', 'dom'], (U, SEL, Net, D)
     const btnStopView = D.button({
       text: 'Stop & View',
       title: 'Stop loading more edits and view collected stats',
-      className: 'e621x-stats-btn',
+      className: 'st-button--sm',
       onClick: () => {
         abortFetch = true;
         progressText.textContent = 'Stopping and displaying collected stats...';
@@ -225,7 +225,7 @@ E621X.define('userEdits', ['utils', 'selectors', 'net', 'dom'], (U, SEL, Net, D)
 
     const btnCancel = D.button({
       text: 'Cancel',
-      className: 'e621x-stats-btn',
+      className: 'st-button--sm',
       onClick: closeModal
     });
 
@@ -306,13 +306,13 @@ E621X.define('userEdits', ['utils', 'selectors', 'net', 'dom'], (U, SEL, Net, D)
 
     const btnExportCsv = D.button({
       text: 'Export CSV',
-      className: 'e621x-stats-btn',
+      className: 'st-button--sm',
       title: 'Download tag statistics as CSV'
     });
 
     const btnRefresh = D.button({
       text: 'Re-fetch',
-      className: 'e621x-stats-btn',
+      className: 'st-button--sm',
       title: 'Clear cache and re-fetch all versions from API'
     });
 
@@ -350,8 +350,8 @@ E621X.define('userEdits', ['utils', 'selectors', 'net', 'dom'], (U, SEL, Net, D)
 
     // 6. Pagination Footer
     const pageInfo = D.el('span', { class: 'e621x-stats-page-info', text: 'Showing 0 tags' });
-    const btnPrev = D.button({ text: '« Prev', className: 'e621x-stats-btn', disabled: true });
-    const btnNext = D.button({ text: 'Next »', className: 'e621x-stats-btn', disabled: true });
+    const btnPrev = D.button({ text: '« Prev', className: 'st-button--sm', disabled: true });
+    const btnNext = D.button({ text: 'Next »', className: 'st-button--sm', disabled: true });
 
     const paginationBar = D.el('div', { class: 'e621x-stats-pagination hidden', style: 'display: none;' }, [
       pageInfo,
@@ -1122,21 +1122,21 @@ E621X.define('userEdits', ['utils', 'selectors', 'net', 'dom'], (U, SEL, Net, D)
     const btnView = D.button({
       text: 'View',
       title: 'Open post versions in a new tab',
-      className: 'e621x-specific-edits-btn',
+      className: 'st-button--sm',
       onClick: handleNavigate
     });
 
     const btnCount = D.button({
       text: 'Count',
       title: 'Count edits matching these tags via API',
-      className: 'e621x-specific-edits-btn',
+      className: 'st-button--sm',
       onClick: handleCount
     });
 
     const btnClear = D.button({
       text: 'Clear',
       title: 'Clear all fields and remove results',
-      className: 'e621x-specific-edits-btn',
+      className: 'st-button--sm',
       onClick: handleClear
     });
 

@@ -222,7 +222,11 @@ E621X.define('tagScriptRunner',
         refreshThumbnail(thumb, postId, data, changes);
         thumb.classList.remove('e621x-thumb-queued', 'e621x-thumb-locked');
         thumb.classList.add('e621x-thumb-updated');
-        await Queue.dequeue(postId);
+        try {
+          await Queue.dequeue(postId);
+        } catch (_) {
+          // Extension might be reloaded; post was already updated successfully
+        }
         U.showToast(`Post #${postId} updated`);
       } catch (err) {
         if (queueEnabled && Queue.isHourlyLimitResponse(err.status, err.message)) {
@@ -260,7 +264,11 @@ E621X.define('tagScriptRunner',
         throw err;
       }
     } catch (err) {
-      U.showToast(`Error #${postId}: ${err.message}`, true);
+      if (/Extension context invalidated/i.test(err.message)) {
+        U.showToast('Extension reloaded. Please refresh the page.', true);
+      } else {
+        U.showToast(`Error #${postId}: ${err.message}`, true);
+      }
     } finally {
       inFlight.delete(postId);
     }
@@ -312,7 +320,11 @@ E621X.define('tagScriptRunner',
         refreshThumbnail(thumb, id, data);
         thumb.classList.remove('e621x-thumb-queued', 'e621x-thumb-locked');
         thumb.classList.add('e621x-thumb-updated');
-        await Queue.dequeue(id);
+        try {
+          await Queue.dequeue(id);
+        } catch (_) {
+          // Extension might be reloaded; post was already updated successfully
+        }
         updated++;
       } catch (err) {
         if (queueEnabled && Queue.isHourlyLimitResponse(err.status, err.message)) {

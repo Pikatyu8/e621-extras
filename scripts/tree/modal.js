@@ -13,7 +13,7 @@ E621X.define('tree',
     const btnExportJson = D.button({ text: 'Export JSON', icon: 'download' });
     const btnExportSvg = D.button({ text: 'Export SVG', icon: 'download' });
     const closeBtn = D.el('button', {
-      type: 'button', class: 'e621x-tree-close st-button kinetic', text: '×', 'aria-label': 'Close'
+      type: 'button', class: 'e621x-tree-close e621x-modal-close st-button kinetic', text: '×', 'aria-label': 'Close'
     });
     const contentArea = D.el('div', { class: 'e621x-tree-content' }, [
       D.el('div', { class: 'e621x-tree-message', text: 'Loading full dependency tree...' })

@@ -5,6 +5,7 @@ E621X.define('tagScriptQueue', ['utils', 'net'], (U, Net) => {
   const { STORAGE_KEYS: KEYS, ACTIONS } = E621_CONSTANTS;
   const HOURLY_EDIT_LIMIT = 150;
   const ONE_HOUR_MS = 60 * 60 * 1000;
+  const CLOCK_BUFFER_MS = 3000;
 
   async function isEnabled() {
     return Boolean(await U.storageGet(KEYS.QUEUE_TAG_SCRIPTS_ENABLED, false));
@@ -16,6 +17,58 @@ E621X.define('tagScriptQueue', ['utils', 'net'], (U, Net) => {
 
   async function getTimeoutUntil() {
     return Number(await U.storageGet(KEYS.QUEUE_TIMEOUT_UNTIL, 0)) || 0;
+  }
+
+  async function setTimeoutUntil(timestamp) {
+    await U.storageSet(KEYS.QUEUE_TIMEOUT_UNTIL, Number(timestamp) || 0);
+  }
+
+  async function verifyHourlyLimitExceeded() {
+    try {
+      const user = U.getCurrentUser();
+      let userId = user?.userId;
+      if (!userId) {
+        const me = await Net.fetchJson('/users/me.json');
+        userId = me?.id;
+      }
+      if (!userId) return { isLimit: false, nextAvailableMs: 0, slots: [] };
+
+      const url = `/post_versions.json?search[updater_id]=${userId}&limit=${HOURLY_EDIT_LIMIT}`;
+      const list = await Net.fetchJson(url);
+      const versions = Array.isArray(list) ? list : (list?.post_versions || []);
+      const now = Date.now();
+
+      const recentTimestamps = [];
+      for (const item of versions) {
+        const dateStr = item?.updated_at || item?.created_at;
+        if (!dateStr) continue;
+        const t = new Date(dateStr).getTime();
+        if (!Number.isNaN(t) && (now - t) < ONE_HOUR_MS) {
+          recentTimestamps.push(t);
+        }
+      }
+
+      if (recentTimestamps.length < HOURLY_EDIT_LIMIT) {
+        return { isLimit: false, nextAvailableMs: 0, slots: [] };
+      }
+
+      recentTimestamps.sort((a, b) => a - b);
+      const slots = recentTimestamps.map(t => t + ONE_HOUR_MS + CLOCK_BUFFER_MS);
+
+      const queue = await getQueue();
+      const queueLen = Math.max(Object.keys(queue).length, slots.length);
+      while (slots.length < queueLen) {
+        const baseIdx = Math.max(0, slots.length - HOURLY_EDIT_LIMIT);
+        slots.push((slots[baseIdx] || now) + ONE_HOUR_MS);
+      }
+
+      const nextAvailableMs = Math.max(1000, slots[0] - now);
+      await U.storageSet(KEYS.QUEUE_SLOT_TIMESTAMPS, slots);
+      return { isLimit: true, nextAvailableMs, slots };
+    } catch (err) {
+      U.logWarn('verifyHourlyLimitExceeded error', err);
+      return { isLimit: false, nextAvailableMs: 0, slots: [] };
+    }
   }
 
   async function isTimeoutActive() {
@@ -84,7 +137,9 @@ E621X.define('tagScriptQueue', ['utils', 'net'], (U, Net) => {
     try {
       const res = await chrome.runtime.sendMessage({ action: ACTIONS.FETCH_IMAGE, url });
       if (res?.ok && res.dataUrl) return res.dataUrl;
-    } catch (_) {}
+    } catch (_) {
+      // Ignored
+    }
     return null;
   }
 
@@ -143,13 +198,17 @@ E621X.define('tagScriptQueue', ['utils', 'net'], (U, Net) => {
     const sanitized = { ...editData };
     delete sanitized.thumbnailDataUrl;
 
-    const res = await chrome.runtime.sendMessage({
-      action: ACTIONS.ENQUEUE_TAG_SCRIPT,
-      postId: id,
-      editData: sanitized
-    });
-
-    return res?.queue || (await getQueue());
+    try {
+      const res = await chrome.runtime.sendMessage({
+        action: ACTIONS.ENQUEUE_TAG_SCRIPT,
+        postId: id,
+        editData: sanitized
+      });
+      return res?.queue || (await getQueue());
+    } catch (err) {
+      U.logWarn('enqueue', err);
+      return await getQueue();
+    }
   }
 
   async function enqueueFromThumb(thumb, editData) {
@@ -167,16 +226,25 @@ E621X.define('tagScriptQueue', ['utils', 'net'], (U, Net) => {
   async function dequeue(postId) {
     const id = Number(postId);
     await deleteImage(id);
-    const res = await chrome.runtime.sendMessage({
-      action: ACTIONS.DEQUEUE_TAG_SCRIPT,
-      postId: id
-    });
-    return res?.queue || (await getQueue());
+    try {
+      const res = await chrome.runtime.sendMessage({
+        action: ACTIONS.DEQUEUE_TAG_SCRIPT,
+        postId: id
+      });
+      return res?.queue || (await getQueue());
+    } catch (err) {
+      U.logWarn('dequeue', err);
+      return await getQueue();
+    }
   }
 
   async function clearQueue() {
     await clearImages();
-    await chrome.runtime.sendMessage({ action: ACTIONS.CLEAR_TAG_QUEUE });
+    try {
+      await chrome.runtime.sendMessage({ action: ACTIONS.CLEAR_TAG_QUEUE });
+    } catch (err) {
+      U.logWarn('clearQueue', err);
+    }
   }
 
   async function processQueue() {
@@ -319,12 +387,14 @@ E621X.define('tagScriptQueue', ['utils', 'net'], (U, Net) => {
     isEnabled,
     setEnabled,
     getTimeoutUntil,
+    setTimeoutUntil,
     isTimeoutActive,
     getRemainingTimeoutMs,
     getQueueTimingInfo,
     getSlotSchedule,
     checkPostLockStatus,
     isHourlyLimitResponse,
+    verifyHourlyLimitExceeded,
     getQueue,
     getQueueCount,
     enqueue,

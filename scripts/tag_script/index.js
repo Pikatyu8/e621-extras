@@ -473,7 +473,7 @@ E621X.define('tagScript',
       }
 
       if (Storage.isStickyMode() && e.key === 'Escape' && !e.ctrlKey && !e.altKey && !e.metaKey) {
-        if (document.querySelector('.e621x-tree-dialog')) return;
+        if (document.querySelector('.e621x-tree-dialog, .e621x-stats-dialog')) return;
 
         const activeSlots = Storage.getActiveStickySlots();
         if (activeSlots.length > 0) {

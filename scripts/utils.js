@@ -3,9 +3,18 @@ E621X.define('utils', ['selectors'], (SEL) => {
   const { STORAGE_KEYS, SCHEMA_VERSION } = E621_CONSTANTS;
   const TOAST_ID = 'e621-extras-toast';
 
-  const logWarn = (scope, err) => console.warn(`[e621 extras] ${scope}:`, err);
+  const logWarn = (scope, err) => {
+    if (err && /Extension context invalidated/i.test(err.message || String(err))) return;
+    console.warn(`[e621 extras] ${scope}:`, err);
+  };
   const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-  const extensionAlive = () => Boolean(globalThis.chrome?.runtime?.id);
+  const extensionAlive = () => {
+    try {
+      return Boolean(globalThis.chrome?.runtime?.id);
+    } catch (_) {
+      return false;
+    }
+  };
 
   // ---------- results ----------
   const ok = (message, extra = {}) => ({ ok: true, message, ...extra });
@@ -59,18 +68,37 @@ E621X.define('utils', ['selectors'], (SEL) => {
     }
   }
 
-  // ---------- UI helpers ----------
+  const TOAST_CONTAINER_ID = 'e621x-toast-container';
+
   function showToast(message, isError = false) {
-    document.getElementById(TOAST_ID)?.remove();
+    let container = document.getElementById(TOAST_CONTAINER_ID);
+    if (!container) {
+      container = document.createElement('div');
+      container.id = TOAST_CONTAINER_ID;
+      container.className = 'e621x-toast-container';
+      document.body.appendChild(container);
+    }
+
+    const MAX_TOASTS = 5;
+    while (container.children.length >= MAX_TOASTS) {
+      container.firstElementChild.remove();
+    }
+
     const toast = document.createElement('div');
-    toast.id = TOAST_ID;
     toast.className = `e621x-toast${isError ? ' e621x-toast--error' : ''}`;
     toast.textContent = message;
-    document.body.appendChild(toast);
+    container.appendChild(toast);
+
+    const duration = isError ? 5000 : 3500;
     setTimeout(() => {
       toast.classList.add('is-hiding');
-      setTimeout(() => toast.remove(), 300);
-    }, 3500);
+      setTimeout(() => {
+        toast.remove();
+        if (container.children.length === 0) {
+          container.remove();
+        }
+      }, 300);
+    }, duration);
   }
 
   function downloadBlob(blob, filename) {
