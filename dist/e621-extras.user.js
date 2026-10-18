@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name        e621 extras
-// @version     1.5.4
+// @version     1.5.5
 // @description Downvotes-to-blacklist manager, post tree viewer, hover zoom and tag scripts for regular members of e621 and e926.
 // @namespace   e621-extras
 // @author      Converter Script
@@ -780,7 +780,7 @@ console.log("Script start:",performance.now());const e=!0,t=e=>e,o="passthrough"
 			
 			
 			const EXTENSION_ASSETS_MAP = {
-			  "popup/popup.html": "<!DOCTYPE html>\r\n<html lang=\"en\">\r\n<head>\r\n  <meta charset=\"UTF-8\">\r\n  <title>e621 extras</title>\r\n  <style>\n* {\r\n  box-sizing: border-box;\r\n  margin: 0;\r\n  padding: 0;\r\n  font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif;\r\n  -webkit-font-smoothing: antialiased;\r\n}\r\n\r\nbody {\r\n  width: 290px;\r\n  background-color: #000000;\r\n  color: #ffffff;\r\n  padding: 14px;\r\n  user-select: none;\r\n}\r\n\r\n/* 1. Remove arrows from numeric input */\r\ninput::-webkit-outer-spin-button,\r\ninput::-webkit-inner-spin-button {\r\n  -webkit-appearance: none;\r\n  margin: 0;\r\n}\r\n\r\ninput[type=\"number\"] {\r\n  -moz-appearance: textfield;\r\n  appearance: textfield;\r\n}\r\n\r\n.container {\r\n  display: flex;\r\n  flex-direction: column;\r\n  gap: 12px;\r\n}\r\n\r\n.header {\r\n  display: flex;\r\n  align-items: center;\r\n  padding-bottom: 2px;\r\n}\r\n\r\n.title {\r\n  font-size: 13px;\r\n  font-weight: 600;\r\n  letter-spacing: 0.8px;\r\n  text-transform: uppercase;\r\n}\r\n\r\n/* Tabs */\r\n.tabs {\r\n  display: flex;\r\n  gap: 4px;\r\n  border-bottom: 1px solid #222222;\r\n  padding-bottom: 8px;\r\n}\r\n\r\n.tab-btn {\r\n  flex: 1;\r\n  background: #000000;\r\n  color: #666666;\r\n  border: 1px solid #222222;\r\n  padding: 6px 0;\r\n  font-size: 10px;\r\n  font-weight: 600;\r\n  letter-spacing: 0.5px;\r\n  cursor: pointer;\r\n  transition: all 0.15s ease;\r\n  text-align: center;\r\n}\r\n\r\n.tab-btn:hover {\r\n  color: #cccccc;\r\n  background-color: #0a0a0a;\r\n}\r\n\r\n.tab-btn.active {\r\n  background-color: #ffffff;\r\n  color: #000000;\r\n  border-color: #ffffff;\r\n}\r\n\r\n.tab-content {\r\n  display: flex;\r\n  flex-direction: column;\r\n  gap: 10px;\r\n}\r\n\r\n.section {\r\n  display: flex;\r\n  flex-direction: column;\r\n  gap: 8px;\r\n}\r\n\r\n.hidden {\r\n  display: none !important;\r\n}\r\n\r\n.btn {\r\n  width: 100%;\r\n  background: #000000;\r\n  color: #ffffff;\r\n  border: 1px solid #272727;\r\n  padding: 8px 12px;\r\n  font-size: 12px;\r\n  letter-spacing: 0.3px;\r\n  cursor: pointer;\r\n  display: flex;\r\n  justify-content: space-between;\r\n  align-items: center;\r\n  transition: background-color 0.15s ease, border-color 0.15s ease;\r\n}\r\n\r\n.btn:hover:not(:disabled) {\r\n  background-color: #141414;\r\n  border-color: #444444;\r\n}\r\n\r\n.btn:active:not(:disabled) {\r\n  background-color: #222222;\r\n}\r\n\r\n.btn:disabled {\r\n  color: #444444;\r\n  border-color: #181818;\r\n  cursor: not-allowed;\r\n}\r\n\r\n.btn-sub {\r\n  padding-left: 20px;\r\n  color: #aaaaaa;\r\n}\r\n\r\n.setting-row {\r\n  display: flex;\r\n  justify-content: space-between;\r\n  align-items: center;\r\n  background: #0a0a0a;\r\n  border: 1px solid #222222;\r\n  padding: 10px 12px;\r\n}\r\n\r\n.setting-block {\r\n  display: flex;\r\n  flex-direction: column;\r\n  gap: 8px;\r\n  background: #0a0a0a;\r\n  border: 1px solid #222222;\r\n  padding: 10px 12px;\r\n}\r\n\r\n.setting-info {\r\n  display: flex;\r\n  flex-direction: column;\r\n  gap: 2px;\r\n}\r\n\r\n.setting-label {\r\n  font-size: 12px;\r\n  color: #ffffff;\r\n}\r\n\r\n.setting-desc {\r\n  font-size: 10px;\r\n  color: #666666;\r\n}\r\n\r\n.btn-toggle-switch {\r\n  background: transparent;\r\n  border: none;\r\n  cursor: pointer;\r\n  padding: 0;\r\n}\r\n\r\n.input-inline-group {\r\n  display: flex;\r\n  gap: 6px;\r\n  align-items: center;\r\n}\r\n\r\n.input-minimal {\r\n  flex: 1;\r\n  background: #000000;\r\n  border: 1px solid #272727;\r\n  color: #ffffff;\r\n  padding: 6px 10px;\r\n  font-size: 12px;\r\n  outline: none;\r\n  transition: border-color 0.15s;\r\n}\r\n\r\n.input-minimal:focus {\r\n  border-color: #666666;\r\n}\r\n\r\n.btn-inline {\r\n  width: auto;\r\n  padding: 6px 14px;\r\n}\r\n\r\n.badge {\r\n  display: inline-block;\r\n  width: 36px;\r\n  text-align: center;\r\n  font-size: 10px;\r\n  border: 1px solid #444444;\r\n  padding: 2px 0;\r\n  text-transform: uppercase;\r\n  color: #ffffff;\r\n  background-color: transparent;\r\n  font-weight: 500;\r\n}\r\n\r\n.badge.on {\r\n  background-color: #ffffff;\r\n  color: #000000;\r\n  border-color: #ffffff;\r\n}\r\n\r\n.footer {\r\n  border-top: 1px solid #222222;\r\n  padding-top: 8px;\r\n}\r\n\r\n.status-msg {\r\n  font-size: 11px;\r\n  color: #888888;\r\n  line-height: 1.4;\r\n  min-height: 16px;\r\n  word-break: break-word;\r\n}\r\n\r\n/* 2. Screen styles for third-party pages */\r\n.offline-view {\r\n  display: flex;\r\n  flex-direction: column;\r\n  align-items: center;\r\n  justify-content: center;\r\n  min-height: 160px;\r\n  text-align: center;\r\n  gap: 14px;\r\n  padding: 8px 0;\r\n}\r\n\r\n.offline-text {\r\n  font-size: 12px;\r\n  color: #888888;\r\n  line-height: 1.4;\r\n}\r\n\r\n.offline-links {\r\n  display: flex;\r\n  flex-direction: column;\r\n  gap: 8px;\r\n  width: 100%;\r\n}\r\n\r\n.offline-link {\r\n  display: block;\r\n  text-decoration: none;\r\n  color: #ffffff;\r\n  background-color: #0a0a0a;\r\n  border: 1px solid #222222;\r\n  padding: 8px 0;\r\n  font-size: 12px;\r\n  letter-spacing: 0.5px;\r\n  transition: background-color 0.15s, border-color 0.15s;\r\n}\r\n\r\n.offline-link:hover {\r\n  background-color: #141414;\r\n  border-color: #444444;\r\n}\n</style>\r\n</head>\r\n<body>\r\n  <!-- Shown on non-e621 pages -->\r\n  <div id=\"offlineView\" class=\"offline-view hidden\">\r\n    <p class=\"offline-text\">extension works on these webpages:</p>\r\n    <div class=\"offline-links\">\r\n      <a href=\"https://e621.net\" target=\"_blank\" class=\"offline-link\">e621.net</a>\r\n      <a href=\"https://e926.net\" target=\"_blank\" class=\"offline-link\">e926.net</a>\r\n    </div>\r\n  </div>\r\n\r\n  <!-- Main UI -->\r\n  <div id=\"mainView\" class=\"container\">\r\n    <header class=\"header\">\r\n      <h1 class=\"title\">e621 extras</h1>\r\n    </header>\r\n\r\n    <nav class=\"tabs\">\r\n      <button class=\"tab-btn active\" data-tab=\"main\">MAIN</button>\r\n      <button class=\"tab-btn\" data-tab=\"blck\">BLCK</button>\r\n      <button class=\"tab-btn\" data-tab=\"tagscr\">TAGSCR</button>\r\n      <button class=\"tab-btn\" data-tab=\"hz\">HZ</button>\r\n    </nav>\r\n\r\n    <!-- Tab 1: MAIN -->\r\n    <main id=\"tab-main\" class=\"tab-content\">\r\n      <div class=\"setting-row\">\r\n        <div class=\"setting-info\">\r\n          <span class=\"setting-label\">Hide Thumbnail Tooltips</span>\r\n          <span class=\"setting-desc\">Suppress browser tooltip on thumbnails</span>\r\n        </div>\r\n        <button id=\"btnHideTooltipsToggle\" class=\"btn-toggle-switch\">\r\n          <span id=\"hideTooltipsBadge\" class=\"badge\">OFF</span>\r\n        </button>\r\n      </div>\r\n\r\n      <div class=\"setting-row\">\r\n        <div class=\"setting-info\">\r\n          <span class=\"setting-label\">Tracking FPS</span>\r\n          <span class=\"setting-desc\">0 = Monitor Hz (or limit for weak PCs)</span>\r\n        </div>\r\n        <input type=\"number\" id=\"inputTrackingFps\" class=\"input-minimal\" placeholder=\"0\" min=\"0\" max=\"360\" style=\"width: 58px; flex: none; text-align: center;\" />\r\n      </div>\r\n\r\n      <div class=\"setting-row\">\r\n        <div class=\"setting-info\">\r\n          <span class=\"setting-label\">Show Uploader</span>\r\n          <span class=\"setting-desc\">Under status in post details</span>\r\n        </div>\r\n        <button id=\"btnShowUploader\" class=\"btn-toggle-switch\">\r\n          <span id=\"showUploaderBadge\" class=\"badge on\">ON</span>\r\n        </button>\r\n      </div>\r\n\r\n      <div class=\"setting-block\">\r\n        <span class=\"setting-label\">Show Post Tree</span>\r\n        <div class=\"input-inline-group\">\r\n          <input type=\"number\" id=\"inputTreePostId\" class=\"input-minimal\" placeholder=\"post id\" />\r\n          <button id=\"btnShowTreePopup\" class=\"btn btn-inline\">Show</button>\r\n        </div>\r\n      </div>\r\n    </main>\r\n\r\n    <!-- Tab 2: BLCK -->\r\n    <main id=\"tab-blck\" class=\"tab-content hidden\">\r\n      <div class=\"section\">\r\n        <button id=\"btnAutoUpdate\" class=\"btn\" title=\"Keep the blacklist in sync with your downvotes automatically\">\r\n          <span>Auto Update</span>\r\n          <span id=\"autoUpdateState\" class=\"badge\">OFF</span>\r\n        </button>\r\n        <button id=\"btnSyncApi\" class=\"btn btn-sub hidden\" title=\"Re-fetch downvotes and update the blacklist\">↳ Sync via API</button>\r\n      </div>\r\n\r\n      <div id=\"manualActions\" class=\"section\">\r\n        <button id=\"btnBackup\" class=\"btn\" title=\"Save the current blacklist in the extension\">Backup Current Blacklist</button>\r\n        <button id=\"btnLoadDownvotes\" class=\"btn\" title=\"Fetch your downvoted posts from the site into the extension\">Load Downvotes</button>\r\n        <button id=\"btnUpload\" class=\"btn\" title=\"Add the loaded downvotes to your blacklist as id:N rules\">Upload to Blacklist</button>\r\n        <button id=\"btnUnload\" class=\"btn\" title=\"Remove those id:N rules from your blacklist\">Unload from Blacklist</button>\r\n      </div>\r\n    </main>\r\n\r\n    <!-- Tab 3: TAGSCR -->\r\n    <main id=\"tab-tagscr\" class=\"tab-content hidden\">\r\n      <div class=\"setting-row\">\r\n        <div class=\"setting-info\">\r\n          <span class=\"setting-label\">Tag Script Preview (Ctrl)</span>\r\n          <span class=\"setting-desc\">View active tag scripts</span>\r\n        </div>\r\n        <button id=\"btnCtrlPreviewToggle\" class=\"btn-toggle-switch\">\r\n          <span id=\"ctrlPreviewBadge\" class=\"badge on\">ON</span>\r\n        </button>\r\n      </div>\r\n\r\n      <div class=\"setting-row\">\r\n        <div class=\"setting-info\">\r\n          <span class=\"setting-label\">Sticky Preview (Ctrl)</span>\r\n          <span class=\"setting-desc\">Toggle with Ctrl instead of holding</span>\r\n        </div>\r\n        <button id=\"btnCtrlStickyToggle\" class=\"btn-toggle-switch\">\r\n          <span id=\"ctrlStickyBadge\" class=\"badge\">OFF</span>\r\n        </button>\r\n      </div>\r\n\r\n      <div class=\"setting-row\">\r\n        <div class=\"setting-info\">\r\n          <span class=\"setting-label\">Queued Tag Scripts</span>\r\n          <span class=\"setting-desc\">Queue edits during hourly limits</span>\r\n        </div>\r\n        <button id=\"btnQueueToggle\" class=\"btn-toggle-switch\">\r\n          <span id=\"queueBadge\" class=\"badge\">OFF</span>\r\n        </button>\r\n      </div>\r\n\r\n      <div id=\"queueBlock\" class=\"setting-block hidden\">\r\n        <div class=\"setting-info\">\r\n          <span class=\"setting-label\">Tag Script Queue</span>\r\n          <span id=\"queueStatusText\" class=\"setting-desc\">0 posts queued</span>\r\n        </div>\r\n        <div class=\"input-inline-group\">\r\n          <a id=\"btnOpenTimeouted\" href=\"https://e621.net/posts/timeouted\" target=\"_blank\" class=\"btn btn-inline\">View Queue</a>\r\n          <button id=\"btnProcessQueue\" class=\"btn btn-inline\">Process Now</button>\r\n        </div>\r\n      </div>\r\n    </main>\r\n\r\n    <!-- Tab 4: HZ -->\r\n    <main id=\"tab-hz\" class=\"tab-content hidden\">\r\n      <div class=\"setting-row\">\r\n        <div class=\"setting-info\">\r\n          <span class=\"setting-label\">Hover Zoom (Shift)</span>\r\n          <span class=\"setting-desc\">Hold Shift while hovering</span>\r\n        </div>\r\n        <button id=\"btnHzToggle\" class=\"btn-toggle-switch\">\r\n          <span id=\"hzBadge\" class=\"badge on\">ON</span>\r\n        </button>\r\n      </div>\r\n\r\n      <div class=\"setting-row\">\r\n        <div class=\"setting-info\">\r\n          <span class=\"setting-label\">Load Sample on Hover</span>\r\n          <span class=\"setting-desc\">Load sample image instead of full</span>\r\n        </div>\r\n        <button id=\"btnHzSampleToggle\" class=\"btn-toggle-switch\">\r\n          <span id=\"hzSampleBadge\" class=\"badge on\">ON</span>\r\n        </button>\r\n      </div>\r\n    </main>\r\n\r\n    <footer class=\"footer\">\r\n      <div id=\"statusMessage\" class=\"status-msg\">Ready</div>\r\n    </footer>\r\n  </div>\r\n\r\n  <script>\n/* Shared by content scripts, popup and background — single source of truth for keys and message names. */\r\nglobalThis.E621_CONSTANTS = Object.freeze({\r\n  SCHEMA_VERSION: 1,\r\n\r\n  STORAGE_KEYS: Object.freeze({\r\n    SCHEMA_VERSION: 'e621_schema_version',\r\n    DOWNVOTES: 'e621_downvoted_posts',\r\n    BLACKLIST_BACKUP: 'e621_clean_blacklist_backup',\r\n    BLACKLIST_LOCKED: 'e621_load_blacklist_disabled',\r\n    AUTO_UPDATE: 'e621_auto_update_enabled',\r\n    SHOW_UPLOADER: 'e621_extra_show_uploader',\r\n    ACTIVE_POPUP_TAB: 'e621_active_popup_tab',\r\n\r\n    /* Hover Zoom keys */\r\n    HZ_ENABLED: 'e621_hz_enabled',\r\n    HZ_LOAD_SAMPLE: 'e621_hz_load_sample',\r\n    HZ_TAGS: 'e621_hz_tags',\r\n    HZ_TIME: 'e621_hz_time',\r\n    HZ_AUDIO: 'e621_hz_audio',\r\n    HZ_DELAY: 'e621_hz_delay',\r\n    HZ_STICKY: 'e621_hz_sticky',\r\n\r\n    /* Queued / Timeouted Tag Scripts keys */\r\n    QUEUE_TAG_SCRIPTS_ENABLED: 'e621_queue_tag_scripts_enabled',\r\n    TAG_SCRIPT_QUEUE: 'e621_tag_script_queue',\r\n    QUEUE_TIMEOUT_UNTIL: 'e621_queue_timeout_until',\r\n    QUEUE_SLOT_TIMESTAMPS: 'e621_queue_slot_timestamps',\r\n\r\n    /* Preview & Tooltip suppression & Performance */\r\n    CTRL_PREVIEW_ENABLED: 'e621_ctrl_preview_enabled',\r\n    CTRL_PREVIEW_STICKY: 'e621_ctrl_preview_sticky',\r\n    CTRL_STICKY_ACTIVE: 'e621_ctrl_sticky_active',\r\n    HIDE_THUMB_TOOLTIPS: 'e621_hide_thumb_tooltips',\r\n    TRACKING_FPS: 'e621_tracking_fps'\r\n  }),\r\n\r\n  ACTIONS: Object.freeze({\r\n    BACKUP_BLACKLIST: 'backupBlacklist',\r\n    LOAD_DOWNVOTES: 'loadDownvotes',\r\n    UPLOAD_DOWNVOTES: 'uploadDownvotes',\r\n    UNLOAD_DOWNVOTES: 'unloadDownvotes',\r\n    SYNC_API: 'syncApi',\r\n    TOGGLE_AUTO_UPDATE: 'toggleAutoUpdate',\r\n    SHOW_POST_TREE: 'showPostTree',\r\n    FETCH_IMAGE: 'fetchImageAsDataUrl',\r\n    PROCESS_TAG_QUEUE: 'processTagQueue',\r\n    CLEAR_TAG_QUEUE: 'clearTagQueue',\r\n    ENQUEUE_TAG_SCRIPT: 'enqueueTagScript',\r\n    DEQUEUE_TAG_SCRIPT: 'dequeueTagScript',\r\n    SAVE_IMAGE: 'saveImage',\r\n    GET_IMAGE: 'getImage',\r\n    DELETE_IMAGE: 'deleteImage',\r\n    CLEAR_IMAGES: 'clearImages',\r\n    SET_CSRF_TOKEN: 'setCsrfToken',\r\n    TAG_SCRIPT_POST_STATUS: 'tagScriptPostStatus'\r\n  })\r\n});\n</script>\r\n  <script>\ndocument.addEventListener('DOMContentLoaded', async () => {\r\n  const { STORAGE_KEYS: KEYS, ACTIONS } = E621_CONSTANTS;\r\n  const $ = (id) => document.getElementById(id);\r\n\r\n  const mainView = $('mainView');\r\n  const offlineView = $('offlineView');\r\n  const statusMsg = $('statusMessage');\r\n  const tabBtns = document.querySelectorAll('.tab-btn');\r\n  const tabs = {\r\n    main: $('tab-main'),\r\n    blck: $('tab-blck'),\r\n    tagscr: $('tab-tagscr'),\r\n    hz: $('tab-hz')\r\n  };\r\n\r\n  const autoUpdateState = $('autoUpdateState');\r\n  const btnSyncApi = $('btnSyncApi');\r\n  const manualActions = $('manualActions');\r\n  const btnBackup = $('btnBackup');\r\n  const showUploaderBadge = $('showUploaderBadge');\r\n  const inputTreePostId = $('inputTreePostId');\r\n\r\n  const setStatus = (text) => { statusMsg.textContent = text; };\r\n  const setButtonsDisabled = (disabled) =>\r\n    document.querySelectorAll('.btn').forEach(b => { b.disabled = disabled; });\r\n\r\n  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });\r\n  const isE621 = tab?.url && /^https:\\/\\/(e621|e926)\\.net\\//.test(tab.url);\r\n\r\n  if (!isE621) {\r\n    mainView.classList.add('hidden');\r\n    offlineView.classList.remove('hidden');\r\n    return;\r\n  }\r\n\r\n  function showTab(name) {\r\n    tabBtns.forEach(b => b.classList.toggle('active', b.dataset.tab === name));\r\n    Object.entries(tabs).forEach(([key, node]) => node.classList.toggle('hidden', key !== name));\r\n  }\r\n\r\n  tabBtns.forEach(btn => btn.addEventListener('click', () => {\r\n    showTab(btn.dataset.tab);\r\n    chrome.storage.local.set({ [KEYS.ACTIVE_POPUP_TAB]: btn.dataset.tab });\r\n  }));\r\n\r\n  const postMatch = tab.url.match(/\\/posts\\/(\\d+)/);\r\n  if (postMatch) inputTreePostId.value = postMatch[1];\r\n\r\n  const btnHzToggle = $('btnHzToggle');\r\n  const hzBadge = $('hzBadge');\r\n  const btnHzSampleToggle = $('btnHzSampleToggle');\r\n  const hzSampleBadge = $('hzSampleBadge');\r\n\r\n  const btnCtrlPreviewToggle = $('btnCtrlPreviewToggle');\r\n  const ctrlPreviewBadge = $('ctrlPreviewBadge');\r\n  const btnCtrlStickyToggle = $('btnCtrlStickyToggle');\r\n  const ctrlStickyBadge = $('ctrlStickyBadge');\r\n  const inputTrackingFps = $('inputTrackingFps');\r\n  const btnHideTooltipsToggle = $('btnHideTooltipsToggle');\r\n  const hideTooltipsBadge = $('hideTooltipsBadge');\r\n\r\n  const btnQueueToggle = $('btnQueueToggle');\r\n  const queueBadge = $('queueBadge');\r\n  const queueBlock = $('queueBlock');\r\n  const queueStatusText = $('queueStatusText');\r\n  const btnProcessQueue = $('btnProcessQueue');\r\n  const btnOpenTimeouted = $('btnOpenTimeouted');\r\n\r\n  if (btnOpenTimeouted && tab.url) {\r\n    const isE926 = /^https:\\/\\/e926\\.net/i.test(tab.url);\r\n    btnOpenTimeouted.href = isE926 ? 'https://e926.net/posts/timeouted' : 'https://e621.net/posts/timeouted';\r\n  }\r\n\r\n  function formatTime(ms) {\r\n    const totalSec = Math.ceil(ms / 1000);\r\n    const mins = Math.floor(totalSec / 60);\r\n    const secs = totalSec % 60;\r\n    return mins > 0 ? `${mins}m ${secs}s` : `${secs}s`;\r\n  }\r\n\r\n  async function refreshUI() {\r\n    const data = await chrome.storage.local.get([\r\n      KEYS.AUTO_UPDATE,\r\n      KEYS.BLACKLIST_LOCKED,\r\n      KEYS.SHOW_UPLOADER,\r\n      KEYS.HZ_ENABLED,\r\n      KEYS.HZ_LOAD_SAMPLE,\r\n      KEYS.CTRL_PREVIEW_ENABLED,\r\n      KEYS.CTRL_PREVIEW_STICKY,\r\n      KEYS.TRACKING_FPS,\r\n      KEYS.HIDE_THUMB_TOOLTIPS,\r\n      KEYS.QUEUE_TAG_SCRIPTS_ENABLED,\r\n      KEYS.TAG_SCRIPT_QUEUE,\r\n      KEYS.QUEUE_TIMEOUT_UNTIL,\r\n      KEYS.QUEUE_SLOT_TIMESTAMPS\r\n    ]);\r\n\r\n    const isAuto = Boolean(data[KEYS.AUTO_UPDATE]);\r\n    const isLocked = Boolean(data[KEYS.BLACKLIST_LOCKED]);\r\n\r\n    const hzEnabled = data[KEYS.HZ_ENABLED] !== false;\r\n    hzBadge.textContent = hzEnabled ? 'ON' : 'OFF';\r\n    hzBadge.classList.toggle('on', hzEnabled);\r\n\r\n    const hzSample = data[KEYS.HZ_LOAD_SAMPLE] !== false;\r\n    hzSampleBadge.textContent = hzSample ? 'ON' : 'OFF';\r\n    hzSampleBadge.classList.toggle('on', hzSample);\r\n\r\n    const ctrlPreview = data[KEYS.CTRL_PREVIEW_ENABLED] !== false;\r\n    ctrlPreviewBadge.textContent = ctrlPreview ? 'ON' : 'OFF';\r\n    ctrlPreviewBadge.classList.toggle('on', ctrlPreview);\r\n\r\n    const ctrlSticky = Boolean(data[KEYS.CTRL_PREVIEW_STICKY]);\r\n    ctrlStickyBadge.textContent = ctrlSticky ? 'ON' : 'OFF';\r\n    ctrlStickyBadge.classList.toggle('on', ctrlSticky);\r\n\r\n    if (inputTrackingFps && document.activeElement !== inputTrackingFps) {\r\n      inputTrackingFps.value = Number(data[KEYS.TRACKING_FPS]) || 0;\r\n    }\r\n\r\n    const hideTooltips = Boolean(data[KEYS.HIDE_THUMB_TOOLTIPS]);\r\n    hideTooltipsBadge.textContent = hideTooltips ? 'ON' : 'OFF';\r\n    hideTooltipsBadge.classList.toggle('on', hideTooltips);\r\n\r\n    const queueEnabled = Boolean(data[KEYS.QUEUE_TAG_SCRIPTS_ENABLED]);\r\n    queueBadge.textContent = queueEnabled ? 'ON' : 'OFF';\r\n    queueBadge.classList.toggle('on', queueEnabled);\r\n    queueBlock.classList.toggle('hidden', !queueEnabled);\r\n\r\n    const queue = data[KEYS.TAG_SCRIPT_QUEUE] || {};\r\n    const count = Object.keys(queue).length;\r\n    const slots = data[KEYS.QUEUE_SLOT_TIMESTAMPS] || [];\r\n    const timeoutUntil = Number(data[KEYS.QUEUE_TIMEOUT_UNTIL]) || 0;\r\n    const now = Date.now();\r\n\r\n    const nextSlot = slots[0] || timeoutUntil;\r\n    const isTimeout = nextSlot > now;\r\n\r\n    if (isTimeout && count > 0) {\r\n      const nextMs = Math.max(0, nextSlot - now);\r\n      const allSlotIdx = Math.min(count - 1, slots.length - 1);\r\n      const allSlot = slots[allSlotIdx] || nextSlot;\r\n      const allMs = Math.max(0, allSlot - now);\r\n\r\n      if (count > 1) {\r\n        queueStatusText.textContent = `${count} queued (next: ${formatTime(nextMs)}, all: ${formatTime(allMs)})`;\r\n      } else {\r\n        queueStatusText.textContent = `1 queued (ready in ${formatTime(nextMs)})`;\r\n      }\r\n    } else {\r\n      queueStatusText.textContent = `${count} posts queued (ready)`;\r\n    }\r\n\r\n    setButtonsDisabled(false);\r\n    autoUpdateState.textContent = isAuto ? 'ON' : 'OFF';\r\n    autoUpdateState.classList.toggle('on', isAuto);\r\n    btnSyncApi.classList.toggle('hidden', !isAuto);\r\n    manualActions.classList.toggle('hidden', isAuto);\r\n    if (!isAuto) btnBackup.disabled = isLocked;\r\n\r\n    const showUploader = data[KEYS.SHOW_UPLOADER] !== false;\r\n    showUploaderBadge.textContent = showUploader ? 'ON' : 'OFF';\r\n    showUploaderBadge.classList.toggle('on', showUploader);\r\n  }\r\n\r\n  btnHzToggle?.addEventListener('click', async () => {\r\n    const data = await chrome.storage.local.get([KEYS.HZ_ENABLED]);\r\n    await chrome.storage.local.set({ [KEYS.HZ_ENABLED]: data[KEYS.HZ_ENABLED] === false });\r\n    await refreshUI();\r\n  });\r\n\r\n  btnHzSampleToggle?.addEventListener('click', async () => {\r\n    const data = await chrome.storage.local.get([KEYS.HZ_LOAD_SAMPLE]);\r\n    const current = data[KEYS.HZ_LOAD_SAMPLE] !== false;\r\n    await chrome.storage.local.set({ [KEYS.HZ_LOAD_SAMPLE]: !current });\r\n    await refreshUI();\r\n  });\r\n\r\n  btnCtrlPreviewToggle?.addEventListener('click', async () => {\r\n    const data = await chrome.storage.local.get([KEYS.CTRL_PREVIEW_ENABLED]);\r\n    const current = data[KEYS.CTRL_PREVIEW_ENABLED] !== false;\r\n    await chrome.storage.local.set({ [KEYS.CTRL_PREVIEW_ENABLED]: !current });\r\n    if (current) {\r\n      await chrome.storage.local.set({ [KEYS.CTRL_STICKY_ACTIVE]: false });\r\n    }\r\n    await refreshUI();\r\n  });\r\n\r\n  btnCtrlStickyToggle?.addEventListener('click', async () => {\r\n    const data = await chrome.storage.local.get([KEYS.CTRL_PREVIEW_STICKY]);\r\n    const current = Boolean(data[KEYS.CTRL_PREVIEW_STICKY]);\r\n    await chrome.storage.local.set({ [KEYS.CTRL_PREVIEW_STICKY]: !current });\r\n    if (current) {\r\n      await chrome.storage.local.set({ [KEYS.CTRL_STICKY_ACTIVE]: false });\r\n    }\r\n    await refreshUI();\r\n  });\r\n\r\n  inputTrackingFps?.addEventListener('change', async () => {\r\n    let val = parseInt(inputTrackingFps.value, 10);\r\n    if (isNaN(val) || val < 0) val = 0;\r\n    if (val > 360) val = 360;\r\n    inputTrackingFps.value = val;\r\n    await chrome.storage.local.set({ [KEYS.TRACKING_FPS]: val });\r\n  });\r\n\r\n  inputTrackingFps?.addEventListener('keydown', (e) => {\r\n    if (e.key === 'Enter') inputTrackingFps.blur();\r\n  });\r\n\r\n  btnHideTooltipsToggle?.addEventListener('click', async () => {\r\n    const data = await chrome.storage.local.get([KEYS.HIDE_THUMB_TOOLTIPS]);\r\n    const current = Boolean(data[KEYS.HIDE_THUMB_TOOLTIPS]);\r\n    await chrome.storage.local.set({ [KEYS.HIDE_THUMB_TOOLTIPS]: !current });\r\n    await refreshUI();\r\n  });\r\n\r\n  btnQueueToggle?.addEventListener('click', async () => {\r\n    const data = await chrome.storage.local.get([KEYS.QUEUE_TAG_SCRIPTS_ENABLED]);\r\n    await chrome.storage.local.set({ [KEYS.QUEUE_TAG_SCRIPTS_ENABLED]: !data[KEYS.QUEUE_TAG_SCRIPTS_ENABLED] });\r\n    await refreshUI();\r\n  });\r\n\r\n  async function sendAction(action) {\r\n    const enabling = action === ACTIONS.TOGGLE_AUTO_UPDATE && autoUpdateState.textContent === 'OFF';\r\n    setStatus(enabling ? 'Syncing API & enabling...' : 'Processing...');\r\n    setButtonsDisabled(true);\r\n\r\n    try {\r\n      let response = null;\r\n\r\n      try {\r\n        response = await chrome.tabs.sendMessage(tab.id, { action });\r\n      } catch (err) {}\r\n\r\n      if (!response && window.parent && window.parent !== window) {\r\n        response = await new Promise((resolve) => {\r\n          const channel = new MessageChannel();\r\n          channel.port1.onmessage = (e) => resolve(e.data);\r\n          window.parent.postMessage({ fromE621Popup: true, action }, '*', [channel.port2]);\r\n          setTimeout(() => resolve(null), 5000);\r\n        });\r\n      }\r\n\r\n      setStatus(response?.status || (response?.ok === false ? 'Failed' : 'Done'));\r\n    } catch (err) {\r\n      const noReceiver = /Receiving end does not exist|message (channel|port) closed/i.test(err.message);\r\n      setStatus(noReceiver ? 'Error: Refresh the page' : `Error: ${err.message}`);\r\n    } finally {\r\n      await refreshUI();\r\n    }\r\n  }\r\n\r\n  $('btnAutoUpdate').addEventListener('click', () => sendAction(ACTIONS.TOGGLE_AUTO_UPDATE));\r\n  btnSyncApi.addEventListener('click', () => sendAction(ACTIONS.SYNC_API));\r\n  btnBackup.addEventListener('click', () => sendAction(ACTIONS.BACKUP_BLACKLIST));\r\n  $('btnLoadDownvotes').addEventListener('click', () => sendAction(ACTIONS.LOAD_DOWNVOTES));\r\n  $('btnUpload').addEventListener('click', () => sendAction(ACTIONS.UPLOAD_DOWNVOTES));\r\n  $('btnUnload').addEventListener('click', () => sendAction(ACTIONS.UNLOAD_DOWNVOTES));\r\n  btnProcessQueue?.addEventListener('click', () => sendAction(ACTIONS.PROCESS_TAG_QUEUE));\r\n\r\n  $('btnShowUploader').addEventListener('click', async () => {\r\n    const data = await chrome.storage.local.get([KEYS.SHOW_UPLOADER]);\r\n    await chrome.storage.local.set({ [KEYS.SHOW_UPLOADER]: data[KEYS.SHOW_UPLOADER] === false });\r\n    await refreshUI();\r\n  });\r\n\r\n  $('btnShowTreePopup').addEventListener('click', async () => {\r\n    const id = Number(inputTreePostId.value.trim());\r\n    if (!Number.isInteger(id) || id <= 0) return setStatus('Enter a valid post ID');\r\n    try {\r\n      await chrome.tabs.sendMessage(tab.id, { action: ACTIONS.SHOW_POST_TREE, postId: id });\r\n      window.close();\r\n    } catch (err) {\r\n      setStatus('Error: Refresh the page');\r\n    }\r\n  });\r\n\r\n  const stored = await chrome.storage.local.get([KEYS.ACTIVE_POPUP_TAB]);\r\n  const validTabs = ['main', 'blck', 'tagscr', 'hz'];\r\n  let initialTab = 'main';\r\n  if (stored[KEYS.ACTIVE_POPUP_TAB] === 'extra') {\r\n    initialTab = 'tagscr';\r\n  } else if (validTabs.includes(stored[KEYS.ACTIVE_POPUP_TAB])) {\r\n    initialTab = stored[KEYS.ACTIVE_POPUP_TAB];\r\n  }\r\n  showTab(initialTab);\r\n\r\n  await refreshUI();\r\n\r\n  const liveTimer = setInterval(refreshUI, 1000);\r\n  window.addEventListener('unload', () => clearInterval(liveTimer));\r\n});\n</script>\r\n</body>\r\n</html>"
+			  "popup/popup.html": "<!DOCTYPE html>\r\n<html lang=\"en\">\r\n<head>\r\n  <meta charset=\"UTF-8\">\r\n  <title>e621 extras</title>\r\n  <style>\n* {\r\n  box-sizing: border-box;\r\n  margin: 0;\r\n  padding: 0;\r\n  font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif;\r\n  -webkit-font-smoothing: antialiased;\r\n}\r\n\r\nbody {\r\n  width: 290px;\r\n  background-color: #000000;\r\n  color: #ffffff;\r\n  padding: 14px;\r\n  user-select: none;\r\n}\r\n\r\n/* 1. Remove arrows from numeric input */\r\ninput::-webkit-outer-spin-button,\r\ninput::-webkit-inner-spin-button {\r\n  -webkit-appearance: none;\r\n  margin: 0;\r\n}\r\n\r\ninput[type=\"number\"] {\r\n  -moz-appearance: textfield;\r\n  appearance: textfield;\r\n}\r\n\r\n.container {\r\n  display: flex;\r\n  flex-direction: column;\r\n  gap: 12px;\r\n}\r\n\r\n.header {\r\n  display: flex;\r\n  align-items: center;\r\n  padding-bottom: 2px;\r\n}\r\n\r\n.title {\r\n  font-size: 13px;\r\n  font-weight: 600;\r\n  letter-spacing: 0.8px;\r\n  text-transform: uppercase;\r\n}\r\n\r\n/* Tabs */\r\n.tabs {\r\n  display: flex;\r\n  gap: 4px;\r\n  border-bottom: 1px solid #222222;\r\n  padding-bottom: 8px;\r\n}\r\n\r\n.tab-btn {\r\n  flex: 1;\r\n  background: #000000;\r\n  color: #666666;\r\n  border: 1px solid #222222;\r\n  padding: 6px 0;\r\n  font-size: 10px;\r\n  font-weight: 600;\r\n  letter-spacing: 0.5px;\r\n  cursor: pointer;\r\n  transition: all 0.15s ease;\r\n  text-align: center;\r\n}\r\n\r\n.tab-btn:hover {\r\n  color: #cccccc;\r\n  background-color: #0a0a0a;\r\n}\r\n\r\n.tab-btn.active {\r\n  background-color: #ffffff;\r\n  color: #000000;\r\n  border-color: #ffffff;\r\n}\r\n\r\n.tab-content {\r\n  display: flex;\r\n  flex-direction: column;\r\n  gap: 10px;\r\n}\r\n\r\n.section {\r\n  display: flex;\r\n  flex-direction: column;\r\n  gap: 8px;\r\n}\r\n\r\n.hidden {\r\n  display: none !important;\r\n}\r\n\r\n.btn {\r\n  width: 100%;\r\n  background: #000000;\r\n  color: #ffffff;\r\n  border: 1px solid #272727;\r\n  padding: 8px 12px;\r\n  font-size: 12px;\r\n  letter-spacing: 0.3px;\r\n  cursor: pointer;\r\n  display: flex;\r\n  justify-content: space-between;\r\n  align-items: center;\r\n  transition: background-color 0.15s ease, border-color 0.15s ease;\r\n}\r\n\r\n.btn:hover:not(:disabled) {\r\n  background-color: #141414;\r\n  border-color: #444444;\r\n}\r\n\r\n.btn:active:not(:disabled) {\r\n  background-color: #222222;\r\n}\r\n\r\n.btn:disabled {\r\n  color: #444444;\r\n  border-color: #181818;\r\n  cursor: not-allowed;\r\n}\r\n\r\n.btn-sub {\r\n  padding-left: 20px;\r\n  color: #aaaaaa;\r\n}\r\n\r\n.setting-row {\r\n  display: flex;\r\n  justify-content: space-between;\r\n  align-items: center;\r\n  background: #0a0a0a;\r\n  border: 1px solid #222222;\r\n  padding: 10px 12px;\r\n}\r\n\r\n.setting-block {\r\n  display: flex;\r\n  flex-direction: column;\r\n  gap: 8px;\r\n  background: #0a0a0a;\r\n  border: 1px solid #222222;\r\n  padding: 10px 12px;\r\n}\r\n\r\n.setting-info {\r\n  display: flex;\r\n  flex-direction: column;\r\n  gap: 2px;\r\n}\r\n\r\n.setting-label {\r\n  font-size: 12px;\r\n  color: #ffffff;\r\n}\r\n\r\n.setting-desc {\r\n  font-size: 10px;\r\n  color: #666666;\r\n}\r\n\r\n.btn-toggle-switch {\r\n  background: transparent;\r\n  border: none;\r\n  cursor: pointer;\r\n  padding: 0;\r\n}\r\n\r\n.input-inline-group {\r\n  display: flex;\r\n  gap: 6px;\r\n  align-items: center;\r\n}\r\n\r\n.input-minimal {\r\n  flex: 1;\r\n  background: #000000;\r\n  border: 1px solid #272727;\r\n  color: #ffffff;\r\n  padding: 6px 10px;\r\n  font-size: 12px;\r\n  outline: none;\r\n  transition: border-color 0.15s;\r\n}\r\n\r\n.input-minimal:focus {\r\n  border-color: #666666;\r\n}\r\n\r\n.btn-inline {\r\n  width: auto;\r\n  padding: 6px 14px;\r\n}\r\n\r\n.badge {\r\n  display: inline-block;\r\n  width: 36px;\r\n  text-align: center;\r\n  font-size: 10px;\r\n  border: 1px solid #444444;\r\n  padding: 2px 0;\r\n  text-transform: uppercase;\r\n  color: #ffffff;\r\n  background-color: transparent;\r\n  font-weight: 500;\r\n}\r\n\r\n.badge.on {\r\n  background-color: #ffffff;\r\n  color: #000000;\r\n  border-color: #ffffff;\r\n}\r\n\r\n.footer {\r\n  border-top: 1px solid #222222;\r\n  padding-top: 8px;\r\n}\r\n\r\n.status-msg {\r\n  font-size: 11px;\r\n  color: #888888;\r\n  line-height: 1.4;\r\n  min-height: 16px;\r\n  word-break: break-word;\r\n}\r\n\r\n/* 2. Screen styles for third-party pages */\r\n.offline-view {\r\n  display: flex;\r\n  flex-direction: column;\r\n  align-items: center;\r\n  justify-content: center;\r\n  min-height: 160px;\r\n  text-align: center;\r\n  gap: 14px;\r\n  padding: 8px 0;\r\n}\r\n\r\n.offline-text {\r\n  font-size: 12px;\r\n  color: #888888;\r\n  line-height: 1.4;\r\n}\r\n\r\n.offline-links {\r\n  display: flex;\r\n  flex-direction: column;\r\n  gap: 8px;\r\n  width: 100%;\r\n}\r\n\r\n.offline-link {\r\n  display: block;\r\n  text-decoration: none;\r\n  color: #ffffff;\r\n  background-color: #0a0a0a;\r\n  border: 1px solid #222222;\r\n  padding: 8px 0;\r\n  font-size: 12px;\r\n  letter-spacing: 0.5px;\r\n  transition: background-color 0.15s, border-color 0.15s;\r\n}\r\n\r\n.offline-link:hover {\r\n  background-color: #141414;\r\n  border-color: #444444;\r\n}\n</style>\r\n</head>\r\n<body>\r\n  <!-- Shown on non-e621 pages -->\r\n  <div id=\"offlineView\" class=\"offline-view hidden\">\r\n    <p class=\"offline-text\">extension works on these webpages:</p>\r\n    <div class=\"offline-links\">\r\n      <a href=\"https://e621.net\" target=\"_blank\" class=\"offline-link\">e621.net</a>\r\n      <a href=\"https://e926.net\" target=\"_blank\" class=\"offline-link\">e926.net</a>\r\n    </div>\r\n  </div>\r\n\r\n  <!-- Main UI -->\r\n  <div id=\"mainView\" class=\"container\">\r\n    <header class=\"header\">\r\n      <h1 class=\"title\">e621 extras</h1>\r\n    </header>\r\n\r\n    <nav class=\"tabs\">\r\n      <button class=\"tab-btn active\" data-tab=\"main\">MAIN</button>\r\n      <button class=\"tab-btn\" data-tab=\"blck\">BLCK</button>\r\n      <button class=\"tab-btn\" data-tab=\"tagscr\">TAGSCR</button>\r\n      <button class=\"tab-btn\" data-tab=\"hz\">HZ</button>\r\n    </nav>\r\n\r\n    <!-- Tab 1: MAIN -->\r\n    <main id=\"tab-main\" class=\"tab-content\">\r\n      <div class=\"setting-row\">\r\n        <div class=\"setting-info\">\r\n          <span class=\"setting-label\">Hide Thumbnail Tooltips</span>\r\n          <span class=\"setting-desc\">Suppress browser tooltip on thumbnails</span>\r\n        </div>\r\n        <button id=\"btnHideTooltipsToggle\" class=\"btn-toggle-switch\">\r\n          <span id=\"hideTooltipsBadge\" class=\"badge\">OFF</span>\r\n        </button>\r\n      </div>\r\n\r\n      <div class=\"setting-row\">\r\n        <div class=\"setting-info\">\r\n          <span class=\"setting-label\">Tracking FPS</span>\r\n          <span class=\"setting-desc\">0 = Monitor Hz (or limit for weak PCs)</span>\r\n        </div>\r\n        <input type=\"number\" id=\"inputTrackingFps\" class=\"input-minimal\" placeholder=\"0\" min=\"0\" max=\"360\" style=\"width: 58px; flex: none; text-align: center;\" />\r\n      </div>\r\n\r\n      <div class=\"setting-row\">\r\n        <div class=\"setting-info\">\r\n          <span class=\"setting-label\">Show Uploader</span>\r\n          <span class=\"setting-desc\">Under status in post details</span>\r\n        </div>\r\n        <button id=\"btnShowUploader\" class=\"btn-toggle-switch\">\r\n          <span id=\"showUploaderBadge\" class=\"badge on\">ON</span>\r\n        </button>\r\n      </div>\r\n\r\n      <div class=\"setting-row\">\r\n        <div class=\"setting-info\">\r\n          <span class=\"setting-label\">Staff AI Heuristics</span>\r\n          <span class=\"setting-desc\">Auto-detect AI metadata on posts</span>\r\n        </div>\r\n        <button id=\"btnAiHeuristicsToggle\" class=\"btn-toggle-switch\">\r\n          <span id=\"aiHeuristicsBadge\" class=\"badge on\">ON</span>\r\n        </button>\r\n      </div>\r\n\r\n      <div class=\"setting-block\">\r\n        <span class=\"setting-label\">Show Post Tree</span>\r\n        <div class=\"input-inline-group\">\r\n          <input type=\"number\" id=\"inputTreePostId\" class=\"input-minimal\" placeholder=\"post id\" />\r\n          <button id=\"btnShowTreePopup\" class=\"btn btn-inline\">Show</button>\r\n        </div>\r\n      </div>\r\n    </main>\r\n\r\n    <!-- Tab 2: BLCK -->\r\n    <main id=\"tab-blck\" class=\"tab-content hidden\">\r\n      <div class=\"section\">\r\n        <button id=\"btnAutoUpdate\" class=\"btn\" title=\"Keep the blacklist in sync with your downvotes automatically\">\r\n          <span>Auto Update</span>\r\n          <span id=\"autoUpdateState\" class=\"badge\">OFF</span>\r\n        </button>\r\n        <button id=\"btnSyncApi\" class=\"btn btn-sub hidden\" title=\"Re-fetch downvotes and update the blacklist\">↳ Sync via API</button>\r\n      </div>\r\n\r\n      <div id=\"manualActions\" class=\"section\">\r\n        <button id=\"btnBackup\" class=\"btn\" title=\"Save the current blacklist in the extension\">Backup Current Blacklist</button>\r\n        <button id=\"btnLoadDownvotes\" class=\"btn\" title=\"Fetch your downvoted posts from the site into the extension\">Load Downvotes</button>\r\n        <button id=\"btnUpload\" class=\"btn\" title=\"Add the loaded downvotes to your blacklist as id:N rules\">Upload to Blacklist</button>\r\n        <button id=\"btnUnload\" class=\"btn\" title=\"Remove those id:N rules from your blacklist\">Unload from Blacklist</button>\r\n      </div>\r\n    </main>\r\n\r\n    <!-- Tab 3: TAGSCR -->\r\n    <main id=\"tab-tagscr\" class=\"tab-content hidden\">\r\n      <div class=\"setting-row\">\r\n        <div class=\"setting-info\">\r\n          <span class=\"setting-label\">Tag Script Preview (Ctrl)</span>\r\n          <span class=\"setting-desc\">View active tag scripts</span>\r\n        </div>\r\n        <button id=\"btnCtrlPreviewToggle\" class=\"btn-toggle-switch\">\r\n          <span id=\"ctrlPreviewBadge\" class=\"badge on\">ON</span>\r\n        </button>\r\n      </div>\r\n\r\n      <div class=\"setting-row\">\r\n        <div class=\"setting-info\">\r\n          <span class=\"setting-label\">Sticky Preview (Ctrl)</span>\r\n          <span class=\"setting-desc\">Toggle with Ctrl instead of holding</span>\r\n        </div>\r\n        <button id=\"btnCtrlStickyToggle\" class=\"btn-toggle-switch\">\r\n          <span id=\"ctrlStickyBadge\" class=\"badge\">OFF</span>\r\n        </button>\r\n      </div>\r\n\r\n      <div class=\"setting-row\">\r\n        <div class=\"setting-info\">\r\n          <span class=\"setting-label\">Queued Tag Scripts</span>\r\n          <span class=\"setting-desc\">Queue edits during hourly limits</span>\r\n        </div>\r\n        <button id=\"btnQueueToggle\" class=\"btn-toggle-switch\">\r\n          <span id=\"queueBadge\" class=\"badge\">OFF</span>\r\n        </button>\r\n      </div>\r\n\r\n      <div id=\"queueBlock\" class=\"setting-block hidden\">\r\n        <div class=\"setting-info\">\r\n          <span class=\"setting-label\">Tag Script Queue</span>\r\n          <span id=\"queueStatusText\" class=\"setting-desc\">0 posts queued</span>\r\n        </div>\r\n        <div class=\"input-inline-group\">\r\n          <a id=\"btnOpenTimeouted\" href=\"https://e621.net/posts/timeouted\" target=\"_blank\" class=\"btn btn-inline\">View Queue</a>\r\n          <button id=\"btnProcessQueue\" class=\"btn btn-inline\">Process Now</button>\r\n        </div>\r\n      </div>\r\n    </main>\r\n\r\n    <!-- Tab 4: HZ -->\r\n    <main id=\"tab-hz\" class=\"tab-content hidden\">\r\n      <div class=\"setting-row\">\r\n        <div class=\"setting-info\">\r\n          <span class=\"setting-label\">Hover Zoom (Shift)</span>\r\n          <span class=\"setting-desc\">Hold Shift while hovering</span>\r\n        </div>\r\n        <button id=\"btnHzToggle\" class=\"btn-toggle-switch\">\r\n          <span id=\"hzBadge\" class=\"badge on\">ON</span>\r\n        </button>\r\n      </div>\r\n\r\n      <div class=\"setting-row\">\r\n        <div class=\"setting-info\">\r\n          <span class=\"setting-label\">Load Sample on Hover</span>\r\n          <span class=\"setting-desc\">Load sample image instead of full</span>\r\n        </div>\r\n        <button id=\"btnHzSampleToggle\" class=\"btn-toggle-switch\">\r\n          <span id=\"hzSampleBadge\" class=\"badge on\">ON</span>\r\n        </button>\r\n      </div>\r\n    </main>\r\n\r\n    <footer class=\"footer\">\r\n      <div id=\"statusMessage\" class=\"status-msg\">Ready</div>\r\n    </footer>\r\n  </div>\r\n\r\n  <script>\n/* Shared by content scripts, popup and background — single source of truth for keys and message names. */\r\nglobalThis.E621_CONSTANTS = Object.freeze({\r\n  SCHEMA_VERSION: 1,\r\n\r\n  STORAGE_KEYS: Object.freeze({\r\n    AI_HEURISTICS_ENABLED: 'e621_ai_heuristics_enabled',\r\n    SCHEMA_VERSION: 'e621_schema_version',\r\n    DOWNVOTES: 'e621_downvoted_posts',\r\n    BLACKLIST_BACKUP: 'e621_clean_blacklist_backup',\r\n    BLACKLIST_LOCKED: 'e621_load_blacklist_disabled',\r\n    AUTO_UPDATE: 'e621_auto_update_enabled',\r\n    SHOW_UPLOADER: 'e621_extra_show_uploader',\r\n    ACTIVE_POPUP_TAB: 'e621_active_popup_tab',\r\n\r\n    /* Hover Zoom keys */\r\n    HZ_ENABLED: 'e621_hz_enabled',\r\n    HZ_LOAD_SAMPLE: 'e621_hz_load_sample',\r\n    HZ_TAGS: 'e621_hz_tags',\r\n    HZ_TIME: 'e621_hz_time',\r\n    HZ_AUDIO: 'e621_hz_audio',\r\n    HZ_DELAY: 'e621_hz_delay',\r\n    HZ_STICKY: 'e621_hz_sticky',\r\n\r\n    /* Queued / Timeouted Tag Scripts keys */\r\n    QUEUE_TAG_SCRIPTS_ENABLED: 'e621_queue_tag_scripts_enabled',\r\n    TAG_SCRIPT_QUEUE: 'e621_tag_script_queue',\r\n    QUEUE_TIMEOUT_UNTIL: 'e621_queue_timeout_until',\r\n    QUEUE_SLOT_TIMESTAMPS: 'e621_queue_slot_timestamps',\r\n\r\n    /* Preview & Tooltip suppression & Performance */\r\n    CTRL_PREVIEW_ENABLED: 'e621_ctrl_preview_enabled',\r\n    CTRL_PREVIEW_STICKY: 'e621_ctrl_preview_sticky',\r\n    CTRL_STICKY_ACTIVE: 'e621_ctrl_sticky_active',\r\n    HIDE_THUMB_TOOLTIPS: 'e621_hide_thumb_tooltips',\r\n    TRACKING_FPS: 'e621_tracking_fps'\r\n  }),\r\n\r\n  ACTIONS: Object.freeze({\r\n    CHECK_AI_HEURISTICS: 'checkAiHeuristics',\r\n    BACKUP_BLACKLIST: 'backupBlacklist',\r\n    LOAD_DOWNVOTES: 'loadDownvotes',\r\n    UPLOAD_DOWNVOTES: 'uploadDownvotes',\r\n    UNLOAD_DOWNVOTES: 'unloadDownvotes',\r\n    SYNC_API: 'syncApi',\r\n    TOGGLE_AUTO_UPDATE: 'toggleAutoUpdate',\r\n    SHOW_POST_TREE: 'showPostTree',\r\n    FETCH_IMAGE: 'fetchImageAsDataUrl',\r\n    PROCESS_TAG_QUEUE: 'processTagQueue',\r\n    CLEAR_TAG_QUEUE: 'clearTagQueue',\r\n    ENQUEUE_TAG_SCRIPT: 'enqueueTagScript',\r\n    DEQUEUE_TAG_SCRIPT: 'dequeueTagScript',\r\n    SAVE_IMAGE: 'saveImage',\r\n    GET_IMAGE: 'getImage',\r\n    DELETE_IMAGE: 'deleteImage',\r\n    CLEAR_IMAGES: 'clearImages',\r\n    SET_CSRF_TOKEN: 'setCsrfToken',\r\n    TAG_SCRIPT_POST_STATUS: 'tagScriptPostStatus'\r\n  })\r\n});\n</script>\r\n  <script>\ndocument.addEventListener('DOMContentLoaded', async () => {\r\n  const { STORAGE_KEYS: KEYS, ACTIONS } = E621_CONSTANTS;\r\n  const $ = (id) => document.getElementById(id);\r\n\r\n  const mainView = $('mainView');\r\n  const offlineView = $('offlineView');\r\n  const statusMsg = $('statusMessage');\r\n  const tabBtns = document.querySelectorAll('.tab-btn');\r\n  const tabs = {\r\n    main: $('tab-main'),\r\n    blck: $('tab-blck'),\r\n    tagscr: $('tab-tagscr'),\r\n    hz: $('tab-hz')\r\n  };\r\n\r\n  const autoUpdateState = $('autoUpdateState');\r\n  const btnSyncApi = $('btnSyncApi');\r\n  const manualActions = $('manualActions');\r\n  const btnBackup = $('btnBackup');\r\n  const showUploaderBadge = $('showUploaderBadge');\r\n  const inputTreePostId = $('inputTreePostId');\r\n\r\n  const setStatus = (text) => { statusMsg.textContent = text; };\r\n  const setButtonsDisabled = (disabled) =>\r\n    document.querySelectorAll('.btn').forEach(b => { b.disabled = disabled; });\r\n\r\n  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });\r\n  const isE621 = tab?.url && /^https:\\/\\/(e621|e926)\\.net\\//.test(tab.url);\r\n\r\n  if (!isE621) {\r\n    mainView.classList.add('hidden');\r\n    offlineView.classList.remove('hidden');\r\n    return;\r\n  }\r\n\r\n  function showTab(name) {\r\n    tabBtns.forEach(b => b.classList.toggle('active', b.dataset.tab === name));\r\n    Object.entries(tabs).forEach(([key, node]) => node.classList.toggle('hidden', key !== name));\r\n  }\r\n\r\n  tabBtns.forEach(btn => btn.addEventListener('click', () => {\r\n    showTab(btn.dataset.tab);\r\n    chrome.storage.local.set({ [KEYS.ACTIVE_POPUP_TAB]: btn.dataset.tab });\r\n  }));\r\n\r\n  const postMatch = tab.url.match(/\\/posts\\/(\\d+)/);\r\n  if (postMatch) inputTreePostId.value = postMatch[1];\r\n\r\n  const btnHzToggle = $('btnHzToggle');\r\n  const hzBadge = $('hzBadge');\r\n  const btnHzSampleToggle = $('btnHzSampleToggle');\r\n  const hzSampleBadge = $('hzSampleBadge');\r\n\r\n  const btnCtrlPreviewToggle = $('btnCtrlPreviewToggle');\r\n  const ctrlPreviewBadge = $('ctrlPreviewBadge');\r\n  const btnCtrlStickyToggle = $('btnCtrlStickyToggle');\r\n  const ctrlStickyBadge = $('ctrlStickyBadge');\r\n  const inputTrackingFps = $('inputTrackingFps');\r\n  const btnHideTooltipsToggle = $('btnHideTooltipsToggle');\r\n  const hideTooltipsBadge = $('hideTooltipsBadge');\r\n  const btnAiHeuristicsToggle = $('btnAiHeuristicsToggle');\r\n  const aiHeuristicsBadge = $('aiHeuristicsBadge');\r\n\r\n  const btnQueueToggle = $('btnQueueToggle');\r\n  const queueBadge = $('queueBadge');\r\n  const queueBlock = $('queueBlock');\r\n  const queueStatusText = $('queueStatusText');\r\n  const btnProcessQueue = $('btnProcessQueue');\r\n  const btnOpenTimeouted = $('btnOpenTimeouted');\r\n\r\n  if (btnOpenTimeouted && tab.url) {\r\n    const isE926 = /^https:\\/\\/e926\\.net/i.test(tab.url);\r\n    btnOpenTimeouted.href = isE926 ? 'https://e926.net/posts/timeouted' : 'https://e621.net/posts/timeouted';\r\n  }\r\n\r\n  function formatTime(ms) {\r\n    const totalSec = Math.ceil(ms / 1000);\r\n    const mins = Math.floor(totalSec / 60);\r\n    const secs = totalSec % 60;\r\n    return mins > 0 ? `${mins}m ${secs}s` : `${secs}s`;\r\n  }\r\n\r\n  async function refreshUI() {\r\n    const data = await chrome.storage.local.get([\r\n      KEYS.AUTO_UPDATE,\r\n      KEYS.BLACKLIST_LOCKED,\r\n      KEYS.SHOW_UPLOADER,\r\n      KEYS.AI_HEURISTICS_ENABLED,\r\n      KEYS.HZ_ENABLED,\r\n      KEYS.HZ_LOAD_SAMPLE,\r\n      KEYS.CTRL_PREVIEW_ENABLED,\r\n      KEYS.CTRL_PREVIEW_STICKY,\r\n      KEYS.TRACKING_FPS,\r\n      KEYS.HIDE_THUMB_TOOLTIPS,\r\n      KEYS.QUEUE_TAG_SCRIPTS_ENABLED,\r\n      KEYS.TAG_SCRIPT_QUEUE,\r\n      KEYS.QUEUE_TIMEOUT_UNTIL,\r\n      KEYS.QUEUE_SLOT_TIMESTAMPS\r\n    ]);\r\n\r\n    const isAuto = Boolean(data[KEYS.AUTO_UPDATE]);\r\n    const isLocked = Boolean(data[KEYS.BLACKLIST_LOCKED]);\r\n\r\n    const hzEnabled = data[KEYS.HZ_ENABLED] !== false;\r\n    hzBadge.textContent = hzEnabled ? 'ON' : 'OFF';\r\n    hzBadge.classList.toggle('on', hzEnabled);\r\n\r\n    const hzSample = data[KEYS.HZ_LOAD_SAMPLE] !== false;\r\n    hzSampleBadge.textContent = hzSample ? 'ON' : 'OFF';\r\n    hzSampleBadge.classList.toggle('on', hzSample);\r\n\r\n    const ctrlPreview = data[KEYS.CTRL_PREVIEW_ENABLED] !== false;\r\n    ctrlPreviewBadge.textContent = ctrlPreview ? 'ON' : 'OFF';\r\n    ctrlPreviewBadge.classList.toggle('on', ctrlPreview);\r\n\r\n    const ctrlSticky = Boolean(data[KEYS.CTRL_PREVIEW_STICKY]);\r\n    ctrlStickyBadge.textContent = ctrlSticky ? 'ON' : 'OFF';\r\n    ctrlStickyBadge.classList.toggle('on', ctrlSticky);\r\n\r\n    if (inputTrackingFps && document.activeElement !== inputTrackingFps) {\r\n      inputTrackingFps.value = Number(data[KEYS.TRACKING_FPS]) || 0;\r\n    }\r\n\r\n    const hideTooltips = Boolean(data[KEYS.HIDE_THUMB_TOOLTIPS]);\r\n    hideTooltipsBadge.textContent = hideTooltips ? 'ON' : 'OFF';\r\n    hideTooltipsBadge.classList.toggle('on', hideTooltips);\r\n\r\n    const queueEnabled = Boolean(data[KEYS.QUEUE_TAG_SCRIPTS_ENABLED]);\r\n    queueBadge.textContent = queueEnabled ? 'ON' : 'OFF';\r\n    queueBadge.classList.toggle('on', queueEnabled);\r\n    queueBlock.classList.toggle('hidden', !queueEnabled);\r\n\r\n    const queue = data[KEYS.TAG_SCRIPT_QUEUE] || {};\r\n    const count = Object.keys(queue).length;\r\n    const slots = data[KEYS.QUEUE_SLOT_TIMESTAMPS] || [];\r\n    const timeoutUntil = Number(data[KEYS.QUEUE_TIMEOUT_UNTIL]) || 0;\r\n    const now = Date.now();\r\n\r\n    const nextSlot = slots[0] || timeoutUntil;\r\n    const isTimeout = nextSlot > now;\r\n\r\n    if (isTimeout && count > 0) {\r\n      const nextMs = Math.max(0, nextSlot - now);\r\n      const allSlotIdx = Math.min(count - 1, slots.length - 1);\r\n      const allSlot = slots[allSlotIdx] || nextSlot;\r\n      const allMs = Math.max(0, allSlot - now);\r\n\r\n      if (count > 1) {\r\n        queueStatusText.textContent = `${count} queued (next: ${formatTime(nextMs)}, all: ${formatTime(allMs)})`;\r\n      } else {\r\n        queueStatusText.textContent = `1 queued (ready in ${formatTime(nextMs)})`;\r\n      }\r\n    } else {\r\n      queueStatusText.textContent = `${count} posts queued (ready)`;\r\n    }\r\n\r\n    setButtonsDisabled(false);\r\n    autoUpdateState.textContent = isAuto ? 'ON' : 'OFF';\r\n    autoUpdateState.classList.toggle('on', isAuto);\r\n    btnSyncApi.classList.toggle('hidden', !isAuto);\r\n    manualActions.classList.toggle('hidden', isAuto);\r\n    if (!isAuto) btnBackup.disabled = isLocked;\r\n\r\n    const showUploader = data[KEYS.SHOW_UPLOADER] !== false;\r\n    showUploaderBadge.textContent = showUploader ? 'ON' : 'OFF';\r\n    showUploaderBadge.classList.toggle('on', showUploader);\r\n\r\n    const aiEnabled = data[KEYS.AI_HEURISTICS_ENABLED] !== false;\r\n    if (aiHeuristicsBadge) {\r\n      aiHeuristicsBadge.textContent = aiEnabled ? 'ON' : 'OFF';\r\n      aiHeuristicsBadge.classList.toggle('on', aiEnabled);\r\n    }\r\n  }\r\n\r\n  btnHzToggle?.addEventListener('click', async () => {\r\n    const data = await chrome.storage.local.get([KEYS.HZ_ENABLED]);\r\n    await chrome.storage.local.set({ [KEYS.HZ_ENABLED]: data[KEYS.HZ_ENABLED] === false });\r\n    await refreshUI();\r\n  });\r\n\r\n  btnHzSampleToggle?.addEventListener('click', async () => {\r\n    const data = await chrome.storage.local.get([KEYS.HZ_LOAD_SAMPLE]);\r\n    const current = data[KEYS.HZ_LOAD_SAMPLE] !== false;\r\n    await chrome.storage.local.set({ [KEYS.HZ_LOAD_SAMPLE]: !current });\r\n    await refreshUI();\r\n  });\r\n\r\n  btnCtrlPreviewToggle?.addEventListener('click', async () => {\r\n    const data = await chrome.storage.local.get([KEYS.CTRL_PREVIEW_ENABLED]);\r\n    const current = data[KEYS.CTRL_PREVIEW_ENABLED] !== false;\r\n    await chrome.storage.local.set({ [KEYS.CTRL_PREVIEW_ENABLED]: !current });\r\n    if (current) {\r\n      await chrome.storage.local.set({ [KEYS.CTRL_STICKY_ACTIVE]: false });\r\n    }\r\n    await refreshUI();\r\n  });\r\n\r\n  btnCtrlStickyToggle?.addEventListener('click', async () => {\r\n    const data = await chrome.storage.local.get([KEYS.CTRL_PREVIEW_STICKY]);\r\n    const current = Boolean(data[KEYS.CTRL_PREVIEW_STICKY]);\r\n    await chrome.storage.local.set({ [KEYS.CTRL_PREVIEW_STICKY]: !current });\r\n    if (current) {\r\n      await chrome.storage.local.set({ [KEYS.CTRL_STICKY_ACTIVE]: false });\r\n    }\r\n    await refreshUI();\r\n  });\r\n\r\n  inputTrackingFps?.addEventListener('change', async () => {\r\n    let val = parseInt(inputTrackingFps.value, 10);\r\n    if (isNaN(val) || val < 0) val = 0;\r\n    if (val > 360) val = 360;\r\n    inputTrackingFps.value = val;\r\n    await chrome.storage.local.set({ [KEYS.TRACKING_FPS]: val });\r\n  });\r\n\r\n  inputTrackingFps?.addEventListener('keydown', (e) => {\r\n    if (e.key === 'Enter') inputTrackingFps.blur();\r\n  });\r\n\r\nbtnHideTooltipsToggle?.addEventListener('click', async () => {\r\n    const data = await chrome.storage.local.get([KEYS.HIDE_THUMB_TOOLTIPS]);\r\n    const current = Boolean(data[KEYS.HIDE_THUMB_TOOLTIPS]);\r\n    await chrome.storage.local.set({ [KEYS.HIDE_THUMB_TOOLTIPS]: !current });\r\n    await refreshUI();\r\n  });\r\n\r\n  btnAiHeuristicsToggle?.addEventListener('click', async () => {\r\n    const data = await chrome.storage.local.get([KEYS.AI_HEURISTICS_ENABLED]);\r\n    await chrome.storage.local.set({ [KEYS.AI_HEURISTICS_ENABLED]: data[KEYS.AI_HEURISTICS_ENABLED] === false });\r\n    await refreshUI();\r\n  });\r\n\r\n  btnQueueToggle?.addEventListener('click', async () => {\r\n    const data = await chrome.storage.local.get([KEYS.QUEUE_TAG_SCRIPTS_ENABLED]);\r\n    await chrome.storage.local.set({ [KEYS.QUEUE_TAG_SCRIPTS_ENABLED]: !data[KEYS.QUEUE_TAG_SCRIPTS_ENABLED] });\r\n    await refreshUI();\r\n  });\r\n\r\n  async function sendAction(action) {\r\n    const enabling = action === ACTIONS.TOGGLE_AUTO_UPDATE && autoUpdateState.textContent === 'OFF';\r\n    setStatus(enabling ? 'Syncing API & enabling...' : 'Processing...');\r\n    setButtonsDisabled(true);\r\n\r\n    try {\r\n      let response = null;\r\n\r\n      try {\r\n        response = await chrome.tabs.sendMessage(tab.id, { action });\r\n      } catch (err) {}\r\n\r\n      if (!response && window.parent && window.parent !== window) {\r\n        response = await new Promise((resolve) => {\r\n          const channel = new MessageChannel();\r\n          channel.port1.onmessage = (e) => resolve(e.data);\r\n          window.parent.postMessage({ fromE621Popup: true, action }, '*', [channel.port2]);\r\n          setTimeout(() => resolve(null), 5000);\r\n        });\r\n      }\r\n\r\n      setStatus(response?.status || (response?.ok === false ? 'Failed' : 'Done'));\r\n    } catch (err) {\r\n      const noReceiver = /Receiving end does not exist|message (channel|port) closed/i.test(err.message);\r\n      setStatus(noReceiver ? 'Error: Refresh the page' : `Error: ${err.message}`);\r\n    } finally {\r\n      await refreshUI();\r\n    }\r\n  }\r\n\r\n  $('btnAutoUpdate').addEventListener('click', () => sendAction(ACTIONS.TOGGLE_AUTO_UPDATE));\r\n  btnSyncApi.addEventListener('click', () => sendAction(ACTIONS.SYNC_API));\r\n  btnBackup.addEventListener('click', () => sendAction(ACTIONS.BACKUP_BLACKLIST));\r\n  $('btnLoadDownvotes').addEventListener('click', () => sendAction(ACTIONS.LOAD_DOWNVOTES));\r\n  $('btnUpload').addEventListener('click', () => sendAction(ACTIONS.UPLOAD_DOWNVOTES));\r\n  $('btnUnload').addEventListener('click', () => sendAction(ACTIONS.UNLOAD_DOWNVOTES));\r\n  btnProcessQueue?.addEventListener('click', () => sendAction(ACTIONS.PROCESS_TAG_QUEUE));\r\n\r\n  $('btnShowUploader').addEventListener('click', async () => {\r\n    const data = await chrome.storage.local.get([KEYS.SHOW_UPLOADER]);\r\n    await chrome.storage.local.set({ [KEYS.SHOW_UPLOADER]: data[KEYS.SHOW_UPLOADER] === false });\r\n    await refreshUI();\r\n  });\r\n\r\n  $('btnShowTreePopup').addEventListener('click', async () => {\r\n    const id = Number(inputTreePostId.value.trim());\r\n    if (!Number.isInteger(id) || id <= 0) return setStatus('Enter a valid post ID');\r\n    try {\r\n      await chrome.tabs.sendMessage(tab.id, { action: ACTIONS.SHOW_POST_TREE, postId: id });\r\n      window.close();\r\n    } catch (err) {\r\n      setStatus('Error: Refresh the page');\r\n    }\r\n  });\r\n\r\n  const stored = await chrome.storage.local.get([KEYS.ACTIVE_POPUP_TAB]);\r\n  const validTabs = ['main', 'blck', 'tagscr', 'hz'];\r\n  let initialTab = 'main';\r\n  if (stored[KEYS.ACTIVE_POPUP_TAB] === 'extra') {\r\n    initialTab = 'tagscr';\r\n  } else if (validTabs.includes(stored[KEYS.ACTIVE_POPUP_TAB])) {\r\n    initialTab = stored[KEYS.ACTIVE_POPUP_TAB];\r\n  }\r\n  showTab(initialTab);\r\n\r\n  await refreshUI();\r\n\r\n  const liveTimer = setInterval(refreshUI, 1000);\r\n  window.addEventListener('unload', () => clearInterval(liveTimer));\r\n});\n</script>\r\n</body>\r\n</html>"
 			};
 			
 // #endregion
@@ -2015,6 +2015,23 @@ console.log("Script start:",performance.now());const e=!0,t=e=>e,o="passthrough"
 	  return `data:${type};base64,${toBase64(bytes)}`;
 	}
 	
+	async function fetchHeaderBytes(rawUrl, maxBytes = 524288) {
+	  const url = new URL(rawUrl);
+	  if (url.protocol !== 'https:' || !ALLOWED_HOST.test(url.hostname)) {
+	    throw new Error('Host not allowed');
+	  }
+	  // Request only the first 512KB since metadata chunks are located before IDAT / SOS
+	  let res = await fetch(url.href, {
+	    headers: { 'Range': `bytes=0-${maxBytes - 1}` }
+	  });
+	  if (!res.ok && res.status !== 206) {
+	    res = await fetch(url.href);
+	  }
+	  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+	  const bytes = new Uint8Array(await res.arrayBuffer());
+	  return toBase64(bytes);
+	}
+	
 	// ---------- Queue synchronization mutex ----------
 	let queueTail = Promise.resolve();
 	function runQueueOp(task) {
@@ -2343,6 +2360,12 @@ console.log("Script start:",performance.now());const e=!0,t=e=>e,o="passthrough"
 	        .catch(err => sendResponse({ ok: false, error: err.message }));
 	      return true;
 	
+	    case ACTIONS.CHECK_AI_HEURISTICS:
+	      fetchHeaderBytes(msg.url)
+	        .then(base64Data => sendResponse({ ok: true, base64Data }))
+	        .catch(err => sendResponse({ ok: false, error: err.message }));
+	      return true;
+	
 	    case ACTIONS.SAVE_IMAGE:
 	      idbSaveImage(msg.postId, msg.dataUrl)
 	        .then(() => sendResponse({ ok: true }))
@@ -2446,7 +2469,7 @@ console.log("Script start:",performance.now());const e=!0,t=e=>e,o="passthrough"
    // #endregion
     // #region Orchestration Logic
 	// Other globals currently defined at this spot: SCRIPT_NAME, _log, _warn, _error
-	const INJECTED_MANIFEST = {"manifest_version":3,"name":"e621 extras","version":"1.5.4","description":"Downvotes-to-blacklist manager, post tree viewer, hover zoom and tag scripts for regular members of e621 and e926.","permissions":["storage","alarms","unlimitedStorage"],"optional_permissions":[],"content_scripts":[{"matches":["https://e621.net/*","https://e926.net/*"],"css":["styles/extras.css"],"js":["scripts/constants.js","scripts/core.js","scripts/selectors.js","scripts/utils.js","scripts/net.js","scripts/ui/dom.js","scripts/ui/layout.js","scripts/ui/thumbnail.js","scripts/ui/dtext.js","scripts/ui/tooltips.js","scripts/blacklist.js","scripts/uploader.js","scripts/user_edits.js","scripts/tree/data.js","scripts/tree/export.js","scripts/tree/modal.js","scripts/hover_zoom/data.js","scripts/hover_zoom/index.js","scripts/tag_script/engine.js","scripts/tag_script/queue.js","scripts/tag_script/timeouted_page.js","scripts/tag_script/logger.js","scripts/tag_script/storage.js","scripts/tag_script/runner.js","scripts/tag_script/preview.js","scripts/tag_script/index.js","scripts/content.js"],"run_at":"document_end"}],"options_ui":{},"browser_action":{},"page_action":{},"action":{"default_popup":"popup/popup.html","default_title":"e621 extras"},"icons":{},"web_accessible_resources":[],"background":{"service_worker":"background.js"},"_id":"e621-extras"};
+	const INJECTED_MANIFEST = {"manifest_version":3,"name":"e621 extras","version":"1.5.5","description":"Downvotes-to-blacklist manager, post tree viewer, hover zoom and tag scripts for regular members of e621 and e926.","permissions":["storage","alarms","unlimitedStorage"],"optional_permissions":[],"content_scripts":[{"matches":["https://e621.net/*","https://e926.net/*"],"css":["styles/extras.css"],"js":["scripts/constants.js","scripts/core.js","scripts/selectors.js","scripts/utils.js","scripts/net.js","scripts/ui/dom.js","scripts/ui/layout.js","scripts/ui/thumbnail.js","scripts/ui/dtext.js","scripts/ui/tooltips.js","scripts/blacklist.js","scripts/uploader.js","scripts/user_edits.js","scripts/ai_heuristics.js","scripts/tree/data.js","scripts/tree/export.js","scripts/tree/modal.js","scripts/hover_zoom/data.js","scripts/hover_zoom/index.js","scripts/tag_script/engine.js","scripts/tag_script/queue.js","scripts/tag_script/timeouted_page.js","scripts/tag_script/logger.js","scripts/tag_script/storage.js","scripts/tag_script/runner.js","scripts/tag_script/preview.js","scripts/tag_script/index.js","scripts/content.js"],"run_at":"document_end"}],"options_ui":{},"browser_action":{},"page_action":{},"action":{"default_popup":"popup/popup.html","default_title":"e621 extras"},"icons":{},"web_accessible_resources":[],"background":{"service_worker":"background.js"},"_id":"e621-extras"};
 	const CONTENT_SCRIPT_CONFIGS_FOR_MATCHING = [
 	  {
 	    "matches": [
@@ -2458,7 +2481,7 @@ console.log("Script start:",performance.now());const e=!0,t=e=>e,o="passthrough"
 	const OPTIONS_PAGE_PATH = null;
 	const POPUP_PAGE_PATH = "popup/popup.html";
 	const EXTENSION_ICON = null;
-	const extensionCssData = {    "styles/extras.css": "/* ===== toast ===== */\r\n.e621x-toast {\r\n  position: fixed; bottom: 24px; right: 24px; z-index: 999999;\r\n  background: #000; color: #fff; border: 1px solid #444;\r\n  padding: 10px 16px; font: 12px/1.4 -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif;\r\n  letter-spacing: 0.3px; pointer-events: none; transition: opacity 0.3s;\r\n}\r\n.e621x-toast--error { background: #1a1a1a; border-color: #ff4444; }\r\n.e621x-toast.is-hiding { opacity: 0; }\r\n\r\n/* ===== thumbnail card (size/fit come from --e621x-* variables set on the container) ===== */\r\n.e621x-thumb {\r\n  margin: 0 !important; float: none !important; align-self: center !important;\r\n  width: var(--e621x-w, 160px) !important; height: var(--e621x-h, 210px) !important;\r\n  background: var(--color-section, #152f56) !important;\r\n  display: flex !important; flex-direction: column !important;\r\n  position: relative !important; overflow: visible !important;\r\n  z-index: 2; box-sizing: border-box !important;\r\n  transition: transform 0.15s ease, box-shadow 0.15s ease;\r\n}\r\n.e621x-thumb:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6); }\r\n.e621x-thumb .thm-link {\r\n  flex: 1 1 auto !important; width: 100% !important; min-height: 0 !important;\r\n  position: relative !important; display: flex !important;\r\n  align-items: center !important; justify-content: center !important; overflow: hidden !important;\r\n}\r\n.e621x-thumb picture { display: flex; width: 100%; height: 100%; align-items: center; justify-content: center; overflow: hidden; }\r\n.e621x-thumb .thm-img-thumb { width: 100%; height: 100%; object-fit: var(--e621x-fit, cover); object-position: center; display: block; }\r\n.e621x-thumb .thm-desc {\r\n  width: 100% !important; max-width: 100% !important; box-sizing: border-box !important;\r\n  margin: 0 !important; align-self: stretch !important; flex-shrink: 0 !important;\r\n  border-radius: 0 0 4px 4px !important;\r\n}\r\n.e621x-pin {\r\n  position: absolute; left: 50%; transform: translateX(-50%);\r\n  width: 18px; height: 18px; border-radius: 50%; box-sizing: border-box;\r\n  background: #152f56; border: 2px solid #3b6aa0; color: #fff;\r\n  font-size: 10px; font-weight: bold; display: flex; align-items: center; justify-content: center;\r\n  z-index: 10; pointer-events: none;\r\n}\r\n.e621x-pin--top { top: -16px; }\r\n.e621x-pin--bottom { bottom: -16px; }\r\n\r\n/* ===== post tree modal ===== */\r\n.e621x-tree-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.75); z-index: 1000000; backdrop-filter: blur(2px); }\r\n.e621x-tree-dialog {\r\n  position: fixed !important; inset: 40px; margin: 0; padding: 0;\r\n  background: var(--color-section, #152f56); border: 1px solid var(--color-section-border, #2a4c7e);\r\n  border-radius: 4px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8); z-index: 1000001;\r\n  display: flex; flex-direction: column; overflow: hidden;\r\n}\r\n.e621x-tree-titlebar { display: flex; justify-content: space-between; align-items: center; padding: 8px 16px; border-bottom: 1px solid var(--color-section-border, #2a4c7e); }\r\n.e621x-tree-toolbar { display: flex; gap: 8px; align-items: center; }\r\n.e621x-tree-close { font-size: 20px; line-height: 1; padding: 2px 8px; cursor: pointer; }\r\n.e621x-tree-content { flex: 1; overflow: auto; position: relative; padding: 0; width: 100%; box-sizing: border-box; }\r\n.e621x-tree-message { margin: 40px auto; text-align: center; color: #888; }\r\n.e621x-tree-message--error { color: #ff5555; }\r\n.e621x-tree { position: relative; display: flex; flex-direction: column; align-items: center; width: 100%; min-width: 100%; margin: 0 auto; padding: 30px 24px 0; box-sizing: border-box; }\r\n.e621x-tree-lines { position: absolute; top: 0; left: 0; pointer-events: none; z-index: 1; overflow: visible; }\r\n.e621x-tree-line { stroke: rgba(255, 255, 255, 0.22); stroke-width: 1.5; fill: none; transition: stroke 0.15s ease, stroke-width 0.15s ease, opacity 0.15s ease; }\r\n.e621x-tree-line.is-active { stroke: #3b82f6; stroke-width: 2.5; }\r\n.e621x-tree-line.is-dim { opacity: 0.12; }\r\n.e621x-tree-tier { display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 100%; margin-bottom: 50px; position: relative; z-index: 2; box-sizing: border-box; }\r\n.e621x-tree-divider { display: flex; align-items: center; width: 100%; margin-bottom: 24px; user-select: none; }\r\n.e621x-tree-divider-line { flex: 1; height: 1px; background: rgba(255, 255, 255, 0.08); }\r\n.e621x-tree-divider-label { padding: 2px 14px; margin: 0 16px; font-size: 10px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: #8a9ba8; background: #0c1a2f; border: 1px solid #24416b; border-radius: 12px; }\r\n.e621x-tree-cards { display: flex; flex-flow: row wrap; justify-content: center; align-items: flex-start; gap: 36px 24px; width: 100%; max-width: 100%; box-sizing: border-box; }\r\n.e621x-tree-spacer { width: 100%; height: 60px; flex-shrink: 0; pointer-events: none; }\r\n\r\n/* ===== \"show post tree\" button / notices ===== */\r\n.e621x-notice-row { display: flex !important; align-items: center !important; flex-wrap: wrap !important; gap: 8px !important; }\r\n.e621x-notice-inline { display: inline-flex !important; align-items: center !important; gap: 6px !important; min-height: 32px !important; line-height: normal !important; margin: 0 !important; vertical-align: middle !important; }\r\n.e621x-tree-btn { margin-left: 8px; vertical-align: middle; }\r\n\r\n/* ===== tag script panel ===== */\r\n#e621x-tag-script-ui { display: none; margin-top: 0.5em; flex-direction: column; gap: 6px; }\r\n#e621x-tag-script-ui.is-visible { display: flex; }\r\n.e621x-ts-input { width: 100%; min-width: 0; box-sizing: border-box; font-size: 12px; padding: 4px 6px; }\r\n.e621x-ts-grow { flex: 1 1 0; min-width: 0; width: auto; }\r\n.e621x-ts-all { padding: 4px 10px; font-size: 12px; cursor: pointer; flex-shrink: 0; }\r\n.e621x-ts-btn { padding: 4px 6px; font-size: 12px; cursor: pointer; white-space: nowrap; flex-shrink: 0; }\r\n.e621x-ts-row { display: flex; gap: 4px; align-items: center; width: 100%; box-sizing: border-box; }\r\n.e621x-ts-row--spread { justify-content: space-between; padding: 0px 0; font-size: 11px; }\r\n.e621x-ts-label { display: flex; align-items: center; gap: 6px; cursor: pointer; user-select: none; color: #b4c7d9; }\r\n\r\n/* ===== Hover Zoom ===== */\r\n.e621x-zoom {\r\n  position: fixed;\r\n  z-index: 10000002;\r\n  pointer-events: none;\r\n  padding: 0 !important;\r\n  margin: 0 !important;\r\n  line-height: 0 !important;\r\n  font-size: 0 !important;\r\n  border: 1px solid rgba(255, 255, 255, 0.45);\r\n  background: transparent !important;\r\n  border-radius: 4px;\r\n  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.9);\r\n  overflow: hidden;\r\n  box-sizing: content-box !important;\r\n  display: block;\r\n}\r\n\r\n.e621x-zoom.is-hidden {\r\n  display: none !important;\r\n}\r\n\r\n.e621x-zoom-media {\r\n  display: block !important;\r\n  margin: 0 !important;\r\n  padding: 0 !important;\r\n  border: none !important;\r\n  outline: none !important;\r\n}\r\n\r\n/* ===== Queued Tag Scripts (3px Clean Yellow Outline outside thumbnail) ===== */\r\n.e621x-thumb-queued {\r\n  outline: 3px solid #ffff00 !important;\r\n  outline-offset: 0 !important;\r\n  box-shadow: none !important;\r\n  position: relative !important;\r\n  z-index: 5 !important;\r\n}\r\n\r\n/* ===== Successfully Updated Tag Scripts (3px Clean Green Outline) ===== */\r\n.e621x-thumb-updated {\r\n  outline: 3px solid #22c55e !important;\r\n  outline-offset: 0 !important;\r\n  box-shadow: none !important;\r\n  position: relative !important;\r\n  z-index: 5 !important;\r\n}\r\n\r\n/* ===== Locked Tag Scripts (3px Clean Red Outline) ===== */\r\n.e621x-thumb-locked {\r\n  outline: 3px solid #ef4444 !important;\r\n  outline-offset: 0 !important;\r\n  box-shadow: none !important;\r\n  position: relative !important;\r\n  z-index: 5 !important;\r\n}\r\n\r\n\r\n.e621x-ts-queue-link {\r\n  font-size: 11px;\r\n  color: #ffff00 !important;\r\n  font-weight: bold;\r\n  text-decoration: underline;\r\n  margin-left: auto;\r\n  margin-right: 8px;\r\n}\r\n.e621x-ts-queue-link:hover {\r\n  color: #ffffff !important;\r\n}\r\n\r\n/* ===== /posts/timeouted page ===== */\r\n.e621x-queue-page {\r\n  width: 100%;\r\n  max-width: 1600px;\r\n  margin: 20px auto;\r\n  padding: 0 20px 60px;\r\n  box-sizing: border-box;\r\n}\r\n\r\n.e621x-queue-header {\r\n  background: var(--color-section, #152f56);\r\n  border: 1px solid var(--color-section-border, #2a4c7e);\r\n  border-radius: 4px;\r\n  padding: 16px 20px;\r\n  margin-bottom: 24px;\r\n  display: flex;\r\n  flex-wrap: wrap;\r\n  justify-content: space-between;\r\n  align-items: center;\r\n  gap: 16px;\r\n}\r\n\r\n.e621x-queue-title-area h2 {\r\n  margin: 0 0 4px 0;\r\n  font-size: 18px;\r\n  color: #ffffff;\r\n  display: flex;\r\n  align-items: center;\r\n  gap: 10px;\r\n}\r\n\r\n.e621x-queue-badge {\r\n  background: #ffff00;\r\n  color: #000000;\r\n  font-size: 11px;\r\n  font-weight: 700;\r\n  padding: 2px 8px;\r\n  border-radius: 10px;\r\n}\r\n\r\n.e621x-queue-subtitle {\r\n  font-size: 12px;\r\n  color: #b4c7d9;\r\n}\r\n\r\n.e621x-queue-actions {\r\n  display: flex;\r\n  gap: 10px;\r\n  align-items: center;\r\n}\r\n\r\n.e621x-queue-status-pill {\r\n  font-size: 12px;\r\n  padding: 6px 12px;\r\n  background: #0a1b32;\r\n  border: 1px solid #24416b;\r\n  border-radius: 4px;\r\n  color: #e2e8f0;\r\n}\r\n.e621x-queue-status-pill.is-timeout {\r\n  border-color: #eab308;\r\n  color: #fef08a;\r\n}\r\n.e621x-queue-status-pill.is-ready {\r\n  border-color: #22c55e;\r\n  color: #86efac;\r\n}\r\n\r\n.e621x-queue-card-wrap {\r\n  position: relative;\r\n  display: flex;\r\n  flex-direction: column;\r\n  align-items: center;\r\n  gap: 6px;\r\n}\r\n\r\n.e621x-queue-card-meta {\r\n  width: var(--e621x-w, 160px);\r\n  background: #0a1b32;\r\n  border: 1px solid #24416b;\r\n  border-radius: 4px;\r\n  padding: 6px 8px;\r\n  box-sizing: border-box;\r\n  font-size: 11px;\r\n  color: #ffffff;\r\n  display: flex;\r\n  flex-direction: column;\r\n  gap: 4px;\r\n}\r\n\r\n.e621x-queue-diff {\r\n  word-break: break-all;\r\n  font-family: monospace;\r\n  font-size: 10px;\r\n  color: #fef08a;\r\n  max-height: 48px;\r\n  overflow-y: auto;\r\n}\r\n\r\n.e621x-queue-card-actions {\r\n  display: flex;\r\n  justify-content: space-between;\r\n  align-items: center;\r\n  margin-top: 2px;\r\n}\r\n\r\n.e621x-queue-remove-btn {\r\n  background: transparent;\r\n  border: 1px solid #ef4444;\r\n  color: #ef4444;\r\n  font-size: 10px;\r\n  padding: 2px 6px;\r\n  border-radius: 2px;\r\n  cursor: pointer;\r\n  transition: all 0.15s;\r\n}\r\n.e621x-queue-remove-btn:hover {\r\n  background: #ef4444;\r\n  color: #ffffff;\r\n}\r\n\r\n.e621x-queue-empty {\r\n  text-align: center;\r\n  padding: 60px 20px;\r\n  background: var(--color-section, #152f56);\r\n  border: 1px solid var(--color-section-border, #2a4c7e);\r\n  border-radius: 4px;\r\n  color: #b4c7d9;\r\n}\r\n.e621x-queue-empty h3 {\r\n  color: #ffffff;\r\n  margin-bottom: 8px;\r\n}\r\n\r\n.hidden {\r\n  display: none !important;\r\n}\r\n\r\n/* ===== Tag Script Ctrl Preview Tooltip ===== */\r\n.e621x-ts-preview {\r\n  position: fixed;\r\n  z-index: 10000005;\r\n  pointer-events: none;\r\n  background: #000000;\r\n  border: 1px solid #ffffff;\r\n  border-radius: 2px;\r\n  padding: 8px 12px;\r\n  color: #ffffff;\r\n  font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif;\r\n  font-size: 13px;\r\n  line-height: 1.5;\r\n  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.85);\r\n  white-space: nowrap;\r\n  display: flex;\r\n  flex-direction: column;\r\n  gap: 2px;\r\n}\r\n\r\n.e621x-ts-preview.is-hidden {\r\n  display: none !important;\r\n}\r\n\r\n.e621x-ts-preview-line {\r\n  display: block;\r\n}\r\n\r\n.e621x-ts-preview-bullet {\r\n  color: #ffffff;\r\n  margin-right: 6px;\r\n  user-select: none;\r\n}\r\n\r\n/* Tag type colors matching e621 categories */\r\n.e621x-tag-type-0, .e621x-tag-type-general { color: #7eb3e6; }\r\n.e621x-tag-type-1, .e621x-tag-type-artist { color: #f2ac08; }\r\n.e621x-tag-type-2, .e621x-tag-type-contributor { color: #00aa00; }\r\n.e621x-tag-type-3, .e621x-tag-type-copyright { color: #dd00aa; }\r\n.e621x-tag-type-4, .e621x-tag-type-character { color: #00aa00; }\r\n.e621x-tag-type-5, .e621x-tag-type-species { color: #ed5d1f; }\r\n.e621x-tag-type-6, .e621x-tag-type-invalid { color: #ff3333; }\r\n.e621x-tag-type-7, .e621x-tag-type-meta { color: #ffffff; }\r\n.e621x-tag-type-8, .e621x-tag-type-lore { color: #2e8b57; }\r\n.e621x-tag-type-command { color: #fef08a; }\r\n.e621x-tag-type-prefix { color: #94a3b8; }\r\n\r\n/* ===== Specific Post Edits Filter ===== */\r\n.e621x-specific-edits-wrapper {\r\n  margin-top: 10px;\r\n  width: 100%;\r\n  display: flex;\r\n  flex-direction: column;\r\n  align-items: center;\r\n  text-align: center;\r\n}\r\n\r\n.e621x-specific-edits-trigger {\r\n  font-size: 11px;\r\n  color: #ffff00 !important;\r\n  font-weight: bold;\r\n  text-decoration: underline;\r\n  cursor: pointer;\r\n  display: inline-block;\r\n  text-align: center;\r\n  margin: 6px auto;\r\n  user-select: none;\r\n  transition: color 0.15s ease;\r\n}\r\n\r\n.e621x-specific-edits-trigger:hover {\r\n  color: #ffffff !important;\r\n}\r\n\r\n.e621x-specific-edits-panel {\r\n  background: var(--color-section, #152f56);\r\n  border: 1px solid var(--color-section-border, #2a4c7e);\r\n  border-radius: 4px;\r\n  padding: 12px 14px;\r\n  margin: 8px auto 0 auto;\r\n  width: 100%;\r\n  max-width: 480px;\r\n  box-sizing: border-box;\r\n  display: flex;\r\n  flex-direction: column;\r\n  gap: 10px;\r\n  font-size: 12px;\r\n  text-align: left;\r\n}\r\n\r\n.e621x-specific-edits-panel.is-hidden {\r\n  display: none !important;\r\n}\r\n\r\n.e621x-specific-edits-header {\r\n  display: flex;\r\n  justify-content: space-between;\r\n  align-items: center;\r\n  border-bottom: 1px solid rgba(255, 255, 255, 0.12);\r\n  padding-bottom: 6px;\r\n}\r\n\r\n.e621x-specific-edits-title {\r\n  font-weight: bold;\r\n  color: #ffffff;\r\n  font-size: 12px;\r\n  letter-spacing: 0.3px;\r\n}\r\n\r\n.e621x-specific-edits-close {\r\n  background: transparent;\r\n  border: none;\r\n  color: #8a9ba8;\r\n  font-size: 16px;\r\n  line-height: 1;\r\n  cursor: pointer;\r\n  padding: 0 4px;\r\n}\r\n\r\n.e621x-specific-edits-close:hover {\r\n  color: #ffffff;\r\n}\r\n\r\n.e621x-specific-edits-fields {\r\n  display: flex;\r\n  flex-direction: column;\r\n  gap: 8px;\r\n}\r\n\r\n.e621x-specific-edits-field {\r\n  display: flex;\r\n  flex-direction: column;\r\n  gap: 3px;\r\n}\r\n\r\n.e621x-specific-edits-field label {\r\n  font-size: 11px;\r\n  color: #b4c7d9;\r\n  font-weight: 600;\r\n}\r\n\r\n.e621x-specific-edits-input {\r\n  width: 100%;\r\n  box-sizing: border-box;\r\n  font-size: 12px;\r\n  padding: 6px 8px;\r\n  background-color: #ffffff !important;\r\n  color: #000000 !important;\r\n  border: 1px solid #cccccc;\r\n  border-radius: 2px;\r\n  outline: none;\r\n  transition: background-color 0.15s ease, border-color 0.15s ease;\r\n}\r\n\r\n.e621x-specific-edits-input::placeholder {\r\n  color: #777777 !important;\r\n}\r\n\r\n.e621x-specific-edits-input:focus {\r\n  background-color: #ffffcc !important;\r\n  border-color: #bbbb33 !important;\r\n  color: #000000 !important;\r\n}\r\n\r\n.e621x-specific-edits-actions {\r\n  display: flex;\r\n  gap: 6px;\r\n  align-items: center;\r\n  flex-wrap: wrap;\r\n  margin-top: 4px;\r\n}\r\n\r\n.e621x-specific-edits-btn {\r\n  padding: 4px 12px;\r\n  font-size: 11px;\r\n  cursor: pointer;\r\n  white-space: nowrap;\r\n}\r\n\r\n.e621x-specific-edits-status {\r\n  font-size: 11px;\r\n  color: #fef08a;\r\n  background: #0a1b32;\r\n  border: 1px solid #24416b;\r\n  border-radius: 3px;\r\n  padding: 6px 10px;\r\n  line-height: 1.4;\r\n  word-break: break-word;\r\n}\r\n\r\n.e621x-specific-edits-status.is-error {\r\n  color: #ff6b6b;\r\n  border-color: #7f1d1d;\r\n}\r\n\r\n.e621x-specific-edits-status a {\r\n  color: #ffff00;\r\n  text-decoration: underline;\r\n  margin-left: 4px;\r\n  font-weight: 600;\r\n}\r\n\r\n/* ===== Tag Update Statistics Modal & Table ===== */\r\n.e621x-specific-edits-triggers-row {\r\n  display: flex;\r\n  gap: 10px;\r\n  align-items: center;\r\n  justify-content: center;\r\n  margin: 6px auto;\r\n}\r\n\r\n.e621x-trigger-sep {\r\n  color: #64748b;\r\n  font-size: 13px;\r\n  user-select: none;\r\n}\r\n\r\n.e621x-stats-overlay {\r\n  position: fixed;\r\n  inset: 0;\r\n  background: rgba(0, 0, 0, 0.8);\r\n  z-index: 1000000;\r\n  backdrop-filter: blur(3px);\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: center;\r\n}\r\n\r\n.e621x-stats-dialog {\r\n  width: 92%;\r\n  max-width: 1050px;\r\n  height: 85vh;\r\n  background: var(--color-section, #152f56);\r\n  border: 1px solid var(--color-section-border, #2a4c7e);\r\n  border-radius: 6px;\r\n  box-shadow: 0 14px 45px rgba(0, 0, 0, 0.85);\r\n  display: flex;\r\n  flex-direction: column;\r\n  overflow: hidden;\r\n  box-sizing: border-box;\r\n}\r\n\r\n.e621x-stats-header {\r\n  display: flex;\r\n  justify-content: space-between;\r\n  align-items: center;\r\n  padding: 12px 18px;\r\n  background: #0a1b32;\r\n  border-bottom: 1px solid var(--color-section-border, #2a4c7e);\r\n}\r\n\r\n.e621x-stats-title {\r\n  font-size: 15px;\r\n  font-weight: 700;\r\n  color: #ffffff;\r\n  letter-spacing: 0.4px;\r\n}\r\n\r\n.e621x-stats-close-btn {\r\n  background: transparent;\r\n  border: none;\r\n  color: #94a3b8;\r\n  font-size: 24px;\r\n  line-height: 1;\r\n  cursor: pointer;\r\n  padding: 0 4px;\r\n  transition: color 0.15s;\r\n}\r\n\r\n.e621x-stats-close-btn:hover {\r\n  color: #ffffff;\r\n}\r\n\r\n/* Progress Box */\r\n.e621x-stats-progress-box {\r\n  padding: 30px 24px;\r\n  display: flex;\r\n  flex-direction: column;\r\n  align-items: center;\r\n  gap: 16px;\r\n  background: rgba(10, 27, 50, 0.5);\r\n}\r\n\r\n.e621x-stats-progress-text {\r\n  font-size: 14px;\r\n  color: #fef08a;\r\n  font-weight: 600;\r\n  text-align: center;\r\n}\r\n\r\n.e621x-stats-progress-track {\r\n  width: 100%;\r\n  max-width: 500px;\r\n  height: 8px;\r\n  background: #0a1b32;\r\n  border: 1px solid #24416b;\r\n  border-radius: 4px;\r\n  overflow: hidden;\r\n}\r\n\r\n.e621x-stats-progress-fill {\r\n  height: 100%;\r\n  width: 0%;\r\n  background: #3b82f6;\r\n  transition: width 0.25s ease;\r\n}\r\n\r\n.e621x-stats-progress-actions {\r\n  display: flex;\r\n  gap: 12px;\r\n}\r\n\r\n/* Summary Bar */\r\n.e621x-stats-summary-bar {\r\n  display: grid;\r\n  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));\r\n  gap: 10px;\r\n  padding: 12px 18px;\r\n  background: #0e223d;\r\n  border-bottom: 1px solid var(--color-section-border, #2a4c7e);\r\n}\r\n\r\n.e621x-stats-summary-card {\r\n  display: flex;\r\n  flex-direction: column;\r\n  align-items: center;\r\n  justify-content: center;\r\n  background: #0a1b32;\r\n  border: 1px solid #24416b;\r\n  border-radius: 4px;\r\n  padding: 8px 10px;\r\n  text-align: center;\r\n}\r\n\r\n.e621x-stats-summary-num {\r\n  font-size: 18px;\r\n  font-weight: 700;\r\n  color: #ffffff;\r\n}\r\n\r\n.e621x-stats-summary-lbl {\r\n  font-size: 10px;\r\n  text-transform: uppercase;\r\n  color: #94a3b8;\r\n  letter-spacing: 0.8px;\r\n  margin-top: 2px;\r\n}\r\n\r\n.e621x-color-add {\r\n  color: #22c55e !important;\r\n}\r\n\r\n.e621x-color-rem {\r\n  color: #ef4444 !important;\r\n}\r\n\r\n/* Toolbar */\r\n.e621x-stats-toolbar {\r\n  display: flex;\r\n  flex-wrap: wrap;\r\n  justify-content: space-between;\r\n  align-items: center;\r\n  gap: 10px;\r\n  padding: 10px 18px;\r\n  background: #0c1c30;\r\n  border-bottom: 1px solid #24416b;\r\n}\r\n\r\n.e621x-stats-toolbar-group {\r\n  display: flex;\r\n  align-items: center;\r\n  gap: 8px;\r\n  flex-wrap: wrap;\r\n}\r\n\r\n.e621x-stats-search {\r\n  width: 190px;\r\n  background: #ffffff !important;\r\n  color: #000000 !important;\r\n  padding: 5px 8px;\r\n  font-size: 12px;\r\n  border-radius: 2px;\r\n}\r\n\r\n.e621x-stats-select {\r\n  padding: 5px 8px;\r\n  font-size: 12px;\r\n  background: #0a1b32;\r\n  color: #ffffff;\r\n  border: 1px solid #24416b;\r\n  border-radius: 2px;\r\n  outline: none;\r\n  cursor: pointer;\r\n}\r\n\r\n.e621x-stats-btn {\r\n  padding: 5px 12px;\r\n  font-size: 11px;\r\n  cursor: pointer;\r\n  white-space: nowrap;\r\n}\r\n\r\n/* Table Area */\r\n.e621x-stats-table-wrap {\r\n  flex: 1;\r\n  overflow-y: auto;\r\n  padding: 0;\r\n  background: #0a1728;\r\n}\r\n\r\n.e621x-stats-table {\r\n  width: 100%;\r\n  border-collapse: collapse;\r\n  font-size: 12px;\r\n  text-align: left;\r\n}\r\n\r\n.e621x-stats-table th {\r\n  position: sticky;\r\n  top: 0;\r\n  background: #0a1b32;\r\n  color: #94a3b8;\r\n  font-size: 11px;\r\n  text-transform: uppercase;\r\n  letter-spacing: 0.6px;\r\n  padding: 9px 14px;\r\n  border-bottom: 1px solid #24416b;\r\n  z-index: 2;\r\n}\r\n\r\n.e621x-stats-table td {\r\n  padding: 7px 14px;\r\n  border-bottom: 1px solid rgba(255, 255, 255, 0.05);\r\n  color: #e2e8f0;\r\n}\r\n\r\n.e621x-stats-row:hover {\r\n  background: rgba(255, 255, 255, 0.04);\r\n}\r\n\r\n.e621x-stats-tag-link {\r\n  font-weight: 600;\r\n  text-decoration: none;\r\n  display: inline-block;\r\n  transition: opacity 0.15s;\r\n}\r\n\r\n.e621x-stats-tag-link:hover {\r\n  text-decoration: underline;\r\n  opacity: 0.85;\r\n}\r\n\r\n.e621x-cat-badge {\r\n  display: inline-block;\r\n  font-size: 9px;\r\n  font-weight: 700;\r\n  text-transform: uppercase;\r\n  letter-spacing: 0.6px;\r\n  padding: 1px 6px;\r\n  border-radius: 10px;\r\n  border: 1px solid currentColor;\r\n  background: rgba(0, 0, 0, 0.3);\r\n}\r\n\r\n.e621x-stats-count-link {\r\n  font-weight: 700;\r\n  text-decoration: none;\r\n  cursor: pointer;\r\n}\r\n\r\n.e621x-stats-count-link:hover {\r\n  text-decoration: underline;\r\n}\r\n\r\n.e621x-stats-count-zero {\r\n  color: #64748b;\r\n}\r\n\r\n.e621x-stats-date {\r\n  color: #94a3b8;\r\n  font-family: monospace;\r\n  font-size: 11px;\r\n}\r\n\r\n.e621x-stats-empty {\r\n  text-align: center;\r\n  padding: 40px 10px;\r\n  color: #94a3b8;\r\n  font-size: 13px;\r\n}\r\n\r\n/* Pagination Bar */\r\n.e621x-stats-pagination {\r\n  display: flex;\r\n  justify-content: space-between;\r\n  align-items: center;\r\n  padding: 8px 18px;\r\n  background: #0a1b32;\r\n  border-top: 1px solid #24416b;\r\n}\r\n\r\n.e621x-stats-page-info {\r\n  font-size: 11px;\r\n  color: #94a3b8;\r\n}\r\n\r\n.e621x-stats-pagination-buttons {\r\n  display: flex;\r\n  gap: 8px;\r\n}\r\n\r\n.hidden,\r\n.e621x-stats-progress-box.hidden {\r\n  display: none !important;\r\n}\r\n"};
+	const extensionCssData = {    "styles/extras.css": ":root {\r\n  --e621x-text-muted: #8a9ba8;\r\n  --e621x-border-subtle: #24416b;\r\n}\r\n\r\n/* ===== toast queue & items ===== */\r\n.e621x-toast-container {\r\n  position: fixed;\r\n  bottom: 24px;\r\n  right: 24px;\r\n  z-index: 999999;\r\n  display: flex;\r\n  flex-direction: column-reverse;\r\n  gap: 8px;\r\n  pointer-events: none;\r\n}\r\n.e621x-toast {\r\n  position: relative;\r\n  background: #000;\r\n  color: #fff;\r\n  border: 1px solid #444;\r\n  padding: 10px 16px;\r\n  font: 12px/1.4 -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif;\r\n  letter-spacing: 0.3px;\r\n  pointer-events: auto;\r\n  transition: opacity 0.3s ease, transform 0.3s ease;\r\n  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);\r\n  max-width: 380px;\r\n  word-break: break-word;\r\n}\r\n.e621x-toast--error {\r\n  background: #1a1a1a;\r\n  border-color: #ff4444;\r\n}\r\n.e621x-toast.is-hiding {\r\n  opacity: 0;\r\n  transform: translateY(6px);\r\n}\r\n\r\n/* ===== button modifiers ===== */\r\n.st-button--sm {\r\n  padding: 2px 8px !important;\r\n  font-size: 11px !important;\r\n  line-height: 1.4 !important;\r\n  cursor: pointer;\r\n  white-space: nowrap;\r\n}\r\n\r\n/* ===== thumbnail card (size/fit come from --e621x-* variables set on the container) ===== */\r\n.e621x-thumb {\r\n  margin: 0 !important; float: none !important; align-self: center !important;\r\n  width: var(--e621x-w, 160px) !important; height: var(--e621x-h, 210px) !important;\r\n  background: var(--color-section, #152f56) !important;\r\n  display: flex !important; flex-direction: column !important;\r\n  position: relative !important; overflow: visible !important;\r\n  z-index: 2; box-sizing: border-box !important;\r\n  transition: transform 0.15s ease, box-shadow 0.15s ease;\r\n}\r\n.e621x-thumb:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6); }\r\n.e621x-thumb .thm-link {\r\n  flex: 1 1 auto !important; width: 100% !important; min-height: 0 !important;\r\n  position: relative !important; display: flex !important;\r\n  align-items: center !important; justify-content: center !important; overflow: hidden !important;\r\n}\r\n.e621x-thumb picture { display: flex; width: 100%; height: 100%; align-items: center; justify-content: center; overflow: hidden; }\r\n.e621x-thumb .thm-img-thumb { width: 100%; height: 100%; object-fit: var(--e621x-fit, cover); object-position: center; display: block; }\r\n.e621x-thumb .thm-desc {\r\n  width: 100% !important; max-width: 100% !important; box-sizing: border-box !important;\r\n  margin: 0 !important; align-self: stretch !important; flex-shrink: 0 !important;\r\n  border-radius: 0 0 4px 4px !important;\r\n}\r\n.e621x-pin {\r\n  position: absolute; left: 50%; transform: translateX(-50%);\r\n  width: 18px; height: 18px; border-radius: 50%; box-sizing: border-box;\r\n  background: #152f56; border: 2px solid #3b6aa0; color: #fff;\r\n  font-size: 10px; font-weight: bold; display: flex; align-items: center; justify-content: center;\r\n  z-index: 10; pointer-events: none;\r\n}\r\n.e621x-pin--top { top: -16px; }\r\n.e621x-pin--bottom { bottom: -16px; }\r\n\r\n/* ===== modals (tree & stats) ===== */\r\n.e621x-tree-overlay,\r\n.e621x-stats-overlay {\r\n  position: fixed;\r\n  inset: 0;\r\n  background: rgba(0, 0, 0, 0.75);\r\n  z-index: 1000000;\r\n  backdrop-filter: blur(2px);\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: center;\r\n}\r\n.e621x-tree-dialog,\r\n.e621x-stats-dialog {\r\n  position: fixed !important;\r\n  inset: 40px;\r\n  margin: 0;\r\n  padding: 0;\r\n  background: var(--color-section, #152f56);\r\n  border: 1px solid var(--color-section-border, #2a4c7e);\r\n  border-radius: 4px;\r\n  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);\r\n  z-index: 1000001;\r\n  display: flex;\r\n  flex-direction: column;\r\n  overflow: hidden;\r\n  box-sizing: border-box;\r\n}\r\n.e621x-tree-titlebar,\r\n.e621x-stats-header {\r\n  display: flex;\r\n  justify-content: space-between;\r\n  align-items: center;\r\n  padding: 8px 16px;\r\n  background: #0a1b32;\r\n  border-bottom: 1px solid var(--color-section-border, #2a4c7e);\r\n}\r\n.e621x-tree-toolbar { display: flex; gap: 8px; align-items: center; }\r\n.e621x-tree-close,\r\n.e621x-modal-close {\r\n  font-size: 20px;\r\n  line-height: 1;\r\n  padding: 2px 8px;\r\n  cursor: pointer;\r\n}\r\n.e621x-tree-content { flex: 1; overflow: auto; position: relative; padding: 0; width: 100%; box-sizing: border-box; }\r\n.e621x-tree-message { margin: 40px auto; text-align: center; color: var(--e621x-text-muted); }\r\n.e621x-tree-message--error { color: #ff5555; }\r\n.e621x-tree { position: relative; display: flex; flex-direction: column; align-items: center; width: 100%; min-width: 100%; margin: 0 auto; padding: 30px 24px 0; box-sizing: border-box; }\r\n.e621x-tree-lines { position: absolute; top: 0; left: 0; pointer-events: none; z-index: 1; overflow: visible; }\r\n.e621x-tree-line { stroke: rgba(255, 255, 255, 0.22); stroke-width: 1.5; fill: none; transition: stroke 0.15s ease, stroke-width 0.15s ease, opacity 0.15s ease; }\r\n.e621x-tree-line.is-active { stroke: #3b82f6; stroke-width: 2.5; }\r\n.e621x-tree-line.is-dim { opacity: 0.12; }\r\n.e621x-tree-tier { display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 100%; margin-bottom: 50px; position: relative; z-index: 2; box-sizing: border-box; }\r\n.e621x-tree-divider { display: flex; align-items: center; width: 100%; margin-bottom: 24px; user-select: none; }\r\n.e621x-tree-divider-line { flex: 1; height: 1px; background: rgba(255, 255, 255, 0.08); }\r\n.e621x-tree-divider-label {\r\n  padding: 2px 14px;\r\n  margin: 0 16px;\r\n  font-size: 10px;\r\n  font-weight: 700;\r\n  letter-spacing: 1.2px;\r\n  text-transform: uppercase;\r\n  color: var(--e621x-text-muted);\r\n  background: #0c1a2f;\r\n  border: 1px solid var(--e621x-border-subtle);\r\n  border-radius: 10px;\r\n}\r\n.e621x-tree-cards { display: flex; flex-flow: row wrap; justify-content: center; align-items: flex-start; gap: 36px 24px; width: 100%; max-width: 100%; box-sizing: border-box; }\r\n.e621x-tree-spacer { width: 100%; height: 60px; flex-shrink: 0; pointer-events: none; }\r\n\r\n/* ===== \"show post tree\" button / notices ===== */\r\n.e621x-notice-row { display: flex !important; align-items: center !important; flex-wrap: wrap !important; gap: 8px !important; }\r\n.e621x-notice-inline { display: inline-flex !important; align-items: center !important; gap: 6px !important; min-height: 32px !important; line-height: normal !important; margin: 0 !important; vertical-align: middle !important; }\r\n.e621x-tree-btn { margin-left: 8px; vertical-align: middle; }\r\n\r\n/* ===== Post Mode Background for Extension Tag Script ===== */\r\n#page[data-mode-menu=\"tag-script-ext\"] .content {\r\n  background-color: #402769 !important;\r\n}\r\n\r\n/* ===== tag script panel ===== */\r\n#e621x-tag-script-ui { display: none; margin-top: 0.5em; flex-direction: column; gap: 6px; }\r\n#e621x-tag-script-ui.is-visible { display: flex; }\r\n.e621x-ts-input { width: 100%; min-width: 0; box-sizing: border-box; font-size: 12px; padding: 4px 6px; }\r\n.e621x-ts-grow { flex: 1 1 0; min-width: 0; width: auto; }\r\n.e621x-ts-all { padding: 4px 10px; font-size: 12px; cursor: pointer; flex-shrink: 0; }\r\n.e621x-ts-btn { padding: 4px 6px; font-size: 12px; cursor: pointer; white-space: nowrap; flex-shrink: 0; }\r\n.e621x-ts-row { display: flex; gap: 4px; align-items: center; width: 100%; box-sizing: border-box; }\r\n.e621x-ts-row--spread { justify-content: space-between; padding: 0px 0; font-size: 11px; }\r\n.e621x-ts-label { display: flex; align-items: center; gap: 6px; cursor: pointer; user-select: none; color: var(--e621x-text-muted); }\r\n\r\n/* ===== Hover Zoom ===== */\r\n.e621x-zoom {\r\n  position: fixed;\r\n  z-index: 10000002;\r\n  pointer-events: none;\r\n  padding: 0 !important;\r\n  margin: 0 !important;\r\n  line-height: 0 !important;\r\n  font-size: 0 !important;\r\n  border: 1px solid rgba(255, 255, 255, 0.45);\r\n  background: transparent !important;\r\n  border-radius: 4px;\r\n  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.9);\r\n  overflow: hidden;\r\n  box-sizing: content-box !important;\r\n  display: block;\r\n}\r\n\r\n.e621x-zoom.is-hidden {\r\n  display: none !important;\r\n}\r\n\r\n.e621x-zoom-media {\r\n  display: block !important;\r\n  margin: 0 !important;\r\n  padding: 0 !important;\r\n  border: none !important;\r\n  outline: none !important;\r\n}\r\n\r\n/* ===== Queued Tag Scripts (3px Clean Yellow Outline outside thumbnail) ===== */\r\n.e621x-thumb-queued {\r\n  outline: 3px solid #ffff00 !important;\r\n  outline-offset: 0 !important;\r\n  box-shadow: none !important;\r\n  position: relative !important;\r\n  z-index: 5 !important;\r\n}\r\n\r\n/* ===== Successfully Updated Tag Scripts (3px Clean Green Outline) ===== */\r\n.e621x-thumb-updated {\r\n  outline: 3px solid #22c55e !important;\r\n  outline-offset: 0 !important;\r\n  box-shadow: none !important;\r\n  position: relative !important;\r\n  z-index: 5 !important;\r\n}\r\n\r\n/* ===== Locked Tag Scripts (3px Clean Red Outline) ===== */\r\n.e621x-thumb-locked {\r\n  outline: 3px solid #ef4444 !important;\r\n  outline-offset: 0 !important;\r\n  box-shadow: none !important;\r\n  position: relative !important;\r\n  z-index: 5 !important;\r\n}\r\n\r\n.e621x-ts-queue-link {\r\n  font-size: 11px;\r\n  color: #ffff00 !important;\r\n  font-weight: bold;\r\n  text-decoration: underline;\r\n  margin-left: auto;\r\n  margin-right: 8px;\r\n}\r\n.e621x-ts-queue-link:hover {\r\n  color: #ffffff !important;\r\n}\r\n\r\n/* ===== /posts/timeouted page ===== */\r\n.e621x-queue-page {\r\n  width: 100%;\r\n  max-width: 1600px;\r\n  margin: 20px auto;\r\n  padding: 0 20px 60px;\r\n  box-sizing: border-box;\r\n}\r\n\r\n.e621x-queue-header {\r\n  background: var(--color-section, #152f56);\r\n  border: 1px solid var(--color-section-border, #2a4c7e);\r\n  border-radius: 4px;\r\n  padding: 16px 20px;\r\n  margin-bottom: 24px;\r\n  display: flex;\r\n  flex-wrap: wrap;\r\n  justify-content: space-between;\r\n  align-items: center;\r\n  gap: 16px;\r\n}\r\n\r\n.e621x-queue-title-area h2 {\r\n  margin: 0 0 4px 0;\r\n  font-size: 18px;\r\n  color: #ffffff;\r\n  display: flex;\r\n  align-items: center;\r\n  gap: 10px;\r\n}\r\n\r\n.e621x-queue-badge {\r\n  background: #ffff00;\r\n  color: #000000;\r\n  font-size: 11px;\r\n  font-weight: 700;\r\n  padding: 2px 8px;\r\n  border-radius: 10px;\r\n}\r\n\r\n.e621x-queue-subtitle {\r\n  font-size: 12px;\r\n  color: var(--e621x-text-muted);\r\n}\r\n\r\n.e621x-queue-actions {\r\n  display: flex;\r\n  gap: 10px;\r\n  align-items: center;\r\n}\r\n\r\n.e621x-queue-status-pill {\r\n  font-size: 12px;\r\n  padding: 6px 12px;\r\n  background: #0a1b32;\r\n  border: 1px solid var(--e621x-border-subtle);\r\n  border-radius: 4px;\r\n  color: #ffffff;\r\n}\r\n.e621x-queue-status-pill.is-timeout {\r\n  border-color: #eab308;\r\n  color: #fef08a;\r\n}\r\n.e621x-queue-status-pill.is-ready {\r\n  border-color: #22c55e;\r\n  color: #86efac;\r\n}\r\n\r\n.e621x-queue-card-wrap {\r\n  position: relative;\r\n  display: flex;\r\n  flex-direction: column;\r\n  align-items: center;\r\n  gap: 6px;\r\n}\r\n\r\n.e621x-queue-card-meta {\r\n  width: var(--e621x-w, 160px);\r\n  background: #0a1b32;\r\n  border: 1px solid var(--e621x-border-subtle);\r\n  border-radius: 4px;\r\n  padding: 6px 8px;\r\n  box-sizing: border-box;\r\n  font-size: 11px;\r\n  color: #ffffff;\r\n  display: flex;\r\n  flex-direction: column;\r\n  gap: 4px;\r\n}\r\n\r\n.e621x-queue-diff {\r\n  word-break: break-all;\r\n  font-family: monospace;\r\n  font-size: 10px;\r\n  color: #fef08a;\r\n  max-height: 48px;\r\n  overflow-y: auto;\r\n}\r\n\r\n.e621x-queue-card-actions {\r\n  display: flex;\r\n  justify-content: space-between;\r\n  align-items: center;\r\n  margin-top: 2px;\r\n}\r\n\r\n.e621x-queue-remove-btn {\r\n  background: transparent;\r\n  border: 1px solid #ef4444;\r\n  color: #ef4444;\r\n  font-size: 10px;\r\n  padding: 2px 6px;\r\n  border-radius: 2px;\r\n  cursor: pointer;\r\n  transition: all 0.15s;\r\n}\r\n.e621x-queue-remove-btn:hover {\r\n  background: #ef4444;\r\n  color: #ffffff;\r\n}\r\n\r\n.e621x-queue-empty {\r\n  text-align: center;\r\n  padding: 60px 20px;\r\n  background: var(--color-section, #152f56);\r\n  border: 1px solid var(--color-section-border, #2a4c7e);\r\n  border-radius: 4px;\r\n  color: var(--e621x-text-muted);\r\n}\r\n.e621x-queue-empty h3 {\r\n  color: #ffffff;\r\n  margin-bottom: 8px;\r\n}\r\n\r\n.hidden {\r\n  display: none !important;\r\n}\r\n\r\n/* ===== Tag Script Ctrl Preview Tooltip ===== */\r\n.e621x-ts-preview {\r\n  position: fixed;\r\n  z-index: 10000005;\r\n  pointer-events: none;\r\n  background: #000000;\r\n  border: 1px solid #ffffff;\r\n  border-radius: 2px;\r\n  padding: 8px 12px;\r\n  color: #ffffff;\r\n  font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif;\r\n  font-size: 13px;\r\n  line-height: 1.5;\r\n  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.85);\r\n  white-space: nowrap;\r\n  display: flex;\r\n  flex-direction: column;\r\n  gap: 2px;\r\n}\r\n\r\n.e621x-ts-preview.is-hidden {\r\n  display: none !important;\r\n}\r\n\r\n.e621x-ts-preview-line {\r\n  display: block;\r\n}\r\n\r\n.e621x-ts-preview-bullet {\r\n  color: #ffffff;\r\n  margin-right: 6px;\r\n  user-select: none;\r\n}\r\n\r\n/* Tag type colors matching e621 categories */\r\n.e621x-tag-type-0, .e621x-tag-type-general { color: #7eb3e6; }\r\n.e621x-tag-type-1, .e621x-tag-type-artist { color: #f2ac08; }\r\n.e621x-tag-type-2, .e621x-tag-type-contributor { color: #00aa00; }\r\n.e621x-tag-type-3, .e621x-tag-type-copyright { color: #dd00aa; }\r\n.e621x-tag-type-4, .e621x-tag-type-character { color: #00aa00; }\r\n.e621x-tag-type-5, .e621x-tag-type-species { color: #ed5d1f; }\r\n.e621x-tag-type-6, .e621x-tag-type-invalid { color: #ff3333; }\r\n.e621x-tag-type-7, .e621x-tag-type-meta { color: #ffffff; }\r\n.e621x-tag-type-8, .e621x-tag-type-lore { color: #2e8b57; }\r\n.e621x-tag-type-command { color: #fef08a; }\r\n.e621x-tag-type-prefix { color: var(--e621x-text-muted); }\r\n\r\n/* ===== Specific Post Edits Filter ===== */\r\n.e621x-specific-edits-wrapper {\r\n  margin-top: 10px;\r\n  width: 100%;\r\n  display: flex;\r\n  flex-direction: column;\r\n  align-items: center;\r\n  text-align: center;\r\n}\r\n\r\n.e621x-specific-edits-trigger {\r\n  font-size: 11px;\r\n  color: #ffff00 !important;\r\n  font-weight: bold;\r\n  text-decoration: underline;\r\n  cursor: pointer;\r\n  display: inline-block;\r\n  text-align: center;\r\n  margin: 6px auto;\r\n  user-select: none;\r\n  transition: color 0.15s ease;\r\n}\r\n\r\n.e621x-specific-edits-trigger:hover {\r\n  color: #ffffff !important;\r\n}\r\n\r\n.e621x-specific-edits-panel {\r\n  background: var(--color-section, #152f56);\r\n  border: 1px solid var(--color-section-border, #2a4c7e);\r\n  border-radius: 4px;\r\n  padding: 12px 14px;\r\n  margin: 8px auto 0 auto;\r\n  width: 100%;\r\n  max-width: 480px;\r\n  box-sizing: border-box;\r\n  display: flex;\r\n  flex-direction: column;\r\n  gap: 10px;\r\n  font-size: 12px;\r\n  text-align: left;\r\n}\r\n\r\n.e621x-specific-edits-panel.is-hidden {\r\n  display: none !important;\r\n}\r\n\r\n.e621x-specific-edits-header {\r\n  display: flex;\r\n  justify-content: space-between;\r\n  align-items: center;\r\n  border-bottom: 1px solid rgba(255, 255, 255, 0.12);\r\n  padding-bottom: 6px;\r\n}\r\n\r\n.e621x-specific-edits-title {\r\n  font-weight: bold;\r\n  color: #ffffff;\r\n  font-size: 12px;\r\n  letter-spacing: 0.3px;\r\n}\r\n\r\n.e621x-specific-edits-close {\r\n  background: transparent;\r\n  border: none;\r\n  color: var(--e621x-text-muted);\r\n  font-size: 16px;\r\n  line-height: 1;\r\n  cursor: pointer;\r\n  padding: 0 4px;\r\n}\r\n\r\n.e621x-specific-edits-close:hover {\r\n  color: #ffffff;\r\n}\r\n\r\n.e621x-specific-edits-fields {\r\n  display: flex;\r\n  flex-direction: column;\r\n  gap: 8px;\r\n}\r\n\r\n.e621x-specific-edits-field {\r\n  display: flex;\r\n  flex-direction: column;\r\n  gap: 3px;\r\n}\r\n\r\n.e621x-specific-edits-field label {\r\n  font-size: 11px;\r\n  color: var(--e621x-text-muted);\r\n  font-weight: 600;\r\n}\r\n\r\n.e621x-specific-edits-input {\r\n  width: 100%;\r\n  box-sizing: border-box;\r\n  font-size: 12px;\r\n  padding: 6px 8px;\r\n  background-color: #ffffff !important;\r\n  color: #000000 !important;\r\n  border: 1px solid #cccccc;\r\n  border-radius: 2px;\r\n  outline: none;\r\n  transition: background-color 0.15s ease, border-color 0.15s ease;\r\n}\r\n\r\n.e621x-specific-edits-input::placeholder {\r\n  color: #777777 !important;\r\n}\r\n\r\n.e621x-specific-edits-input:focus {\r\n  background-color: #ffffcc !important;\r\n  border-color: #777777 !important;\r\n  outline: none !important;\r\n  color: #000000 !important;\r\n}\r\n\r\n.e621x-specific-edits-actions {\r\n  display: flex;\r\n  gap: 6px;\r\n  align-items: center;\r\n  flex-wrap: wrap;\r\n  margin-top: 4px;\r\n}\r\n\r\n.e621x-specific-edits-status {\r\n  font-size: 11px;\r\n  color: #fef08a;\r\n  background: #0a1b32;\r\n  border: 1px solid var(--e621x-border-subtle);\r\n  border-radius: 3px;\r\n  padding: 6px 10px;\r\n  line-height: 1.4;\r\n  word-break: break-word;\r\n}\r\n\r\n.e621x-specific-edits-status.is-error {\r\n  color: #ff6b6b;\r\n  border-color: #7f1d1d;\r\n}\r\n\r\n.e621x-specific-edits-status a {\r\n  color: #ffff00;\r\n  text-decoration: underline;\r\n  margin-left: 4px;\r\n  font-weight: 600;\r\n}\r\n\r\n/* ===== Tag Update Statistics Modal & Table ===== */\r\n.e621x-specific-edits-triggers-row {\r\n  display: flex;\r\n  gap: 10px;\r\n  align-items: center;\r\n  justify-content: center;\r\n  margin: 6px auto;\r\n}\r\n\r\n.e621x-trigger-sep {\r\n  color: var(--e621x-text-muted);\r\n  font-size: 13px;\r\n  user-select: none;\r\n}\r\n\r\n.e621x-stats-title {\r\n  font-size: 15px;\r\n  font-weight: 700;\r\n  color: #ffffff;\r\n  letter-spacing: 0.4px;\r\n}\r\n\r\n/* Progress Box */\r\n.e621x-stats-progress-box {\r\n  padding: 30px 24px;\r\n  display: flex;\r\n  flex-direction: column;\r\n  align-items: center;\r\n  gap: 16px;\r\n  background: rgba(10, 27, 50, 0.5);\r\n}\r\n\r\n.e621x-stats-progress-text {\r\n  font-size: 14px;\r\n  color: #fef08a;\r\n  font-weight: 600;\r\n  text-align: center;\r\n}\r\n\r\n.e621x-stats-progress-track {\r\n  width: 100%;\r\n  max-width: 500px;\r\n  height: 8px;\r\n  background: #0a1b32;\r\n  border: 1px solid var(--e621x-border-subtle);\r\n  border-radius: 4px;\r\n  overflow: hidden;\r\n}\r\n\r\n.e621x-stats-progress-fill {\r\n  height: 100%;\r\n  width: 0%;\r\n  background: #3b82f6;\r\n  transition: width 0.25s ease;\r\n}\r\n\r\n.e621x-stats-progress-actions {\r\n  display: flex;\r\n  gap: 12px;\r\n}\r\n\r\n/* Summary Bar */\r\n.e621x-stats-summary-bar {\r\n  display: grid;\r\n  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));\r\n  gap: 10px;\r\n  padding: 12px 18px;\r\n  background: #0e223d;\r\n  border-bottom: 1px solid var(--color-section-border, #2a4c7e);\r\n}\r\n\r\n.e621x-stats-summary-card {\r\n  display: flex;\r\n  flex-direction: column;\r\n  align-items: center;\r\n  justify-content: center;\r\n  background: #0a1b32;\r\n  border: 1px solid var(--e621x-border-subtle);\r\n  border-radius: 4px;\r\n  padding: 8px 10px;\r\n  text-align: center;\r\n}\r\n\r\n.e621x-stats-summary-num {\r\n  font-size: 18px;\r\n  font-weight: 700;\r\n  color: #ffffff;\r\n}\r\n\r\n.e621x-stats-summary-lbl {\r\n  font-size: 10px;\r\n  text-transform: uppercase;\r\n  color: var(--e621x-text-muted);\r\n  letter-spacing: 0.8px;\r\n  margin-top: 2px;\r\n}\r\n\r\n.e621x-color-add {\r\n  color: #22c55e !important;\r\n}\r\n\r\n.e621x-color-rem {\r\n  color: #ef4444 !important;\r\n}\r\n\r\n/* Toolbar */\r\n.e621x-stats-toolbar {\r\n  display: flex;\r\n  flex-wrap: wrap;\r\n  justify-content: space-between;\r\n  align-items: center;\r\n  gap: 10px;\r\n  padding: 10px 18px;\r\n  background: #0c1c30;\r\n  border-bottom: 1px solid var(--e621x-border-subtle);\r\n}\r\n\r\n.e621x-stats-toolbar-group {\r\n  display: flex;\r\n  align-items: center;\r\n  gap: 8px;\r\n  flex-wrap: wrap;\r\n}\r\n\r\n.e621x-stats-search {\r\n  width: 190px;\r\n  background: #ffffff !important;\r\n  color: #000000 !important;\r\n  padding: 5px 8px;\r\n  font-size: 12px;\r\n  border-radius: 2px;\r\n}\r\n\r\n.e621x-stats-select {\r\n  padding: 5px 8px;\r\n  font-size: 12px;\r\n  background: #0a1b32;\r\n  color: #ffffff;\r\n  border: 1px solid var(--e621x-border-subtle);\r\n  border-radius: 2px;\r\n  outline: none;\r\n  cursor: pointer;\r\n}\r\n\r\n/* Table Area */\r\n.e621x-stats-table-wrap {\r\n  flex: 1;\r\n  overflow-y: auto;\r\n  padding: 0;\r\n  background: #0a1728;\r\n}\r\n\r\n.e621x-stats-table {\r\n  width: 100%;\r\n  border-collapse: collapse;\r\n  font-size: 12px;\r\n  text-align: left;\r\n}\r\n\r\n.e621x-stats-table th {\r\n  position: sticky;\r\n  top: 0;\r\n  background: #0a1b32;\r\n  color: var(--e621x-text-muted);\r\n  font-size: 11px;\r\n  text-transform: uppercase;\r\n  letter-spacing: 0.6px;\r\n  padding: 9px 14px;\r\n  border-bottom: 1px solid var(--e621x-border-subtle);\r\n  z-index: 2;\r\n}\r\n\r\n.e621x-stats-table td {\r\n  padding: 7px 14px;\r\n  border-bottom: 1px solid rgba(255, 255, 255, 0.05);\r\n  color: #ffffff;\r\n}\r\n\r\n.e621x-stats-row:hover {\r\n  background: rgba(255, 255, 255, 0.04);\r\n}\r\n\r\n.e621x-stats-tag-link {\r\n  font-weight: 600;\r\n  text-decoration: none;\r\n  display: inline-block;\r\n  transition: opacity 0.15s;\r\n}\r\n\r\n.e621x-stats-tag-link:hover {\r\n  text-decoration: underline;\r\n  opacity: 0.85;\r\n}\r\n\r\n.e621x-cat-badge {\r\n  display: inline-block;\r\n  font-size: 9px;\r\n  font-weight: 700;\r\n  text-transform: uppercase;\r\n  letter-spacing: 0.6px;\r\n  padding: 1px 6px;\r\n  border-radius: 10px;\r\n  border: 1px solid currentColor;\r\n  background: rgba(0, 0, 0, 0.3);\r\n}\r\n\r\n.e621x-cat-badge.e621x-tag-type-0,\r\n.e621x-cat-badge.e621x-tag-type-general {\r\n  color: var(--e621x-text-muted);\r\n  border-color: rgba(138, 155, 168, 0.4);\r\n}\r\n\r\n.e621x-stats-count-link {\r\n  font-weight: 700;\r\n  text-decoration: none;\r\n  cursor: pointer;\r\n}\r\n\r\n.e621x-stats-count-link:hover {\r\n  text-decoration: underline;\r\n}\r\n\r\n.e621x-stats-count-zero {\r\n  color: var(--e621x-text-muted);\r\n}\r\n\r\n.e621x-stats-date {\r\n  color: var(--e621x-text-muted);\r\n  font-family: monospace;\r\n  font-size: 11px;\r\n}\r\n\r\n.e621x-stats-empty {\r\n  text-align: center;\r\n  padding: 40px 10px;\r\n  color: var(--e621x-text-muted);\r\n  font-size: 13px;\r\n}\r\n\r\n/* Pagination Bar */\r\n.e621x-stats-pagination {\r\n  display: flex;\r\n  justify-content: space-between;\r\n  align-items: center;\r\n  padding: 8px 18px;\r\n  background: #0a1b32;\r\n  border-top: 1px solid var(--e621x-border-subtle);\r\n}\r\n\r\n.e621x-stats-page-info {\r\n  font-size: 11px;\r\n  color: var(--e621x-text-muted);\r\n}\r\n\r\n.e621x-stats-pagination-buttons {\r\n  display: flex;\r\n  gap: 8px;\r\n}\r\n\r\n.hidden,\r\n.e621x-stats-progress-box.hidden {\r\n  display: none !important;\r\n}\r\n\r\n/* ===== Staff AI Heuristics ===== */\r\n.e621x-ai-row {\r\n  margin-top: 6px !important;\r\n  display: flex !important;\r\n  flex-direction: column !important;\r\n  gap: 4px !important;\r\n}\r\n\r\n.e621x-ai-label {\r\n  font-weight: 600;\r\n  color: var(--e621x-text-muted);\r\n}\r\n\r\n.e621x-ai-badge {\r\n  display: inline-block;\r\n  padding: 2px 8px;\r\n  border-radius: 4px;\r\n  font-size: 11px;\r\n  font-weight: bold;\r\n  letter-spacing: 0.3px;\r\n  width: fit-content;\r\n}\r\n\r\n.e621x-ai-badge--loading {\r\n  background: #334155;\r\n  color: var(--e621x-text-muted);\r\n}\r\n\r\n.e621x-ai-badge--clean {\r\n  background: rgba(34, 197, 94, 0.15);\r\n  border: 1px solid #22c55e;\r\n  color: #86efac;\r\n}\r\n\r\n.e621x-ai-badge--warning {\r\n  background: rgba(234, 179, 8, 0.15);\r\n  border: 1px solid #eab308;\r\n  color: #fef08a;\r\n}\r\n\r\n.e621x-ai-badge--danger {\r\n  background: rgba(239, 68, 68, 0.2);\r\n  border: 1px solid #ef4444;\r\n  color: #fca5a5;\r\n  animation: pulse-danger 2s infinite ease-in-out;\r\n}\r\n\r\n.e621x-ai-badge--flagged {\r\n  background: rgba(138, 155, 168, 0.15);\r\n  border: 1px solid var(--e621x-text-muted);\r\n  color: #d1d5db;\r\n}\r\n\r\n@keyframes pulse-danger {\r\n  0%, 100% { opacity: 1; }\r\n  50% { opacity: 0.8; }\r\n}\r\n\r\n.e621x-ai-reasons {\r\n  font-size: 10px;\r\n  color: var(--e621x-text-muted);\r\n  word-break: break-word;\r\n  line-height: 1.3;\r\n}\r\n\r\n.e621x-ai-actions {\r\n  display: flex;\r\n  gap: 6px;\r\n  margin-top: 4px;\r\n}\r\n\r\n.e621x-ai-raw {\r\n  max-height: 140px;\r\n  overflow-y: auto;\r\n  background: #0a1b32;\r\n  border: 1px solid var(--e621x-border-subtle);\r\n  border-radius: 3px;\r\n  padding: 6px;\r\n  font-size: 9px;\r\n  color: var(--e621x-text-muted);\r\n  white-space: pre-wrap;\r\n  word-break: break-all;\r\n}"};
 	
 	const LOCALE_KEYS = {};
 	const USED_LOCALE = "en";
@@ -2786,7 +2809,7 @@ console.log("Script start:",performance.now());const e=!0,t=e=>e,o="passthrough"
 			      } else { console.warn(`  CSS not found (end): ${cssKey_0}`); }
 			    } catch(e) { _error(`  Failed injecting CSS (${cssKey_0}) in phase end`, e, extensionCssData); }
 			  
-			    const scriptPaths = ["scripts/constants.js","scripts/core.js","scripts/selectors.js","scripts/utils.js","scripts/net.js","scripts/ui/dom.js","scripts/ui/layout.js","scripts/ui/thumbnail.js","scripts/ui/dtext.js","scripts/ui/tooltips.js","scripts/blacklist.js","scripts/uploader.js","scripts/user_edits.js","scripts/tree/data.js","scripts/tree/export.js","scripts/tree/modal.js","scripts/hover_zoom/data.js","scripts/hover_zoom/index.js","scripts/tag_script/engine.js","scripts/tag_script/queue.js","scripts/tag_script/timeouted_page.js","scripts/tag_script/logger.js","scripts/tag_script/storage.js","scripts/tag_script/runner.js","scripts/tag_script/preview.js","scripts/tag_script/index.js","scripts/content.js"];
+			    const scriptPaths = ["scripts/constants.js","scripts/core.js","scripts/selectors.js","scripts/utils.js","scripts/net.js","scripts/ui/dom.js","scripts/ui/layout.js","scripts/ui/thumbnail.js","scripts/ui/dtext.js","scripts/ui/tooltips.js","scripts/blacklist.js","scripts/uploader.js","scripts/user_edits.js","scripts/ai_heuristics.js","scripts/tree/data.js","scripts/tree/export.js","scripts/tree/modal.js","scripts/hover_zoom/data.js","scripts/hover_zoom/index.js","scripts/tag_script/engine.js","scripts/tag_script/queue.js","scripts/tag_script/timeouted_page.js","scripts/tag_script/logger.js","scripts/tag_script/storage.js","scripts/tag_script/runner.js","scripts/tag_script/preview.js","scripts/tag_script/index.js","scripts/content.js"];
 			   _log(`  Executing JS (end): ${scriptPaths}`);
 			
 			   try {
@@ -2798,6 +2821,7 @@ console.log("Script start:",performance.now());const e=!0,t=e=>e,o="passthrough"
 			  SCHEMA_VERSION: 1,
 			
 			  STORAGE_KEYS: Object.freeze({
+			    AI_HEURISTICS_ENABLED: 'e621_ai_heuristics_enabled',
 			    SCHEMA_VERSION: 'e621_schema_version',
 			    DOWNVOTES: 'e621_downvoted_posts',
 			    BLACKLIST_BACKUP: 'e621_clean_blacklist_backup',
@@ -2830,6 +2854,7 @@ console.log("Script start:",performance.now());const e=!0,t=e=>e,o="passthrough"
 			  }),
 			
 			  ACTIONS: Object.freeze({
+			    CHECK_AI_HEURISTICS: 'checkAiHeuristics',
 			    BACKUP_BLACKLIST: 'backupBlacklist',
 			    LOAD_DOWNVOTES: 'loadDownvotes',
 			    UPLOAD_DOWNVOTES: 'uploadDownvotes',
@@ -2927,9 +2952,18 @@ console.log("Script start:",performance.now());const e=!0,t=e=>e,o="passthrough"
 			  const { STORAGE_KEYS, SCHEMA_VERSION } = E621_CONSTANTS;
 			  const TOAST_ID = 'e621-extras-toast';
 			
-			  const logWarn = (scope, err) => console.warn(`[e621 extras] ${scope}:`, err);
+			  const logWarn = (scope, err) => {
+			    if (err && /Extension context invalidated/i.test(err.message || String(err))) return;
+			    console.warn(`[e621 extras] ${scope}:`, err);
+			  };
 			  const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-			  const extensionAlive = () => Boolean(globalThis.chrome?.runtime?.id);
+			  const extensionAlive = () => {
+			    try {
+			      return Boolean(globalThis.chrome?.runtime?.id);
+			    } catch (_) {
+			      return false;
+			    }
+			  };
 			
 			  // ---------- results ----------
 			  const ok = (message, extra = {}) => ({ ok: true, message, ...extra });
@@ -2983,18 +3017,37 @@ console.log("Script start:",performance.now());const e=!0,t=e=>e,o="passthrough"
 			    }
 			  }
 			
-			  // ---------- UI helpers ----------
+			  const TOAST_CONTAINER_ID = 'e621x-toast-container';
+			
 			  function showToast(message, isError = false) {
-			    document.getElementById(TOAST_ID)?.remove();
+			    let container = document.getElementById(TOAST_CONTAINER_ID);
+			    if (!container) {
+			      container = document.createElement('div');
+			      container.id = TOAST_CONTAINER_ID;
+			      container.className = 'e621x-toast-container';
+			      document.body.appendChild(container);
+			    }
+			
+			    const MAX_TOASTS = 5;
+			    while (container.children.length >= MAX_TOASTS) {
+			      container.firstElementChild.remove();
+			    }
+			
 			    const toast = document.createElement('div');
-			    toast.id = TOAST_ID;
 			    toast.className = `e621x-toast${isError ? ' e621x-toast--error' : ''}`;
 			    toast.textContent = message;
-			    document.body.appendChild(toast);
+			    container.appendChild(toast);
+			
+			    const duration = isError ? 5000 : 3500;
 			    setTimeout(() => {
 			      toast.classList.add('is-hiding');
-			      setTimeout(() => toast.remove(), 300);
-			    }, 3500);
+			      setTimeout(() => {
+			        toast.remove();
+			        if (container.children.length === 0) {
+			          container.remove();
+			        }
+			      }, 300);
+			    }, duration);
 			  }
 			
 			  function downloadBlob(blob, filename) {
@@ -4324,7 +4377,7 @@ console.log("Script start:",performance.now());const e=!0,t=e=>e,o="passthrough"
 			
 			    const closeBtn = D.el('button', {
 			      type: 'button',
-			      class: 'e621x-stats-close-btn',
+			      class: 'e621x-modal-close st-button kinetic',
 			      text: '×',
 			      'aria-label': 'Close',
 			      onClick: closeModal
@@ -4343,7 +4396,7 @@ console.log("Script start:",performance.now());const e=!0,t=e=>e,o="passthrough"
 			    const btnStopView = D.button({
 			      text: 'Stop & View',
 			      title: 'Stop loading more edits and view collected stats',
-			      className: 'e621x-stats-btn',
+			      className: 'st-button--sm',
 			      onClick: () => {
 			        abortFetch = true;
 			        progressText.textContent = 'Stopping and displaying collected stats...';
@@ -4352,7 +4405,7 @@ console.log("Script start:",performance.now());const e=!0,t=e=>e,o="passthrough"
 			
 			    const btnCancel = D.button({
 			      text: 'Cancel',
-			      className: 'e621x-stats-btn',
+			      className: 'st-button--sm',
 			      onClick: closeModal
 			    });
 			
@@ -4433,13 +4486,13 @@ console.log("Script start:",performance.now());const e=!0,t=e=>e,o="passthrough"
 			
 			    const btnExportCsv = D.button({
 			      text: 'Export CSV',
-			      className: 'e621x-stats-btn',
+			      className: 'st-button--sm',
 			      title: 'Download tag statistics as CSV'
 			    });
 			
 			    const btnRefresh = D.button({
 			      text: 'Re-fetch',
-			      className: 'e621x-stats-btn',
+			      className: 'st-button--sm',
 			      title: 'Clear cache and re-fetch all versions from API'
 			    });
 			
@@ -4477,8 +4530,8 @@ console.log("Script start:",performance.now());const e=!0,t=e=>e,o="passthrough"
 			
 			    // 6. Pagination Footer
 			    const pageInfo = D.el('span', { class: 'e621x-stats-page-info', text: 'Showing 0 tags' });
-			    const btnPrev = D.button({ text: '« Prev', className: 'e621x-stats-btn', disabled: true });
-			    const btnNext = D.button({ text: 'Next »', className: 'e621x-stats-btn', disabled: true });
+			    const btnPrev = D.button({ text: '« Prev', className: 'st-button--sm', disabled: true });
+			    const btnNext = D.button({ text: 'Next »', className: 'st-button--sm', disabled: true });
 			
 			    const paginationBar = D.el('div', { class: 'e621x-stats-pagination hidden', style: 'display: none;' }, [
 			      pageInfo,
@@ -5249,21 +5302,21 @@ console.log("Script start:",performance.now());const e=!0,t=e=>e,o="passthrough"
 			    const btnView = D.button({
 			      text: 'View',
 			      title: 'Open post versions in a new tab',
-			      className: 'e621x-specific-edits-btn',
+			      className: 'st-button--sm',
 			      onClick: handleNavigate
 			    });
 			
 			    const btnCount = D.button({
 			      text: 'Count',
 			      title: 'Count edits matching these tags via API',
-			      className: 'e621x-specific-edits-btn',
+			      className: 'st-button--sm',
 			      onClick: handleCount
 			    });
 			
 			    const btnClear = D.button({
 			      text: 'Clear',
 			      title: 'Clear all fields and remove results',
-			      className: 'e621x-specific-edits-btn',
+			      className: 'st-button--sm',
 			      onClick: handleClear
 			    });
 			
@@ -5374,6 +5427,438 @@ console.log("Script start:",performance.now());const e=!0,t=e=>e,o="passthrough"
 			  return { init: inject, openTagStatsModal };
 			});
 			// END: scripts/user_edits.js
+			
+			// START: scripts/ai_heuristics.js
+			/* Staff AI Heuristics Analyzer (Port of e621ng AiMethods)
+			 * Analyzes image headers, EXIF, XMP, C2PA manifests, and PNG text chunks. */
+			E621X.define('aiHeuristics', ['utils', 'selectors', 'net', 'dom'], (U, SEL, Net, D) => {
+			  'use strict';
+			  const { STORAGE_KEYS: KEYS, ACTIONS } = E621_CONSTANTS;
+			
+			  const AI_GENERATORS = [
+			    'novelai', 'nai', 'stable diffusion', 'sdxl', 'automatic1111', 'a1111',
+			    'comfyui', 'invokeai', 'midjourney', 'dall·e', 'dall-e', 'openai',
+			    'bing image creator', 'firefly', 'adobe generative fill', 'adobe firefly',
+			    'leonardo', 'playground', 'google generative ai', 'synthid'
+			  ];
+			
+			  const SD_TOKENS = [
+			    'negative prompt:', 'steps:', 'sampler:', 'cfg scale:', 'model hash',
+			    'hires fix', 'denoising strength', 'clip skip', 'refiner:',
+			    '"sampler":', '"seed":', '"model":', '"workflow":', 'sd-metadata',
+			    'comfy', 'parameters:', 'seed:', 'sampler:', 'cfg:', 'hires:'
+			  ];
+			
+			  const C2PA_TOKENS = ['c2pa.org', 'jumbf', 'manifeststore', 'c2pa'];
+			  const CAMERA_TOKENS = ['Make', 'Model', 'DateTimeOriginal', 'ExposureTime', 'FNumber', 'ISO'];
+			
+			  function escapeRegex(str) {
+			    return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+			  }
+			
+			  function buildTokenRegex(tokens) {
+			    const patterns = tokens.map(token => {
+			      if (token.includes(' ') || /[^a-z0-9]/i.test(token)) {
+			        return escapeRegex(token);
+			      }
+			      return `\\b${escapeRegex(token)}\\b`;
+			    });
+			    return new RegExp(patterns.join('|'), 'i');
+			  }
+			
+			  const AI_GENERATORS_REGEX = buildTokenRegex(AI_GENERATORS);
+			  const SD_TOKENS_REGEX = buildTokenRegex(SD_TOKENS);
+			  const C2PA_TOKENS_REGEX = buildTokenRegex(C2PA_TOKENS);
+			  const C2PA_AI_SOURCE_REGEX = /trainedalgorithmicmedia/i;
+			
+			  function base64ToUint8Array(base64) {
+			    const binary = atob(base64);
+			    const len = binary.length;
+			    const bytes = new Uint8Array(len);
+			    for (let i = 0; i < len; i++) {
+			      bytes[i] = binary.charCodeAt(i);
+			    }
+			    return bytes;
+			  }
+			
+			  async function inflateZlib(bytes) {
+			    if (typeof DecompressionStream === 'undefined') return '';
+			    try {
+			      const ds = new DecompressionStream('deflate');
+			      const writer = ds.writable.getWriter();
+			      writer.write(bytes);
+			      writer.close();
+			      const reader = ds.readable.getReader();
+			      const chunks = [];
+			      for (;;) {
+			        const { done, value } = await reader.read();
+			        if (done) break;
+			        chunks.push(value);
+			      }
+			      const totalLen = chunks.reduce((acc, c) => acc + c.length, 0);
+			      const out = new Uint8Array(totalLen);
+			      let offset = 0;
+			      for (const c of chunks) {
+			        out.set(c, offset);
+			        offset += c.length;
+			      }
+			      return new TextDecoder('utf-8', { fatal: false }).decode(out);
+			    } catch (_) {
+			      return '';
+			    }
+			  }
+			
+			  async function parseMetadata(bytes, fileExt) {
+			    let pngTextBlob = '';
+			    let exifData = '';
+			    let xmpData = '';
+			    let jpegComment = '';
+			    let c2paBlob = '';
+			
+			    const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+			
+			    if (fileExt === 'png') {
+			      let offset = 8;
+			      const textChunks = [];
+			
+			      while (offset + 8 <= bytes.length) {
+			        const length = view.getUint32(offset, false);
+			        offset += 4;
+			        const type = String.fromCharCode(
+			          bytes[offset], bytes[offset + 1], bytes[offset + 2], bytes[offset + 3]
+			        );
+			        offset += 4;
+			
+			        if (type === 'IEND' || type === 'IDAT') break;
+			        if (offset + length > bytes.length) break;
+			
+			        const chunkData = bytes.subarray(offset, offset + length);
+			
+			        if (type === 'tEXt') {
+			          const nullIdx = chunkData.indexOf(0);
+			          if (nullIdx !== -1) {
+			            const key = new TextDecoder('latin1').decode(chunkData.subarray(0, nullIdx));
+			            const val = new TextDecoder('latin1').decode(chunkData.subarray(nullIdx + 1));
+			            textChunks.push(`${key}: ${val}`);
+			          }
+			        } else if (type === 'zTXt') {
+			          const nullIdx = chunkData.indexOf(0);
+			          if (nullIdx !== -1 && nullIdx + 2 < chunkData.length) {
+			            const key = new TextDecoder('latin1').decode(chunkData.subarray(0, nullIdx));
+			            const inflated = await inflateZlib(chunkData.subarray(nullIdx + 2));
+			            if (inflated) textChunks.push(`${key}: ${inflated}`);
+			          }
+			        } else if (type === 'iTXt') {
+			          const nullIdx1 = chunkData.indexOf(0);
+			          if (nullIdx1 !== -1 && nullIdx1 + 3 < chunkData.length) {
+			            const key = new TextDecoder('utf-8').decode(chunkData.subarray(0, nullIdx1));
+			            const compFlag = chunkData[nullIdx1 + 1];
+			            const nullIdx2 = chunkData.indexOf(0, nullIdx1 + 3);
+			            if (nullIdx2 !== -1) {
+			              const nullIdx3 = chunkData.indexOf(0, nullIdx2 + 1);
+			              if (nullIdx3 !== -1) {
+			                const textBytes = chunkData.subarray(nullIdx3 + 1);
+			                if (compFlag === 1) {
+			                  const inflated = await inflateZlib(textBytes);
+			                  if (inflated) textChunks.push(`${key}: ${inflated}`);
+			                } else {
+			                  const text = new TextDecoder('utf-8').decode(textBytes);
+			                  textChunks.push(`${key}: ${text}`);
+			                }
+			              }
+			            }
+			          }
+			        } else if (type === 'caBX') {
+			          c2paBlob += new TextDecoder('latin1').decode(chunkData);
+			        } else if (type === 'eXIf') {
+			          exifData += new TextDecoder('latin1').decode(chunkData);
+			        }
+			
+			        offset += length + 4;
+			      }
+			      pngTextBlob = textChunks.join('\n');
+			    } else if (fileExt === 'jpg' || fileExt === 'jpeg') {
+			      let offset = 2;
+			      const comments = [];
+			
+			      while (offset + 4 <= bytes.length) {
+			        if (bytes[offset] !== 0xFF) {
+			          offset++;
+			          continue;
+			        }
+			        const marker = bytes[offset + 1];
+			        offset += 2;
+			
+			        if (marker === 0xDA || marker === 0xD9) break;
+			        if (marker === 0xD8) continue;
+			
+			        const length = view.getUint16(offset, false);
+			        if (length < 2 || offset + length > bytes.length) break;
+			        const payload = bytes.subarray(offset + 2, offset + length);
+			
+			        if (marker === 0xFE) {
+			          comments.push(new TextDecoder('latin1').decode(payload));
+			        } else if (marker === 0xE1) {
+			          const head = new TextDecoder('latin1').decode(payload.subarray(0, 32));
+			          if (head.startsWith('Exif\0\0')) {
+			            exifData += new TextDecoder('latin1').decode(payload.subarray(6));
+			          } else if (head.startsWith('http://ns.adobe.com/xap/1.0/\0')) {
+			            xmpData += new TextDecoder('utf-8').decode(payload.subarray(29));
+			          }
+			        } else if (marker === 0xEB) {
+			          const str = new TextDecoder('latin1').decode(payload);
+			          if (str.startsWith('JP')) {
+			            c2paBlob += str;
+			          }
+			        }
+			
+			        offset += length;
+			      }
+			      jpegComment = comments.join('\n');
+			    }
+			
+			    return { pngTextBlob, exifData, xmpData, jpegComment, c2paBlob };
+			  }
+			
+			  function calculateScore(meta, fileExt) {
+			    const isPng = fileExt === 'png';
+			    const isJpeg = fileExt === 'jpg' || fileExt === 'jpeg';
+			    const c2paText = meta.c2paBlob.toLowerCase();
+			    const xmpDataLower = meta.xmpData.toLowerCase();
+			
+			    const combinedText = [
+			      meta.pngTextBlob,
+			      meta.exifData,
+			      meta.xmpData,
+			      meta.jpegComment,
+			      meta.c2paBlob
+			    ].join('\n').toLowerCase();
+			
+			    let score = 0;
+			    const reasons = [];
+			
+			    if (C2PA_TOKENS_REGEX.test(xmpDataLower) || C2PA_TOKENS_REGEX.test(c2paText)) {
+			      score += 80;
+			      reasons.push('c2pa manifest present');
+			    }
+			
+			    if (C2PA_AI_SOURCE_REGEX.test(c2paText)) {
+			      score += 60;
+			      reasons.push('c2pa declares ai source');
+			    }
+			
+			    const genMatch = combinedText.match(AI_GENERATORS_REGEX);
+			    if (genMatch) {
+			      score += 70;
+			      reasons.push(`ai generator: ${genMatch[0]}`);
+			    }
+			
+			    if (SD_TOKENS_REGEX.test(combinedText)) {
+			      score += 60;
+			      reasons.push('ai parameter tokens found');
+			    }
+			
+			    if (isPng && (/(^|[^a-z])parameters\s*:/i.test(meta.pngTextBlob) || /\bDream\b/i.test(meta.pngTextBlob))) {
+			      score += 20;
+			      reasons.push('png text markers');
+			    }
+			
+			    if (isJpeg &&
+			        !AI_GENERATORS_REGEX.test(combinedText) &&
+			        !SD_TOKENS_REGEX.test(combinedText) &&
+			        CAMERA_TOKENS.some(t => meta.exifData.includes(t))) {
+			      score -= 30;
+			      reasons.push('camera exif present');
+			    }
+			
+			    score = Math.max(0, Math.min(100, score));
+			
+			    return {
+			      score,
+			      reason: score <= 0 ? 'no ai signals' : Array.from(new Set(reasons)).join('; '),
+			      rawText: meta.pngTextBlob || meta.jpegComment || meta.xmpData || ''
+			    };
+			  }
+			
+			  async function applyAiGeneratedTag(postId, reason) {
+			    try {
+			      U.showToast('Adding ai_generated tag...');
+			      const res = await Net.sendForm(`/posts/${postId}.json`, 'PATCH', {
+			        'post[tag_string_diff]': 'ai_generated',
+			        'post[edit_reason]': `AI Heuristics: ${reason}`
+			      });
+			      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+			      U.showToast('Tag ai_generated added successfully!');
+			      setTimeout(() => location.reload(), 800);
+			    } catch (err) {
+			      U.showToast(`Failed to add tag: ${err.message}`, true);
+			    }
+			  }
+			
+			  const findInfoItem = (prefix) =>
+			    Array.from(document.querySelectorAll(SEL.postInfoItems)).find(li =>
+			      li.textContent.trim().toLowerCase().startsWith(prefix));
+			
+			  async function inspectPostPage() {
+			    if (document.getElementById('post-info-extra-ai')) return;
+			
+			    const container = document.querySelector(SEL.imageContainer);
+			    const postId = container?.dataset?.id || U.getPostIdFromPage();
+			
+			    let fileUrl = container?.dataset?.fileUrl || container?.dataset?.largeFileUrl;
+			    if (!fileUrl) {
+			      const dlLink = document.querySelector('#post-info-size a, #image-container a, a[href*="/data/"]');
+			      if (dlLink?.href) fileUrl = dlLink.href;
+			    }
+			    if (!fileUrl) {
+			      const img = document.querySelector('#image');
+			      if (img?.src) fileUrl = img.src;
+			    }
+			
+			    // Insert loading row into post information list immediately
+			    const li = D.el('li', { id: 'post-info-extra-ai', class: 'e621x-ai-row' }, [
+			      D.el('span', { class: 'e621x-ai-label', text: 'AI Check: ' }),
+			      D.el('span', { class: 'e621x-ai-badge e621x-ai-badge--loading', text: 'Analyzing...' })
+			    ]);
+			
+			    const targetLi = findInfoItem('uploader:') || findInfoItem('posted:');
+			    if (targetLi) {
+			      targetLi.insertAdjacentElement('afterend', li);
+			    } else {
+			      const lists = document.querySelectorAll(SEL.postInfoLists);
+			      if (lists.length) lists[lists.length - 1].appendChild(li);
+			      else document.querySelector('#post-information')?.appendChild(li);
+			    }
+			
+			    if (!fileUrl || !postId) {
+			      li.replaceChildren(
+			        D.el('span', { class: 'e621x-ai-label', text: 'AI Check: ' }),
+			        D.el('span', { class: 'e621x-ai-badge e621x-ai-badge--error', text: 'No image source' })
+			      );
+			      return;
+			    }
+			
+			    // Parse clean extension without query parameters or hash
+			    let fileExt = (container?.dataset?.fileExt || '').toLowerCase();
+			    if (!fileExt) {
+			      const cleanUrl = fileUrl.split('#')[0].split('?')[0];
+			      const match = cleanUrl.match(/\.([a-z0-9]+)$/i);
+			      if (match) fileExt = match[1].toLowerCase();
+			    }
+			
+			    if (!['png', 'jpg', 'jpeg', 'gif'].includes(fileExt)) {
+			      li.replaceChildren(
+			        D.el('span', { class: 'e621x-ai-label', text: 'AI Check: ' }),
+			        D.el('span', { class: 'e621x-ai-badge', text: `Unsupported (${fileExt || 'unknown'})` })
+			      );
+			      return;
+			    }
+			
+			    try {
+			      const res = await chrome.runtime.sendMessage({
+			        action: ACTIONS.CHECK_AI_HEURISTICS,
+			        url: fileUrl
+			      });
+			
+			      if (!res?.ok || !res.base64Data) {
+			        li.replaceChildren(
+			          D.el('span', { class: 'e621x-ai-label', text: 'AI Check: ' }),
+			          D.el('span', { class: 'e621x-ai-badge e621x-ai-badge--error', text: res?.error || 'Analysis failed' })
+			        );
+			        return;
+			      }
+			
+			      const bytes = base64ToUint8Array(res.base64Data);
+			      const meta = await parseMetadata(bytes, fileExt);
+			      const result = calculateScore(meta, fileExt);
+			
+			      const hasAiTag = (container?.dataset?.tags || '').split(/\s+/).includes('ai_generated') ||
+			                       document.querySelector('#tag-list .tag-type-general a[href*="ai_generated"]') !== null;
+			
+			      li.replaceChildren();
+			      li.appendChild(D.el('span', { class: 'e621x-ai-label', text: 'AI Check: ' }));
+			
+			      if (result.score >= 50) {
+			        const badgeClass = hasAiTag ? 'e621x-ai-badge--flagged' : 'e621x-ai-badge--danger';
+			        const badgeText = hasAiTag
+			          ? `AI Detected (${result.score}%) · Tagged`
+			          : `⚠️ AI Detected (${result.score}%) · UNTAGGED`;
+			
+			        const badge = D.el('span', { class: `e621x-ai-badge ${badgeClass}`, text: badgeText });
+			        const reasonEl = D.el('div', { class: 'e621x-ai-reasons', text: result.reason });
+			
+			        const actions = D.el('div', { class: 'e621x-ai-actions' });
+			
+			        if (!hasAiTag) {
+			          const btnAddTag = D.button({
+			            text: '+ ai_generated',
+			            className: 'st-button--sm',
+			            title: 'Tag this post as ai_generated immediately',
+			            onClick: () => applyAiGeneratedTag(postId, result.reason)
+			          });
+			          actions.appendChild(btnAddTag);
+			        }
+			
+			        const btnCopy = D.button({
+			          text: 'Copy Reason',
+			          className: 'st-button--sm',
+			          title: 'Copy AI detection note to clipboard',
+			          onClick: () => {
+			            navigator.clipboard.writeText(`AI score: ${result.score}%\n${result.reason}`);
+			            U.showToast('AI note copied to clipboard!');
+			          }
+			        });
+			        actions.appendChild(btnCopy);
+			
+			        if (result.rawText) {
+			          const btnToggle = D.button({
+			            text: 'Prompt/Meta',
+			            className: 'st-button--sm',
+			            onClick: () => {
+			              const box = li.querySelector('.e621x-ai-raw');
+			              if (box) box.classList.toggle('hidden');
+			            }
+			          });
+			          actions.appendChild(btnToggle);
+			        }
+			
+			        li.append(badge, reasonEl, actions);
+			
+			        if (result.rawText) {
+			          const rawBox = D.el('pre', {
+			            class: 'e621x-ai-raw hidden',
+			            text: result.rawText.slice(0, 4000)
+			          });
+			          li.appendChild(rawBox);
+			        }
+			      } else if (result.score > 0) {
+			        const badge = D.el('span', {
+			          class: 'e621x-ai-badge e621x-ai-badge--warning',
+			          text: `Possible AI (${result.score}%)`
+			        });
+			        const reasonEl = D.el('div', { class: 'e621x-ai-reasons', text: result.reason });
+			        li.append(badge, reasonEl);
+			      } else {
+			        const badge = D.el('span', { class: 'e621x-ai-badge e621x-ai-badge--clean', text: 'Clean (0%)' });
+			        li.appendChild(badge);
+			      }
+			    } catch (err) {
+			      U.logWarn('AI Heuristics check error', err);
+			    }
+			  }
+			
+			  async function init() {
+			    const enabled = await U.storageGet(KEYS.AI_HEURISTICS_ENABLED, true);
+			    if (!enabled) return;
+			
+			    if (/^\/posts\/\d+/i.test(location.pathname)) {
+			      inspectPostPage();
+			    }
+			  }
+			
+			  return { init, calculateScore, parseMetadata };
+			});
+			// END: scripts/ai_heuristics.js
 			
 			// START: scripts/tree/data.js
 			E621X.define('treeData', ['net'], (Net) => {
@@ -5653,7 +6138,7 @@ console.log("Script start:",performance.now());const e=!0,t=e=>e,o="passthrough"
 			    const btnExportJson = D.button({ text: 'Export JSON', icon: 'download' });
 			    const btnExportSvg = D.button({ text: 'Export SVG', icon: 'download' });
 			    const closeBtn = D.el('button', {
-			      type: 'button', class: 'e621x-tree-close st-button kinetic', text: '×', 'aria-label': 'Close'
+			      type: 'button', class: 'e621x-tree-close e621x-modal-close st-button kinetic', text: '×', 'aria-label': 'Close'
 			    });
 			    const contentArea = D.el('div', { class: 'e621x-tree-content' }, [
 			      D.el('div', { class: 'e621x-tree-message', text: 'Loading full dependency tree...' })
@@ -6345,6 +6830,7 @@ console.log("Script start:",performance.now());const e=!0,t=e=>e,o="passthrough"
 			  const { STORAGE_KEYS: KEYS, ACTIONS } = E621_CONSTANTS;
 			  const HOURLY_EDIT_LIMIT = 150;
 			  const ONE_HOUR_MS = 60 * 60 * 1000;
+			  const CLOCK_BUFFER_MS = 3000;
 			
 			  async function isEnabled() {
 			    return Boolean(await U.storageGet(KEYS.QUEUE_TAG_SCRIPTS_ENABLED, false));
@@ -6356,6 +6842,58 @@ console.log("Script start:",performance.now());const e=!0,t=e=>e,o="passthrough"
 			
 			  async function getTimeoutUntil() {
 			    return Number(await U.storageGet(KEYS.QUEUE_TIMEOUT_UNTIL, 0)) || 0;
+			  }
+			
+			  async function setTimeoutUntil(timestamp) {
+			    await U.storageSet(KEYS.QUEUE_TIMEOUT_UNTIL, Number(timestamp) || 0);
+			  }
+			
+			  async function verifyHourlyLimitExceeded() {
+			    try {
+			      const user = U.getCurrentUser();
+			      let userId = user?.userId;
+			      if (!userId) {
+			        const me = await Net.fetchJson('/users/me.json');
+			        userId = me?.id;
+			      }
+			      if (!userId) return { isLimit: false, nextAvailableMs: 0, slots: [] };
+			
+			      const url = `/post_versions.json?search[updater_id]=${userId}&limit=${HOURLY_EDIT_LIMIT}`;
+			      const list = await Net.fetchJson(url);
+			      const versions = Array.isArray(list) ? list : (list?.post_versions || []);
+			      const now = Date.now();
+			
+			      const recentTimestamps = [];
+			      for (const item of versions) {
+			        const dateStr = item?.updated_at || item?.created_at;
+			        if (!dateStr) continue;
+			        const t = new Date(dateStr).getTime();
+			        if (!Number.isNaN(t) && (now - t) < ONE_HOUR_MS) {
+			          recentTimestamps.push(t);
+			        }
+			      }
+			
+			      if (recentTimestamps.length < HOURLY_EDIT_LIMIT) {
+			        return { isLimit: false, nextAvailableMs: 0, slots: [] };
+			      }
+			
+			      recentTimestamps.sort((a, b) => a - b);
+			      const slots = recentTimestamps.map(t => t + ONE_HOUR_MS + CLOCK_BUFFER_MS);
+			
+			      const queue = await getQueue();
+			      const queueLen = Math.max(Object.keys(queue).length, slots.length);
+			      while (slots.length < queueLen) {
+			        const baseIdx = Math.max(0, slots.length - HOURLY_EDIT_LIMIT);
+			        slots.push((slots[baseIdx] || now) + ONE_HOUR_MS);
+			      }
+			
+			      const nextAvailableMs = Math.max(1000, slots[0] - now);
+			      await U.storageSet(KEYS.QUEUE_SLOT_TIMESTAMPS, slots);
+			      return { isLimit: true, nextAvailableMs, slots };
+			    } catch (err) {
+			      U.logWarn('verifyHourlyLimitExceeded error', err);
+			      return { isLimit: false, nextAvailableMs: 0, slots: [] };
+			    }
 			  }
 			
 			  async function isTimeoutActive() {
@@ -6424,7 +6962,9 @@ console.log("Script start:",performance.now());const e=!0,t=e=>e,o="passthrough"
 			    try {
 			      const res = await chrome.runtime.sendMessage({ action: ACTIONS.FETCH_IMAGE, url });
 			      if (res?.ok && res.dataUrl) return res.dataUrl;
-			    } catch (_) {}
+			    } catch (_) {
+			      // Ignored
+			    }
 			    return null;
 			  }
 			
@@ -6483,13 +7023,17 @@ console.log("Script start:",performance.now());const e=!0,t=e=>e,o="passthrough"
 			    const sanitized = { ...editData };
 			    delete sanitized.thumbnailDataUrl;
 			
-			    const res = await chrome.runtime.sendMessage({
-			      action: ACTIONS.ENQUEUE_TAG_SCRIPT,
-			      postId: id,
-			      editData: sanitized
-			    });
-			
-			    return res?.queue || (await getQueue());
+			    try {
+			      const res = await chrome.runtime.sendMessage({
+			        action: ACTIONS.ENQUEUE_TAG_SCRIPT,
+			        postId: id,
+			        editData: sanitized
+			      });
+			      return res?.queue || (await getQueue());
+			    } catch (err) {
+			      U.logWarn('enqueue', err);
+			      return await getQueue();
+			    }
 			  }
 			
 			  async function enqueueFromThumb(thumb, editData) {
@@ -6507,16 +7051,25 @@ console.log("Script start:",performance.now());const e=!0,t=e=>e,o="passthrough"
 			  async function dequeue(postId) {
 			    const id = Number(postId);
 			    await deleteImage(id);
-			    const res = await chrome.runtime.sendMessage({
-			      action: ACTIONS.DEQUEUE_TAG_SCRIPT,
-			      postId: id
-			    });
-			    return res?.queue || (await getQueue());
+			    try {
+			      const res = await chrome.runtime.sendMessage({
+			        action: ACTIONS.DEQUEUE_TAG_SCRIPT,
+			        postId: id
+			      });
+			      return res?.queue || (await getQueue());
+			    } catch (err) {
+			      U.logWarn('dequeue', err);
+			      return await getQueue();
+			    }
 			  }
 			
 			  async function clearQueue() {
 			    await clearImages();
-			    await chrome.runtime.sendMessage({ action: ACTIONS.CLEAR_TAG_QUEUE });
+			    try {
+			      await chrome.runtime.sendMessage({ action: ACTIONS.CLEAR_TAG_QUEUE });
+			    } catch (err) {
+			      U.logWarn('clearQueue', err);
+			    }
 			  }
 			
 			  async function processQueue() {
@@ -6659,12 +7212,14 @@ console.log("Script start:",performance.now());const e=!0,t=e=>e,o="passthrough"
 			    isEnabled,
 			    setEnabled,
 			    getTimeoutUntil,
+			    setTimeoutUntil,
 			    isTimeoutActive,
 			    getRemainingTimeoutMs,
 			    getQueueTimingInfo,
 			    getSlotSchedule,
 			    checkPostLockStatus,
 			    isHourlyLimitResponse,
+			    verifyHourlyLimitExceeded,
 			    getQueue,
 			    getQueueCount,
 			    enqueue,
@@ -7591,7 +8146,11 @@ console.log("Script start:",performance.now());const e=!0,t=e=>e,o="passthrough"
 			        refreshThumbnail(thumb, postId, data, changes);
 			        thumb.classList.remove('e621x-thumb-queued', 'e621x-thumb-locked');
 			        thumb.classList.add('e621x-thumb-updated');
-			        await Queue.dequeue(postId);
+			        try {
+			          await Queue.dequeue(postId);
+			        } catch (_) {
+			          // Extension might be reloaded; post was already updated successfully
+			        }
 			        U.showToast(`Post #${postId} updated`);
 			      } catch (err) {
 			        if (queueEnabled && Queue.isHourlyLimitResponse(err.status, err.message)) {
@@ -7629,7 +8188,11 @@ console.log("Script start:",performance.now());const e=!0,t=e=>e,o="passthrough"
 			        throw err;
 			      }
 			    } catch (err) {
-			      U.showToast(`Error #${postId}: ${err.message}`, true);
+			      if (/Extension context invalidated/i.test(err.message)) {
+			        U.showToast('Extension reloaded. Please refresh the page.', true);
+			      } else {
+			        U.showToast(`Error #${postId}: ${err.message}`, true);
+			      }
 			    } finally {
 			      inFlight.delete(postId);
 			    }
@@ -7681,7 +8244,11 @@ console.log("Script start:",performance.now());const e=!0,t=e=>e,o="passthrough"
 			        refreshThumbnail(thumb, id, data);
 			        thumb.classList.remove('e621x-thumb-queued', 'e621x-thumb-locked');
 			        thumb.classList.add('e621x-thumb-updated');
-			        await Queue.dequeue(id);
+			        try {
+			          await Queue.dequeue(id);
+			        } catch (_) {
+			          // Extension might be reloaded; post was already updated successfully
+			        }
 			        updated++;
 			      } catch (err) {
 			        if (queueEnabled && Queue.isHourlyLimitResponse(err.status, err.message)) {
@@ -8615,7 +9182,13 @@ console.log("Script start:",performance.now());const e=!0,t=e=>e,o="passthrough"
 			    const syncMode = () => {
 			      const active = select.value === MODE_VALUE;
 			      ui.classList.toggle('is-visible', active);
+			      const page = document.getElementById('page');
+			
 			      if (active) {
+			        if (page && page.getAttribute('data-mode-menu') !== MODE_VALUE) {
+			          page.setAttribute('data-mode-menu', MODE_VALUE);
+			        }
+			
 			        const curPreset = Storage.getActivePresetName();
 			        updatePresetDropdown(curPreset);
 			        syncStickyUi();
@@ -8631,6 +9204,9 @@ console.log("Script start:",performance.now());const e=!0,t=e=>e,o="passthrough"
 			        }
 			        Preview.syncPreview();
 			      } else {
+			        if (page && page.getAttribute('data-mode-menu') === MODE_VALUE) {
+			          page.setAttribute('data-mode-menu', select.value);
+			        }
 			        Preview.hideTooltip();
 			      }
 			    };
@@ -8671,7 +9247,7 @@ console.log("Script start:",performance.now());const e=!0,t=e=>e,o="passthrough"
 			      }
 			
 			      if (Storage.isStickyMode() && e.key === 'Escape' && !e.ctrlKey && !e.altKey && !e.metaKey) {
-			        if (document.querySelector('.e621x-tree-dialog')) return;
+			        if (document.querySelector('.e621x-tree-dialog, .e621x-stats-dialog')) return;
 			
 			        const activeSlots = Storage.getActiveStickySlots();
 			        if (activeSlots.length > 0) {
@@ -8821,7 +9397,7 @@ console.log("Script start:",performance.now());const e=!0,t=e=>e,o="passthrough"
 			    if (csrf && chrome.runtime?.id) {
 			      chrome.runtime.sendMessage({ action: ACTIONS.SET_CSRF_TOKEN, csrfToken: csrf }).catch(() => {});
 			    }
-			    for (const name of ['uploader', 'userEdits', 'tree', 'blacklist', 'hoverZoom', 'tagScriptQueue', 'timeoutedPage', 'tagScript', 'tooltipsManager']) {
+			    for (const name of ['uploader', 'userEdits', 'aiHeuristics', 'tree', 'blacklist', 'hoverZoom', 'tagScriptQueue', 'timeoutedPage', 'tagScript', 'tooltipsManager']) {
 			      try {
 			        await E621X.get(name).init();
 			      } catch (err) {
