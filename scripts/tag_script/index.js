@@ -17,10 +17,12 @@ E621X.define('tagScript',
     queueLink: 'e621x-tag-script-queue-link'
   };
 
+  const { STORAGE_KEYS: KEYS } = E621_CONSTANTS;
   const MODE_VALUE = 'tag-script-ext';
 
   let usesNative = false;
   let isProgrammaticInput = false;
+  let slotNotificationsEnabled = false;
 
   const getModeSelect = () => document.querySelector(SEL.modeSelect);
   const isTagScriptMode = () => getModeSelect()?.value === MODE_VALUE;
@@ -425,7 +427,9 @@ E621X.define('tagScript',
           setFieldDisplayValue(scriptVal, 'mode-box switch to tag-script');
           const field = Runner.getScriptField();
           if (field) field.focus();
-          U.showToast(`Switched to tag script #${validId}. Use 1-9 keys to switch.`);
+          if (slotNotificationsEnabled) {
+            U.showToast(`Switched to tag script #${validId}. Use 1-9 keys to switch.`);
+          }
           Log.add('ACTION', 'syncMode', `Activated tag-script mode on slot #${validId}`);
         }
         Preview.syncPreview();
@@ -483,7 +487,9 @@ E621X.define('tagScript',
           Storage.setActiveStickySlots([], 'hotkey [Escape]');
           syncStickyUi();
           Preview.syncPreview();
-          U.showToast('All slots deselected');
+          if (slotNotificationsEnabled) {
+            U.showToast('All slots deselected');
+          }
           Log.key(e, 'Escape pressed -> Deselected all active sticky slots');
           return;
         }
@@ -501,11 +507,15 @@ E621X.define('tagScript',
         let activeSlots = Storage.getActiveStickySlots();
         if (activeSlots.includes(newId)) {
           activeSlots = activeSlots.filter(id => id !== newId);
-          U.showToast(`Slot #${newId} disabled`);
+          if (slotNotificationsEnabled) {
+            U.showToast(`Slot #${newId} disabled`);
+          }
         } else {
           if (!Storage.getStoredScript(newId).trim()) return;
           activeSlots.push(newId);
-          U.showToast(`Slot #${newId} enabled`);
+          if (slotNotificationsEnabled) {
+            U.showToast(`Slot #${newId} enabled`);
+          }
         }
         Storage.setActiveStickySlots(activeSlots, `hotkey [${newId}] toggle`);
         syncStickyUi();
@@ -519,12 +529,18 @@ E621X.define('tagScript',
         setFieldDisplayValue(scriptVal, `hotkey [${newId}]`);
         Preview.syncPreview();
 
-        U.showToast(`Switched to tag script #${newId}. Use 1-9 keys to switch.`);
+        if (slotNotificationsEnabled) {
+          U.showToast(`Switched to tag script #${newId}. Use 1-9 keys to switch.`);
+        }
       }
     }, true);
   }
 
   function init() {
+    U.storageGet(KEYS.SLOT_NOTIFICATIONS, false).then(val => {
+      slotNotificationsEnabled = Boolean(val);
+    });
+
     [injectUI, setupThumbnailClickListener, setupHotkeys, Preview.init, Runner.syncQueuedOutlines].forEach(feature => {
       try {
         Promise.resolve(feature()).catch(err => U.logWarn(`tagScript.${feature.name}`, err));
@@ -534,8 +550,13 @@ E621X.define('tagScript',
     });
 
     chrome.storage.onChanged.addListener((changes, area) => {
-      if (area === 'local' && (changes[E621_CONSTANTS.STORAGE_KEYS.TAG_SCRIPT_QUEUE] || changes[E621_CONSTANTS.STORAGE_KEYS.QUEUE_TAG_SCRIPTS_ENABLED])) {
-        Runner.syncQueuedOutlines();
+      if (area === 'local') {
+        if (changes[KEYS.SLOT_NOTIFICATIONS] !== undefined) {
+          slotNotificationsEnabled = Boolean(changes[KEYS.SLOT_NOTIFICATIONS].newValue);
+        }
+        if (changes[KEYS.TAG_SCRIPT_QUEUE] || changes[KEYS.QUEUE_TAG_SCRIPTS_ENABLED]) {
+          Runner.syncQueuedOutlines();
+        }
       }
     });
   }

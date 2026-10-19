@@ -51,6 +51,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   const btnHzSampleToggle = $('btnHzSampleToggle');
   const hzSampleBadge = $('hzSampleBadge');
 
+  const btnSlotNotifsToggle = $('btnSlotNotifsToggle');
+  const slotNotifsBadge = $('slotNotifsBadge');
   const btnCtrlPreviewToggle = $('btnCtrlPreviewToggle');
   const ctrlPreviewBadge = $('ctrlPreviewBadge');
   const btnCtrlStickyToggle = $('btnCtrlStickyToggle');
@@ -95,8 +97,15 @@ document.addEventListener('DOMContentLoaded', async () => {
       KEYS.QUEUE_TAG_SCRIPTS_ENABLED,
       KEYS.TAG_SCRIPT_QUEUE,
       KEYS.QUEUE_TIMEOUT_UNTIL,
-      KEYS.QUEUE_SLOT_TIMESTAMPS
+      KEYS.QUEUE_SLOT_TIMESTAMPS,
+      KEYS.SLOT_NOTIFICATIONS
     ]);
+
+    const slotNotifs = Boolean(data[KEYS.SLOT_NOTIFICATIONS]);
+    if (slotNotifsBadge) {
+      slotNotifsBadge.textContent = slotNotifs ? 'ON' : 'OFF';
+      slotNotifsBadge.classList.toggle('on', slotNotifs);
+    }
 
     const isAuto = Boolean(data[KEYS.AUTO_UPDATE]);
     const isLocked = Boolean(data[KEYS.BLACKLIST_LOCKED]);
@@ -171,6 +180,13 @@ document.addEventListener('DOMContentLoaded', async () => {
       aiHeuristicsBadge.classList.toggle('on', aiEnabled);
     }
   }
+
+  btnSlotNotifsToggle?.addEventListener('click', async () => {
+    const data = await chrome.storage.local.get([KEYS.SLOT_NOTIFICATIONS]);
+    const current = Boolean(data[KEYS.SLOT_NOTIFICATIONS]);
+    await chrome.storage.local.set({ [KEYS.SLOT_NOTIFICATIONS]: !current });
+    await refreshUI();
+  });
 
   btnHzToggle?.addEventListener('click', async () => {
     const data = await chrome.storage.local.get([KEYS.HZ_ENABLED]);
