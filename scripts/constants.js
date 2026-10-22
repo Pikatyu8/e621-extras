@@ -33,7 +33,7 @@ globalThis.E621_CONSTANTS = Object.freeze({
     CTRL_STICKY_ACTIVE: 'e621_ctrl_sticky_active',
     HIDE_THUMB_TOOLTIPS: 'e621_hide_thumb_tooltips',
     TRACKING_FPS: 'e621_tracking_fps',
-    SLOT_NOTIFICATIONS: 'e621_slot_notifications_enabled'
+    VERBOSE_TOASTS: 'e621_verbose_toasts'
   }),
 
   ACTIONS: Object.freeze({

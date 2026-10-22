@@ -3,6 +3,8 @@ E621X.define('utils', ['selectors'], (SEL) => {
   const { STORAGE_KEYS, SCHEMA_VERSION } = E621_CONSTANTS;
   const TOAST_ID = 'e621-extras-toast';
 
+  let verboseToasts = false;
+
   const logWarn = (scope, err) => {
     if (err && /Extension context invalidated/i.test(err.message || String(err))) return;
     console.warn(`[e621 extras] ${scope}:`, err);
@@ -71,6 +73,9 @@ E621X.define('utils', ['selectors'], (SEL) => {
   const TOAST_CONTAINER_ID = 'e621x-toast-container';
 
   function showToast(message, isError = false) {
+    // Suppress non-error and non-warning toasts when verbose mode is off
+    if (!verboseToasts && !isError) return;
+
     let container = document.getElementById(TOAST_CONTAINER_ID);
     if (!container) {
       container = document.createElement('div');
@@ -204,6 +209,18 @@ E621X.define('utils', ['selectors'], (SEL) => {
         }
       }
     };
+  }
+
+  storageGet(STORAGE_KEYS.VERBOSE_TOASTS, false).then(val => {
+    verboseToasts = Boolean(val);
+  });
+
+  if (extensionAlive() && globalThis.chrome?.storage?.onChanged) {
+    chrome.storage.onChanged.addListener((changes, area) => {
+      if (area === 'local' && changes[STORAGE_KEYS.VERBOSE_TOASTS] !== undefined) {
+        verboseToasts = Boolean(changes[STORAGE_KEYS.VERBOSE_TOASTS].newValue);
+      }
+    });
   }
 
   return {

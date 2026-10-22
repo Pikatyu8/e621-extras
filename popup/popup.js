@@ -51,8 +51,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   const btnHzSampleToggle = $('btnHzSampleToggle');
   const hzSampleBadge = $('hzSampleBadge');
 
-  const btnSlotNotifsToggle = $('btnSlotNotifsToggle');
-  const slotNotifsBadge = $('slotNotifsBadge');
+  const btnVerboseToastsToggle = $('btnVerboseToastsToggle');
+  const verboseToastsBadge = $('verboseToastsBadge');
   const btnCtrlPreviewToggle = $('btnCtrlPreviewToggle');
   const ctrlPreviewBadge = $('ctrlPreviewBadge');
   const btnCtrlStickyToggle = $('btnCtrlStickyToggle');
@@ -98,13 +98,13 @@ document.addEventListener('DOMContentLoaded', async () => {
       KEYS.TAG_SCRIPT_QUEUE,
       KEYS.QUEUE_TIMEOUT_UNTIL,
       KEYS.QUEUE_SLOT_TIMESTAMPS,
-      KEYS.SLOT_NOTIFICATIONS
+      KEYS.VERBOSE_TOASTS
     ]);
 
-    const slotNotifs = Boolean(data[KEYS.SLOT_NOTIFICATIONS]);
-    if (slotNotifsBadge) {
-      slotNotifsBadge.textContent = slotNotifs ? 'ON' : 'OFF';
-      slotNotifsBadge.classList.toggle('on', slotNotifs);
+    const verbose = Boolean(data[KEYS.VERBOSE_TOASTS]);
+    if (verboseToastsBadge) {
+      verboseToastsBadge.textContent = verbose ? 'ON' : 'OFF';
+      verboseToastsBadge.classList.toggle('on', verbose);
     }
 
     const isAuto = Boolean(data[KEYS.AUTO_UPDATE]);
@@ -181,10 +181,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   }
 
-  btnSlotNotifsToggle?.addEventListener('click', async () => {
-    const data = await chrome.storage.local.get([KEYS.SLOT_NOTIFICATIONS]);
-    const current = Boolean(data[KEYS.SLOT_NOTIFICATIONS]);
-    await chrome.storage.local.set({ [KEYS.SLOT_NOTIFICATIONS]: !current });
+  btnVerboseToastsToggle?.addEventListener('click', async () => {
+    const data = await chrome.storage.local.get([KEYS.VERBOSE_TOASTS]);
+    const current = Boolean(data[KEYS.VERBOSE_TOASTS]);
+    await chrome.storage.local.set({ [KEYS.VERBOSE_TOASTS]: !current });
     await refreshUI();
   });
 
